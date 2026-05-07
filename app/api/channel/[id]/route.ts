@@ -21,7 +21,7 @@ export async function DELETE(
       { success: false, error: 'BOT_NOT_FOUND' }, { status: 404 }
     )
 
-    // Make sure channel belongs to this merchant's bot
+    // the channel must belong to the bot
     const channel = await prisma.channel.findFirst({
       where: { id: params.id, botId: bot.id }
     })
