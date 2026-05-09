@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 
-// Disconnect channel
+
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -35,7 +35,7 @@ export async function DELETE(
     return NextResponse.json({ success: true })
 
   } catch (err) {
-    console.error(err)
+    console.error('error in channel id delete route:', err)
     return NextResponse.json(
       { success: false, error: 'SERVER_ERROR' }, { status: 500 }
     )

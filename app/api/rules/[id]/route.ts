@@ -1,14 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import { encrypt } from '@/lib/encrypt'
 
-export async function GET() {
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await auth()
     if (!session) return NextResponse.json(
       { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
     )
+
+    const data = await req.json()
 
     const bot = await prisma.bot.findUnique({
       where: { userId: session.user.id }
@@ -18,31 +22,37 @@ export async function GET() {
       { success: false, error: 'BOT_NOT_FOUND' }, { status: 404 }
     )
 
-    const channels = await prisma.channel.findMany({
-      where: { botId: bot.id }
+    const existing = await prisma.rule.findFirst({
+      where: { id: params.id, botId: bot.id }
     })
 
-    return NextResponse.json({ success: true, data: channels })
+    if (!existing) return NextResponse.json(
+      { success: false, error: 'RULE_NOT_FOUND' }, { status: 404 }
+    )
+
+    const rule = await prisma.rule.update({
+      where: { id: params.id },
+      data
+    })
+
+    return NextResponse.json({ success: true, data: rule })
 
   } catch (err) {
-    console.error('error in channel GET route:', err)
+    console.error('error in rules PATCH route:', err)
     return NextResponse.json(
       { success: false, error: 'SERVER_ERROR' }, { status: 500 }
     )
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await auth()
     if (!session) return NextResponse.json(
       { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
-    )
-
-    const { type, pageId, accessToken } = await req.json()
-
-    if (!type || !pageId || !accessToken) return NextResponse.json(
-      { success: false, error: 'MISSING_FIELDS' }, { status: 400 }
     )
 
     const bot = await prisma.bot.findUnique({
@@ -53,22 +63,20 @@ export async function POST(req: NextRequest) {
       { success: false, error: 'BOT_NOT_FOUND' }, { status: 404 }
     )
 
-    // Encrypt accessToken before storing
-    const encrypted = encrypt(accessToken)
-
-    const channel = await prisma.channel.create({
-      data: {
-        type,
-        pageId,
-        accessToken: encrypted,
-        botId: bot.id
-      }
+    const existing = await prisma.rule.findFirst({
+      where: { id: params.id, botId: bot.id }
     })
 
-    return NextResponse.json({ success: true, data: channel }, { status: 201 })
+    if (!existing) return NextResponse.json(
+      { success: false, error: 'RULE_NOT_FOUND' }, { status: 404 }
+    )
+
+    await prisma.rule.delete({ where: { id: params.id } })
+
+    return NextResponse.json({ success: true })
 
   } catch (err) {
-    console.error('error in channel POST route:', err)
+    console.error('error in rules PATCH route:', err)
     return NextResponse.json(
       { success: false, error: 'SERVER_ERROR' }, { status: 500 }
     )

@@ -17,7 +17,7 @@ export async function GET() {
     return NextResponse.json({ success: true, data: bot })
 
   } catch (err) {
-    console.error(err)
+    console.error('error in bot GET route:', err)
     return NextResponse.json(
       { success: false, error: 'SERVER_ERROR' }, { status: 500 }
     )
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, data: bot }, { status: 201 })
 
   } catch (err) {
-    console.error(err)
+    console.error('error in bot POST route:', err)
     return NextResponse.json(
       { success: false, error: 'SERVER_ERROR' }, { status: 500 }
     )
@@ -80,7 +80,7 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ success: true, data: bot })
 
   } catch (err) {
-    console.error(err)
+    console.error('error in bot PATCH route:', err)
     return NextResponse.json(
       { success: false, error: 'SERVER_ERROR' }, { status: 500 }
     )
@@ -101,7 +101,7 @@ export async function DELETE() {
     return NextResponse.json({ success: true })
 
   } catch (err) {
-    console.error(err)
+    console.error('error in bot DELETE route:', err)
     return NextResponse.json(
       { success: false, error: 'SERVER_ERROR' }, { status: 500 }
     )
