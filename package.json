@@ -8,6 +8,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.76",
+    "@ai-sdk/google": "^3.0.71",
+    "@ai-sdk/groq": "^3.0.39",
     "@prisma/client": "^7.8.0",
     "@types/bcryptjs": "^2.4.6",
     "ai": "^6.0.175",

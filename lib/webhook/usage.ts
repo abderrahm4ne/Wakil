@@ -1,14 +1,14 @@
 import { prisma } from '@/lib/prisma'
-import { plan } from '@prisma/client'
+import { Plan } from '@/app/generated/prisma'
 
-const LIMITS: Record<plan, Number | null> = {
+const LIMITS: Record<Plan, number | null> = {
     FREE_TRIAL: 500,
     STARTER: 2000,
     PRO: 10000,
     BUSINESS: null
 }
 
-export default async function CheckAndIncrementUsage(botId: string, plan: plan): Promise<boolean> {
+export default async function CheckAndIncrementUsage(botId: string, plan: Plan): Promise<boolean> {
     const now = new Date()
     const month = now.getMonth() + 1
     const year = now.getFullYear()

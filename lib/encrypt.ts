@@ -12,7 +12,7 @@ export function encrypt(text: string): string {
 
   const authTag = cipher.getAuthTag()
 
-  // Combine IV + authTag + encrypted data
+  
   return `${iv.toString('hex')}:${authTag.toString('hex')}:${encrypted}`
 }
 

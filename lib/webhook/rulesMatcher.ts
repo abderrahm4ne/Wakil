@@ -1,0 +1,15 @@
+import { Rule, Language } from '@/app/generated/prisma'
+
+export function matchRule(rules: Rule[], message: string, language: Language): string | null {
+    const msg = message.toLowerCase()
+
+    const filtered = rules.filter(rule => rule.language === language).sort((a, b) => b.order - b.order)
+
+    for (const rule of filtered) {
+        if (msg.includes(rule.trigger.toLowerCase())) {
+            return rule.response
+        }
+    }
+
+    return null
+}
