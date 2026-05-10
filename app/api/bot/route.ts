@@ -31,7 +31,40 @@ export async function POST(req: NextRequest) {
       { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
     )
 
-    const { name, languages, type } = await req.json()
+    const { name, languages, type, businessName, city, contactInfo, additionalInfo }  = await req.json()
+
+    const subscription = await prisma.subscription.findUnique({
+      where: { userId: session.user.id }
+    })
+
+    const languageLine = subscription?.plan === 'STARTER' || subscription?.plan === 'FREE_TRIAL'
+    ? 'You communicate in Arabic and French. Always reply in the same language the customer uses.'
+    : 'You communicate in Arabic, French, and Darija. Always reply in the same language the customer uses.'
+
+
+    const systemPrompt = `
+    You are an automated customer support assistant for ${businessName}, powered by Wakil.
+
+    ${languageLine}
+
+    Your responsibilities:
+    - Answer frequently asked questions about products, pricing, availability, shipping, and returns
+    - Take orders by collecting: product name, size/variant, full address, and phone number
+    - Handle order status inquiries when the customer provides their order ID
+    - Recommend products based on the customer's query
+
+    Business information:
+    - Business name: ${businessName}
+    - Location: ${city}, Algeria
+    - Contact: ${contactInfo}
+    - ${additionalInfo}
+
+    Rules:
+    - Be concise, polite, and professional
+    - Never invent information you were not given
+    - If a question is outside your knowledge, say: "For more details please contact us directly at ${contactInfo}"
+    - Do not discuss anything unrelated to ${businessName}
+    `.trim()
 
     if (!name || !languages?.length) return NextResponse.json(
       { success: false, error: 'MISSING_FIELDS' }, { status: 400 }

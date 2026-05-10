@@ -5,7 +5,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "@prisma/client"
 }
 
 datasource db {
@@ -87,6 +86,8 @@ model Bot {
 model Channel {
   id              String    @id @default(uuid())
   type            ChannelType
+  pageId          String
+  accessToken     String
   isActive        Boolean   @default(true)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt

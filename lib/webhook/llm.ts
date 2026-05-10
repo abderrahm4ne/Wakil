@@ -2,7 +2,7 @@ import { createGroq } from '@ai-sdk/groq'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { createAnthropic } from '@ai-sdk/anthropic'
 import { generateText } from 'ai'
-import { Plan } from '@/app/generated/prisma'
+import { Plan } from '@prisma/client'
 
 const groq = createGroq({ apiKey: process.env.GROQ_API_KEY })
 const google = createGoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY })
