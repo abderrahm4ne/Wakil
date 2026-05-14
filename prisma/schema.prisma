@@ -44,6 +44,8 @@ model User {
   emailVerified         DateTime?
   verifyToken           String?  @unique
   verifyTokenExpires    DateTime?
+  resetToken            String?
+  resetTokenExpires     DateTime?
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
@@ -68,8 +70,16 @@ model Bot {
   id              String    @id @default(uuid())
   name            String
   type            BotType   @default(RULE_BASED)
-  language        Language[]
+  languages        Language[]
   isActive        Boolean   @default(true)
+  systemPrompt    String?
+
+  // Store Details
+  storeName       String?
+  storeCity       String?
+  storeContact    String?
+  storeInfo       String?
+
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 

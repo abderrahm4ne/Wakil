@@ -4,19 +4,13 @@ import { createAnthropic } from '@ai-sdk/anthropic'
 import { generateText } from 'ai'
 import { Plan } from '@prisma/client'
 
-const groq = createGroq({ apiKey: process.env.GROQ_API_KEY })
 const google = createGoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY })
 const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 export async function callLLM( plan: Plan, systemPrompt: string, userMessage: string ): Promise<string> {
 
   if (plan === 'FREE_TRIAL' || plan === 'STARTER') {
-    const { text } = await generateText({
-      model: groq('llama3-8b-8192'),
-      system: systemPrompt,
-      prompt: userMessage
-    })
-    return text
+    return "Sorry, AI responses are not available on the Free Trial and Starter plans. Please uupgrage to the Pro plan to access AI-powered customer support. For more details please contact us directly."
   }
 
   if (plan === 'PRO') {

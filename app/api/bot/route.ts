@@ -31,11 +31,19 @@ export async function POST(req: NextRequest) {
       { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
     )
 
-    const { name, languages, type, businessName, city, contactInfo, additionalInfo }  = await req.json()
+    const { name, languages, type, storeName, storeCity, storeContact }  = await req.json()
 
     const subscription = await prisma.subscription.findUnique({
-      where: { userId: session.user.id }
+        where: { userId: session.user.id }
     })
+
+    if (!subscription || !subscription.isActive) {
+        return NextResponse.json(
+          { success: false, error: 'NO_ACTIVE_SUBSCRIPTION' }, { status: 403 }  
+        )
+    }
+
+    
 
     const languageLine = subscription?.plan === 'STARTER' || subscription?.plan === 'FREE_TRIAL'
     ? 'You communicate in Arabic and French. Always reply in the same language the customer uses.'
@@ -43,7 +51,7 @@ export async function POST(req: NextRequest) {
 
 
     const systemPrompt = `
-    You are an automated customer support assistant for ${businessName}, powered by Wakil.
+    You are an automated customer support assistant for ${storeName}, powered by Wakil.
 
     ${languageLine}
 
@@ -83,6 +91,10 @@ export async function POST(req: NextRequest) {
         name,
         languages,
         type,
+        systemPrompt,
+        storeName,
+        storeCity,
+        storeContact,
         userId: session.user.id
       }
     })
