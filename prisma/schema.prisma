@@ -119,6 +119,8 @@ model Rule {
 
   botId     String
   bot       Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+
+  messages  Message[]
 }
 
 model Conversation {
@@ -140,10 +142,13 @@ model Message {
   content        String
   fromCustomer   Boolean
   tokensUsed     Int      @default(0)
+  ruleId         String?  // null for AI responses
   createdAt      DateTime @default(now())
 
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  rule           Rule?    @relation(fields: [ruleId], references: [id], onDelete: SetNull)
 }
 
 model UsageLog {

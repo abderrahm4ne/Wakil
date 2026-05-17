@@ -3,6 +3,10 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { encrypt } from '@/lib/encrypt'
 
+async function getBot(userId: string) {
+  return prisma.bot.findUnique({ where: { userId } })
+}
+
 export async function GET() {
   try {
     const session = await auth()
@@ -10,10 +14,7 @@ export async function GET() {
       { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
     )
 
-    const bot = await prisma.bot.findUnique({
-      where: { userId: session.user.id }
-    })
-
+    const bot = await getBot(session.user.id)
     if (!bot) return NextResponse.json(
       { success: false, error: 'BOT_NOT_FOUND' }, { status: 404 }
     )
@@ -25,7 +26,7 @@ export async function GET() {
     return NextResponse.json({ success: true, data: channels })
 
   } catch (err) {
-    console.error('error in channel GET route:', err)
+    console.error('error in channel GET route',err)
     return NextResponse.json(
       { success: false, error: 'SERVER_ERROR' }, { status: 500 }
     )
@@ -39,28 +40,22 @@ export async function POST(req: NextRequest) {
       { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
     )
 
+    const bot = await getBot(session.user.id)
+    if (!bot) return NextResponse.json(
+      { success: false, error: 'BOT_NOT_FOUND' }, { status: 404 }
+    )
+
     const { type, pageId, accessToken } = await req.json()
 
     if (!type || !pageId || !accessToken) return NextResponse.json(
       { success: false, error: 'MISSING_FIELDS' }, { status: 400 }
     )
 
-    const bot = await prisma.bot.findUnique({
-      where: { userId: session.user.id }
-    })
-
-    if (!bot) return NextResponse.json(
-      { success: false, error: 'BOT_NOT_FOUND' }, { status: 404 }
-    )
-
-    // Encrypt accessToken before storing
-    const encrypted = encrypt(accessToken)
-
     const channel = await prisma.channel.create({
       data: {
         type,
         pageId,
-        accessToken: encrypted,
+        accessToken: encrypt(accessToken),
         botId: bot.id
       }
     })
@@ -68,7 +63,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, data: channel }, { status: 201 })
 
   } catch (err) {
-    console.error('error in channel POST route:', err)
+    console.error('error in channel POST route',err)
     return NextResponse.json(
       { success: false, error: 'SERVER_ERROR' }, { status: 500 }
     )

@@ -57,10 +57,10 @@ export async function handleMetaMessage(
     })
 
     let reply = ''
-
+    let matched
     if (bot.type === BotType.RULE_BASED) {
-        const matched = matchRule(bot.rules, message, bot.languages[0] as Language)
-        reply = matched ?? "Sorry, I didn't understand that."
+        matched = matchRule(bot.rules, message, bot.languages[0] as Language)
+        reply = matched?.response ?? "Sorry, I didn't understand that."
     }
     
     if (bot.type === BotType.AI_POWERED) {
@@ -75,9 +75,10 @@ export async function handleMetaMessage(
 
     await prisma.message.create({
         data: {
-        content: reply,
-        fromCustomer: false,
-        conversationId: conversation.id
+            content: reply,
+            fromCustomer: false,
+            ruleId: matched?.id ?? null,
+            conversationId: conversation.id
         }
     })
 }
