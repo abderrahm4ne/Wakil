@@ -18,7 +18,7 @@ export async function handleMetaMessage(
                 include: {
                     rules: true, // rules [] for ai-powered bots
                     user: {
-                        include: { subscribtion: true }
+                        include: { subscription: true }
                     }
                 }
             }

@@ -72,7 +72,7 @@ model Bot {
   type            BotType   @default(RULE_BASED)
   languages        Language[]
   isActive        Boolean   @default(true)
-  systemPrompt    String?
+  systemPrompt    String
 
   // Store Details
   storeName       String?
