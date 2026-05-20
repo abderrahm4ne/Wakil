@@ -40,7 +40,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id
-                // Fetch plan
+                // set plan to cookie
                 const sub = await prisma.subscription.findFirst({
                     where : { userId: user.id },
                 })

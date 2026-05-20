@@ -4,14 +4,127 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
 }
 
-// Enums
+model User {
+  id                 String        @id @default(uuid())
+  name               String
+  email              String        @unique
+  password           String
+  emailVerified      DateTime?
+  verifyToken        String?       @unique
+  verifyTokenExpires DateTime?
+  resetToken         String?
+  resetTokenExpires  DateTime?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  bot                Bot?
+  subscription       Subscription?
+}
+
+model Subscription {
+  id        String    @id @default(uuid())
+  plan      Plan
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    String    @unique
+  user      User      @relation(fields: [userId], references: [id])
+}
+
+model Bot {
+  id            String         @id @default(uuid())
+  name          String
+  type          BotType        @default(RULE_BASED)
+  languages     Language[]
+  isActive      Boolean        @default(true)
+  systemPrompt  String
+  storeName     String?
+  storeCity     String?
+  storeContact  String?
+  storeInfo     String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  userId        String         @unique
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channels      Channel[]
+  conversations Conversation[]
+  rules         Rule[]
+  usageLogs     UsageLog[]
+}
+
+model Channel {
+  id          String      @id @default(uuid())
+  type        ChannelType
+  pageId      String
+  accessToken String
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  botId       String
+  bot         Bot         @relation(fields: [botId], references: [id])
+
+  @@unique([botId, type])
+}
+
+model Rule {
+  id        String    @id @default(cuid())
+  trigger   String
+  response  String
+  language  Language
+  order     Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  botId     String
+  messages  Message[]
+  bot       Bot       @relation(fields: [botId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id         String    @id @default(cuid())
+  customerId String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  botId      String
+  bot        Bot       @relation(fields: [botId], references: [id], onDelete: Cascade)
+  messages   Message[]
+
+  @@unique([botId, customerId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  content        String
+  fromCustomer   Boolean
+  tokensUsed     Int          @default(0)
+  ruleId         String?
+  createdAt      DateTime     @default(now())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  rule           Rule?        @relation(fields: [ruleId], references: [id])
+}
+
+model UsageLog {
+  id           String   @id @default(cuid())
+  month        Int
+  year         Int
+  messageCount Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  botId        String
+  bot          Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+
+  @@unique([botId, month, year])
+}
+
 enum Plan {
   FREE_TRIAL
   STARTER
@@ -33,134 +146,4 @@ enum Language {
 enum ChannelType {
   FACEBOOK
   INSTAGRAM
-}
-
-// Models
-model User {
-  id                    String   @id @default(uuid())
-  name                  String
-  email                 String   @unique
-  password              String
-  emailVerified         DateTime?
-  verifyToken           String?  @unique
-  verifyTokenExpires    DateTime?
-  resetToken            String?
-  resetTokenExpires     DateTime?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-
-  subscription          Subscription?  
-  bot                   Bot?
-}
-
-model Subscription {
-  id              String   @id @default(uuid())
-  plan            Plan
-  startDate       DateTime @default(now())
-  endDate         DateTime?
-  isActive        Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id])
-}
-
-model Bot {
-  id              String    @id @default(uuid())
-  name            String
-  type            BotType   @default(RULE_BASED)
-  languages        Language[]
-  isActive        Boolean   @default(true)
-  systemPrompt    String
-
-  // Store Details
-  storeName       String?
-  storeCity       String?
-  storeContact    String?
-  storeInfo       String?
-
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  userId          String    @unique
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  channels        Channel[]
-  rules           Rule[]
-  conversations   Conversation[]
-  usageLogs       UsageLog[]  
-
-}
-
-model Channel {
-  id              String    @id @default(uuid())
-  type            ChannelType
-  pageId          String
-  accessToken     String
-  isActive        Boolean   @default(true)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  botId           String
-  bot             Bot       @relation(fields: [botId], references: [id])
-
-  @@unique([botId, type])
-}
-
-model Rule {
-  id        String   @id @default(cuid())
-  trigger   String
-  response  String
-  language  Language
-  order     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  botId     String
-  bot       Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
-
-  messages  Message[]
-}
-
-model Conversation {
-  id         String    @id @default(cuid())
-  customerId String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-
-  botId      String
-  bot        Bot       @relation(fields: [botId], references: [id], onDelete: Cascade)
-
-  messages   Message[]
-
-  @@unique([botId, customerId])
-}
-
-model Message {
-  id             String   @id @default(cuid())
-  content        String
-  fromCustomer   Boolean
-  tokensUsed     Int      @default(0)
-  ruleId         String?  // null for AI responses
-  createdAt      DateTime @default(now())
-
-  conversationId String
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-
-  rule           Rule?    @relation(fields: [ruleId], references: [id], onDelete: SetNull)
-}
-
-model UsageLog {
-  id           String   @id @default(cuid())
-  month        Int
-  year         Int
-  messageCount Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  botId        String
-  bot          Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
-
-  @@unique([botId, month, year])
 }

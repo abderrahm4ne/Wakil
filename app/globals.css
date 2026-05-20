@@ -12,17 +12,6 @@ input:-webkit-autofill:active {
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
-  --color-bg-primary: #0F1117;
-  --color-card: #1A1D27;
-  --color-border: #2A2D3A;
-  --color-primary: #4F8EF7;
-  --color-secondary: #00D4AA;
-  --color-text: #FFFFFF;
-  --color-muted: #8B8FA8;
-
-
-}
 
 @layer base {
   body {
@@ -88,8 +77,9 @@ input:-webkit-autofill:active {
   --card-foreground: #FFFFFF;
   --popover: #1A1D27;
   --popover-foreground: #FFFFFF;
-  --primary: #4F8EF7;
+  --primary: #FFFFFF;
   --primary-foreground: #FFFFFF;
+  --error-foreground: #fa0a0a;
   --secondary: #00D4AA;
   --secondary-foreground: #FFFFFF;
   --muted: #2A2D3A;
@@ -99,7 +89,7 @@ input:-webkit-autofill:active {
   --destructive: oklch(0.577 0.245 27.325);
   --border: #2A2D3A;
   --input: #2A2D3A;
-  --ring: #4F8EF7;
+  --ring: #02b592;
   --radius: 0.625rem;
   --sidebar: #1A1D27;
   --sidebar-foreground: #FFFFFF;
