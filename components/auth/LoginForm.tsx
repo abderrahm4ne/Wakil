@@ -41,7 +41,7 @@ export function LoginForm() {
 
 
   return (
-    <form onSubmit={(e) => (handleSubmit(e))} className="space-y-6 sm:w-[45%]">
+    <form onSubmit={(e) => (handleSubmit(e))} className="space-y-3 sm:w-[45%]">
       <div className="space-y-2">
         <Label htmlFor="email" className="text-foreground">
           Email

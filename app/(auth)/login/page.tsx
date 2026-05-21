@@ -36,7 +36,7 @@ export default function Login(){
             </div>
 
             {/* right side form */}
-            <div className="bg-black flex flex-col justify-center items-center md:space-y-10 space-y-7 lg:w-3/4 w-full h-full py-7 overflow-hidden font-display">
+            <div className="bg-black flex flex-col justify-center items-center md:space-y-7 space-y-5 lg:w-3/4 w-full h-full py-7 overflow-hidden font-display">
 
                 {/* Welcoming */}
                 <div className="flex flex-col items-start sm:w-[45%] space-y-2">
