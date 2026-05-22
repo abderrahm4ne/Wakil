@@ -55,14 +55,14 @@ export function PlanSelection({ selected, onSelect }: PlanSelectionProps) {
               <p className="text-xs text-muted-foreground">Pick the plan that works best for you</p>
             </div>
 
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-4 ">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
               {plans.map((tier) => {
                 const isSelected = selected === tier.name
                 return (
                 <div
                     key={tier.name}
                     onClick={() => onSelect(tier.name)}
-                    className="relative rounded-lg border px-7 py-5 transition-all duration-200 cursor-pointer"
+                    className="flex flex-col space-y-2 relative rounded-lg border px-5 pt-5 pb-3 transition-all duration-200 cursor-pointer"
                     style={{
                         backgroundColor: isSelected 
                             ? 'var(--accent)' 
@@ -73,29 +73,30 @@ export function PlanSelection({ selected, onSelect }: PlanSelectionProps) {
                     }}
                 >
                   {tier.popular && (
-                    <div className="absolute -top-2 left-4">
-                      <span className="inline-block bg-emerald-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                        Popular
-                      </span>
-                    </div>
-                  )}
-                  <div className="flex items-start justify-between mb-3 pt-2">
-                    <div>
-                      <h4 className="font-semibold text-foreground text-md">{tier.name}</h4>
-                      <p className="text-sm text-muted-foreground">{tier.description}</p>
-                    </div>
-                    <p className="text-lg font-bold text-foreground">
-                      {tier.price} <span className="text-xs text-muted-foreground">DZD</span>
-                    </p>
-                  </div>
-                  <ul className="space-y-2">
+                      <div className="absolute -top-2 left-4">
+                          <span className="inline-block bg-emerald-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                              Popular
+                          </span>
+                      </div>
+                    )}
+                <div className="flex justify-between items-center font-display ">
+                    <h3 className="font-semibold">{tier.name}</h3>
+                    <h3 className="font-bold">{tier.price} DZD</h3>
+                </div>
+                
+                <h4 className="text-muted-foreground text-sm font-sans tracking-tight">{tier.description}</h4>
+
+                <ul className="space-y-1">
                     {tier.features.map((feature) => (
-                      <li key={feature} className="flex items-center gap-2 text-xs text-muted-foreground ">
-                        <Check className="h-3 w-3 text-emerald-600 " />
-                        {feature}
-                      </li>
+                        <li key={feature} className="flex items-center gap-2 text-xs text-muted-foreground ">
+                            <Check className="h-3 w-3 text-emerald-600 " />
+                            {feature}
+                        </li>
                     ))}
                   </ul>
+
+
+
                 </div>)
               })}
             </div>
