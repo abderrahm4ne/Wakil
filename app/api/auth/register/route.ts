@@ -5,18 +5,26 @@ import { Resend } from 'resend'
 import crypto from 'crypto'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
+const VALID_PLANS = ['FREETRIAL','STARTER', 'PRO', 'BUSINESS']
 
 export async function POST(req: NextRequest) {
     try {
-        const { name, email, password } = await req.json()
+        const { name, email, password, plan } = await req.json()
 
         // Validate
-        if (!name || !email || !password) {
+        if (!name || !email || !password || !plan) {
             return NextResponse.json(
               { success: false, error: 'MISSING_FIELDS' },
               { status: 400 }
             )
-          }
+        }
+
+        if (!VALID_PLANS.includes(plan)){
+          return NextResponse.json(
+              { success: false, error: 'INVALID_PLAN' },
+              { status: 400 }
+          )
+        }
 
         // Check existing user
         const existing = await prisma.user.findUnique({ where: { email } })
@@ -44,7 +52,7 @@ export async function POST(req: NextRequest) {
               verifyToken: token,
               verifyTokenExpires: expires,
               subscription: {
-                create: { plan: 'FREE_TRIAL' }
+                create: { plan: plan }
               }
             }
           })
@@ -60,7 +68,9 @@ export async function POST(req: NextRequest) {
           </div>`
         })
 
-        
+        return NextResponse.json(
+          { success: true },
+          { status: 201 })
 
       } catch (err) {
       console.error("Error in Register", err)

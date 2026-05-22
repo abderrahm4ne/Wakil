@@ -3,19 +3,21 @@
 import { RegisterForm } from "@/components/auth/RegisterForm"
 import { PlanSelection } from "@/components/auth/PlanSelection"
 import { ConfirmSubmit } from "@/components/auth/ConfirmSubmit"
+
 import WakilLogo from "@/components/common/WakilLogo"
+
 import { ChevronUp, ChevronDown } from "lucide-react"
 import { RefObject, useRef, useState } from "react"
 
 export default function Register() {
     const [step, setStep] = useState(1)
     const [formData, setFormData] = useState({
-        fullName: "",
+        name: "",
         email: "",
         password: "",
         confirmPassword: "",
     })
-    const [selectedPlan, setSelectedPlan] = useState("STARTER_PLAN")
+    const [selectedPlan, setSelectedPlan] = useState("Starter")
 
     const containerRef = useRef<HTMLDivElement>(null)
     const formSectionRef = useRef<HTMLDivElement>(null)
@@ -41,8 +43,8 @@ export default function Register() {
     return (
         <div className="flex items-center justify-center h-screen bg-background">
             <div
-                className="flex lg:h-3/4 w-3/4 rounded-2xl overflow-hidden"
-                style={{ boxShadow: "-5px 4px 10px rgba(255, 255, 255, 0.1)" }}
+                className="flex w-3/4 rounded-2xl overflow-hidden"
+                style={{ boxShadow: "-5px 4px 10px rgba(255, 255, 255, 0.1)", height: "75vh" }}
             >
                 {/* left side gradient */}
                 <div className="hidden lg:flex lg:w-2/4 h-full relative overflow-hidden font-display">
@@ -64,31 +66,29 @@ export default function Register() {
                 </div>
 
                 {/* right side */}
-                  <div
-                      className="bg-black lg:w-3/4 w-full h-full relative font-display"
-                  >
-                      <div
+                <div
+                    className="bg-black lg:w-3/4 w-full h-full relative font-display"
+                >
+                    <div
                         ref={containerRef}
-                        className="overflow-y-scroll h-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] snap-y snap-mandatory ">
+                        className="overflow-y-scroll h-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] snap-y snap-mandatory px-3">
 
-                            <div ref={formSectionRef} className="h-full snap-start">
-                                <RegisterForm data={formData} onChange={setFormData} />
-                            </div>
-
-                            <div ref={planSectionRef} className="h-full snap-start">
-                                <PlanSelection selected={selectedPlan} onSelect={setSelectedPlan} />
-                            </div>
-
-                            <div ref={confirmSubmitRef} className="h-full snap-start">
-                                <ConfirmSubmit 
-                                formData={formData} 
-                                plan={selectedPlan} />
-                            </div>
-                      </div>
+                            {[formSectionRef, planSectionRef, confirmSubmitRef].map((ref, i) => (
+                                <div
+                                    key={i}
+                                    ref={ref}
+                                    style={{ height: "100%", minHeight: "100%", scrollSnapAlign: "start", flexShrink: 0 }}
+                                >
+                                    {i === 0 && <RegisterForm data={formData} onChange={setFormData} />}
+                                    {i === 1 && <PlanSelection selected={selectedPlan} onSelect={setSelectedPlan} />}
+                                    {i === 2 && <ConfirmSubmit formData={formData} plan={selectedPlan} />}
+                                </div>
+                            ))}
+                    </div>
                     
 
                     {/* Navigation buttons */}
-                    <div className="absolute bottom-8 right-8 flex flex-col gap-2 z-10">
+                    <div className="absolute bottom-2 right-2 flex flex-col gap-2 z-10">
                         <button
                             onClick={handleBack}
                             disabled={step === 1}

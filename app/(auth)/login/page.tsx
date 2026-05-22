@@ -36,10 +36,10 @@ export default function Login(){
             </div>
 
             {/* right side form */}
-            <div className="bg-black flex flex-col justify-center items-center md:space-y-7 space-y-5 lg:w-3/4 w-full h-full py-7 overflow-hidden font-display">
+            <div className="bg-black flex flex-col justify-center items-center md:space-y-10 space-y-8 lg:w-3/4 w-full h-full py-12 overflow-hidden font-display">
 
                 {/* Welcoming */}
-                <div className="flex flex-col items-start sm:w-[45%] space-y-2">
+                <div className="flex flex-col items-start lg:w-[45%] w-[80%] space-y-2">
                     <h1 className="font-bold md:text-3xl text-xl font-sans tracking-tight text-nowrap">Welcome back</h1>
                     <h3 className="font-semibold md:text-md text-xs text-muted-foreground tracking-tight text-nowrap">Sign in to your account to continue</h3>
                 </div>

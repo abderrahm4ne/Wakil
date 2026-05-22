@@ -41,58 +41,63 @@ export function LoginForm() {
 
 
   return (
-    <form onSubmit={(e) => (handleSubmit(e))} className="space-y-3 sm:w-[45%]">
-      <div className="space-y-2">
-        <Label htmlFor="email" className="text-foreground">
-          Email
-        </Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="name@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="bg-transparent border-border "
-        />
+    <form onSubmit={(e) => (handleSubmit(e))} className="space-y-7 lg:w-[45%] w-[80%] font-sans">
+      <div className="flex flex-col space-y-3">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-foreground">
+              Email
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="bg-transparent border-border "
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-foreground ">
+              Password
+            </Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="bg-transparent border-border "
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <a
+              href="#"
+              className="text-sm text-muted-foreground hover:text-muted-foreground transition-colors"
+            >
+              Forgot password?
+            </a>
+          </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="password" className="text-foreground ">
-          Password
-        </Label>
-        <Input
-          id="password"
-          type="password"
-          placeholder="••••••••"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="bg-transparent border-border "
-        />
+      <div className="flex flex-col space-y-2">
+          <Button type="submit" className="w-full bg-primary text-black py-4.5" disabled={isLoading}>
+            {isLoading ? "Signing in..." : "Sign in"}
+          </Button>
+          <p className="text-center text-sm text-muted-foreground text-nowrap">
+              {"Don't have an account? "}
+                <a href="/register" className="text-foreground hover:underline">
+                  Sign up
+                </a>
+          </p>
       </div>
-
-      <div className="flex justify-end">
-        <a
-          href="#"
-          className="text-sm text-muted-foreground hover:text-muted-foreground transition-colors"
-        >
-          Forgot password?
-        </a>
-      </div>
-
-      <Button type="submit" className="w-full bg-primary text-black py-4.5" disabled={isLoading}>
-        {isLoading ? "Signing in..." : "Sign in"}
-      </Button>
 
       {error && (<p className="text-red-500 text-md text-center font-sans">
         {error}
         </p>)}
 
-      <p className="text-center text-sm text-muted-foreground text-nowrap">
-        {"Don't have an account? "}
-        <a href="#" className="text-foreground hover:underline">
-          Sign up
-        </a>
-      </p>
+      
     </form>
   )
 }
