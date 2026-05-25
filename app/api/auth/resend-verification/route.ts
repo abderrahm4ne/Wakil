@@ -62,7 +62,11 @@ export async function POST(req: NextRequest) {
             from: 'Wakil <onboarding@resend.dev>',
             to: email,
             subject: 'Verify your email',
-            html: `<a href="${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${token}">Verify Email</a>`
+            html: ` <div style="font-family: sans-serif; line-height: 1.5; color: #333; height: 500px; width: 700px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <h2 style="color: #0070f3;">Verify Your Email</h2>
+                    <p>Click the button below to verify your email address.</p>
+                    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/verify?token=${token}" style="display: inline-block; padding: 10px 20px; background-color: #0070f3; color: #fff; text-decoration: none; border-radius: 5px; margin-top: 20px;">Verify Email</a>
+                </div>`
         })
 
         return NextResponse.json({ success: true })

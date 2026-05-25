@@ -49,8 +49,12 @@ export function LoginForm() {
             password,
             redirect: false
           })
-          
-          console.log(res)
+          if (res?.error) {
+              setError("Email or Password is wrong")
+              setIsLoading(false)
+              return
+          }
+          router.push('/dashboard')
           setIsLoading(false)
         } catch (error) {
           console.log(error)
@@ -135,20 +139,19 @@ export function LoginForm() {
       </div>
 
       {error && (
-        <p className="text-red-500/50 text-md text-center font-display">
-            {error === "Email is not verified" && (
-              <div className="text-center space-y-2">
-                  <p className="text-yellow-700 text-sm">Email not verified.</p>
-                  <button
+          <div className="text-center space-y-2">
+              <p className="text-red-500/70 text-sm">{error}</p>
+                  {error === "Email is not verified" && (
+                    <button
                       type="button"
                       onClick={handleResendVerification}
-                      className="text-red-800 text-sm hover:underline"
-                  >
-                      Resend verification email
-                  </button>
-              </div>
-            )}
-        </p>)}
+                      className="text-secondary text-sm hover:underline"
+                    >
+                        Resend verification email
+                    </button>
+              )}
+          </div>
+      )}
       {emailSent && (
         <p className="text-green-500 text-md text-center font-sans">
           {emailSent}
