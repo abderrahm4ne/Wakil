@@ -46,3 +46,5 @@ next-env.d.ts
 .env.development
 useful.txt
 /generated/prisma
+
+app/api/dev

@@ -57,14 +57,15 @@ export function ConfirmSubmit({ formData, plan }: ConfirmSubmitProps) {
             })
 
             const data = await res.json()
-
-            if (!data.sucess) {
+            console.log(data)
+            if (!data.success) {
                 setError(data.error || "Something went wrong")
                 return
             }
             alert("A verification email has been sent to your email, verify your email and login")
             router.push("/login?registered=true")
-        } catch {
+        } catch (err){
+            console.log(err)
             setError("Something went wrong")
         } finally {
             setIsLoading(false)
@@ -80,15 +81,15 @@ export function ConfirmSubmit({ formData, plan }: ConfirmSubmitProps) {
                 <div className="p-4 rounded-lg border border-secondary/40 space-y-3">
                     <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Name</span>
-                        <span className="text-white">{formData.name || "—"}</span>
+                        <span className="text-white text-wrap">{formData.name || "—"}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Email</span>
-                        <span className="text-white">{formData.email || "—"}</span>
+                        <span className="text-white text-wrap">{formData.email || "—"}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Password</span>
-                        <span className="text-white">{"•".repeat(formData.password.length) || "—"}</span>
+                        <span className="text-white text-wrap">{"•".repeat(formData.password.length) || "—"}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Plan</span>

@@ -22,6 +22,8 @@ model User {
   verifyTokenExpires DateTime?
   resetToken         String?
   resetTokenExpires  DateTime?
+  verificationAttempts  Int       @default(0)
+  lastVerificationSent  DateTime?
   createdAt          DateTime      @default(now())
   updatedAt          DateTime      @updatedAt
   bot                Bot?

@@ -3,6 +3,7 @@ import Credentials from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { authConfig } from "@/auth.config"
+import { error } from 'console'
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -18,14 +19,20 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                     where: { email: credentials.email as string }
                 })
 
-
                 // validate
-                if (!user || !user.emailVerified) return null
+                if(!user){
+                    throw new Error ("USER_NOT_FOUND")
+                }
+
+                if (!user.emailVerified) {
+                    throw new Error ("EMAIL_NOT_VERFIED")
+                }
 
                 const valid = await bcrypt.compare(
                     credentials.password as string,
                     user.password
                 )
+
                 if (!valid) return null
 
                 return {

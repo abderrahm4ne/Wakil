@@ -3,6 +3,9 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
+import { EyeOff, Eye } from 'lucide-react';
+import { useState } from "react";
+
 interface RegisterFormProps {
     data: {
         name: string
@@ -18,6 +21,11 @@ export function RegisterForm({ data, onChange }: RegisterFormProps) {
     const update = (field: string, value: string) => {
         onChange({ ...data, [field]: value })
     }
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const passType = showPassword ? 'text' : 'password'
+    const ConfPassType = showConfirmPassword ? 'text' : 'password'
+
 
     return (
       <div
@@ -58,28 +66,38 @@ export function RegisterForm({ data, onChange }: RegisterFormProps) {
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 relative">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                type="password"
+                type={passType}
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => update("password" ,e.target.value)}
                 className="bg-transparent border-border"
               />
+              {showPassword ? (
+                <button type="button" onClick={() => setShowPassword(s => !s)}><EyeOff size={19} className="absolute right-3 top-10 -translate-y-1/2 text-white/60 hover:text-white/40 transition-colors hover:cursor-pointer"/></button>
+              ) : (
+                <button type="button" onClick={() => setShowPassword(s => !s)}><Eye size={19} className="absolute right-3 top-10 -translate-y-1/2 text-white/60 hover:text-white/40 transition-colors hover:cursor-pointer"/></button>
+              )}
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-2 bg relative">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <Input
                 id="confirmPassword"
-                type="password"
+                type={ConfPassType}
                 placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => update("confirmPassword" ,e.target.value)}
                 className="bg-transparent border-border"
               />
+              {showConfirmPassword ? (
+                <button type="button" onClick={() => setShowConfirmPassword(s => !s)}><EyeOff size={19} className="absolute right-3 top-10 -translate-y-1/2 text-white/60 hover:text-white/40 transition-colors hover:cursor-pointer"/></button>
+              ) : (
+                <button type="button" onClick={() => setShowConfirmPassword(s => !s)}><Eye size={19} className="absolute right-3 top-10 -translate-y-1/2 text-white/60 hover:text-white/40 transition-colors hover:cursor-pointer"/></button>
+              )}
             </div>
 
           </form>

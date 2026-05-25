@@ -71,7 +71,7 @@ export default function Register() {
                 >
                     <div
                         ref={containerRef}
-                        className="overflow-y-scroll h-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] snap-y snap-mandatory px-3">
+                        className="overflow-y-hidden h-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] snap-y snap-mandatory px-3">
 
                             {[formSectionRef, planSectionRef, confirmSubmitRef].map((ref, i) => (
                                 <div
