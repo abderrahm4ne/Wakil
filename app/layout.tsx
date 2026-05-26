@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   description: "Wakil, your bot helper",
 };
 
+import { SessionProvider } from "@/providers/session-provider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,7 +33,11 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${jakarta.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <SessionProvider>
+          {children}
+        </SessionProvider>
+      </body>
     </html>
   );
 }

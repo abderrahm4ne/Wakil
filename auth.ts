@@ -3,7 +3,6 @@ import Credentials from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { authConfig } from "@/auth.config"
-import { error } from 'console'
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -15,17 +14,23 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             },
             async authorize(credentials) {
                 if (!credentials?.email || !credentials.password) return null
+                
+                // console.log("Auth attempt for:", credentials.email)
+                
                 const user = await prisma.user.findUnique({
                     where: { email: credentials.email as string }
                 })
 
-                // validate
                 if(!user){
+                    // console.log("Auth failed: User not found")
                     throw new Error ("USER_NOT_FOUND")
                 }
 
+                // console.log("User found, emailVerified:", user.emailVerified)
+
                 if (!user.emailVerified) {
-                    throw new Error ("EMAIL_NOT_VERFIED")
+                    console.log("Auth failed: Email not verified")
+                    throw new Error ("EMAIL_NOT_VERIFIED")
                 }
 
                 const valid = await bcrypt.compare(
@@ -33,7 +38,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                     user.password
                 )
 
-                if (!valid) return null
+                if (!valid) {
+                    // console.log("Auth failed: Invalid password")
+                    return null
+                }
+
+                // console.log("Auth success for:", user.email)
 
                 return {
                     id: user.id,
@@ -44,6 +54,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         })
     ],
     callbacks: {
+        ...authConfig.callbacks,
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id
@@ -51,14 +62,16 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                 const sub = await prisma.subscription.findFirst({
                     where : { userId: user.id },
                 })
-                token.plan = sub?.plan || 'FREE'
+                token.plan = sub?.plan || 'FREE_TRIAL'
             }
             return token
         },
         async session({ session, token }) {
-        session.user.id = token.id as string
-        session.user.plan = token.plan as string
-        return session
+            if (session.user) {
+                session.user.id = token.id as string
+                session.user.plan = token.plan as string
+            }
+            return session
         }
     },
     pages: {

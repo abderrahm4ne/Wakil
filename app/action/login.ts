@@ -15,7 +15,7 @@ export async function validateLogin(email: string, password: string) {
       return { error: "EMAIL_NOT_VERIFIED" }
    }
 
-   const passwordCheck = bcrypt.compare(
+   const passwordCheck = await bcrypt.compare(
                             password,
                             user.password
                         )
