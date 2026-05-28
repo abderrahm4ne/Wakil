@@ -37,13 +37,11 @@ export async function POST(req: NextRequest) {
           where: { userId: session.user.id }
       })
 
-      if (!subscription || !subscription.isActive) {
+      if (!subscription) {
           return NextResponse.json(
-            { success: false, error: 'NO_ACTIVE_SUBSCRIPTION' }, { status: 403 }  
+            { success: false, error: 'NO_SUBSCRIPTION_FOUND' }, { status: 403 }  
           )
       }
-
-      
 
       const languageLine = subscription?.plan === 'STARTER' || subscription?.plan === 'FREE_TRIAL'
       ? 'You communicate in Arabic and French. Always reply in the same language the customer uses.'
@@ -78,7 +76,6 @@ export async function POST(req: NextRequest) {
         { success: false, error: 'MISSING_FIELDS' }, { status: 400 }
       )
 
-      // Check if Merchant already has a bot already exists
       const existing = await prisma.bot.findUnique({
         where: { userId: session.user.id }
       })
@@ -86,18 +83,25 @@ export async function POST(req: NextRequest) {
         { success: false, error: 'BOT_ALREADY_EXISTS' }, { status: 409 }
       )
 
-      const bot = await prisma.bot.create({
-        data: {
-          name,
-          languages,
-          type,
-          systemPrompt,
-          storeName,
-          storeCity,
-          storeContact,
-          userId: session.user.id
-        }
-      })
+      // Use transaction to create bot and activate subscription
+      const [bot] = await prisma.$transaction([
+        prisma.bot.create({
+          data: {
+            name,
+            languages,
+            type,
+            systemPrompt,
+            storeName,
+            storeCity,
+            storeContact,
+            userId: session.user.id
+          }
+        }),
+        prisma.subscription.update({
+          where: { userId: session.user.id },
+          data: { isActive: true }
+        })
+      ])
 
       return NextResponse.json({ success: true, data: bot }, { status: 201 })
 

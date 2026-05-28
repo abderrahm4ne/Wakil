@@ -11,10 +11,24 @@ export async function PATCH(req: NextRequest) {
 
         const { isActive } = await req.json()
         
-        const bot = await prisma.bot.update({
+        const updateData: any = [
+          prisma.bot.update({
             where: { userId: session.user.id },
             data: { isActive }
-        })
+          })
+        ]
+
+        if (isActive === true) {
+          updateData.push(
+            prisma.subscription.update({
+              where: { userId: session.user.id },
+              data: { isActive: true }
+            })
+          )
+        }
+
+        const [bot] = await prisma.$transaction(updateData)
+
         return NextResponse.json({ success: true, data: bot })
         }
         catch (err){

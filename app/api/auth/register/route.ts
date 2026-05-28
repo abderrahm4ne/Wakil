@@ -52,7 +52,10 @@ export async function POST(req: NextRequest) {
               verifyToken: token,
               verifyTokenExpires: expires,
               subscription: {
-                create: { plan: plan }
+                create: { 
+                  plan: plan,
+                  isActive: false
+                }
               }
             }
           })
