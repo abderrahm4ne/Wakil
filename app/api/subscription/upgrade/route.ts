@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
             where: { userId: session.user.id },
             data: {
                 plan: plan as Plan,
-                isActive: true,
+                isActive: false,
                 startDate: start,
                 endDate: end,
             }

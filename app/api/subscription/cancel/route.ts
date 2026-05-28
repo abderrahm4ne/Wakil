@@ -24,11 +24,6 @@ export async function POST(req: NextRequest) {
             )
         }
 
-        const current = await prisma.subscription.findUnique({
-            where: { userId: session.user.id }
-        })
-
-
         const subscription = await prisma.subscription.update({
             where: { userId: session.user.id },
             data: {
