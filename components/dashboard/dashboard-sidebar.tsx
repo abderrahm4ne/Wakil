@@ -30,11 +30,6 @@ const navItems = [
     icon: Radio,
   },
   {
-    label: 'Rules',
-    href: '/dashboard/rules',
-    icon: Zap,
-  },
-  {
     label: 'Conversations',
     href: '/dashboard/conversations',
     icon: MessageSquare,

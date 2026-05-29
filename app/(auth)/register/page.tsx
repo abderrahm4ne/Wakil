@@ -41,9 +41,13 @@ export default function Register() {
     }
 
     return (
-        <div className="flex items-center justify-center h-screen bg-background">
+        <div className="relative flex items-center justify-center h-screen bg-background">
+            <div className="absolute inset-0 opacity-20 overflow-x-hidden">
+                <div className="absolute top-40 lg:-left-10 -left-75 w-80 h-80 bg-blue-600 rounded-full blur-3xl"></div>
+                <div className="absolute top-40 -lg:right-10 -right-75 w-80 h-80 bg-blue-600 rounded-full blur-3xl"></div>
+            </div>
             <div
-                className="flex w-3/4 rounded-2xl overflow-hidden"
+                className="flex w-3/4 rounded-2xl overflow-hidden z-10"
                 style={{ boxShadow: "-5px 4px 10px rgba(255, 255, 255, 0.1)", height: "75vh" }}
             >
                 {/* left side gradient */}

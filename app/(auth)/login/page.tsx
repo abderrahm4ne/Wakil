@@ -3,8 +3,14 @@ import WakilLogo from "@/components/common/WakilLogo"
 
 export default function Login(){
     return(
-    <div className="flex items-center justify-center h-screen bg-background" >
-        <div className="flex lg:h-3/4 w-3/4 rounded-2xl overflow-hidden" style={{
+    <div className="relative flex items-center justify-center h-screen bg-background" >
+
+        <div className="absolute inset-0 opacity-20 overflow-x-hidden">
+            <div className="absolute top-40 lg:-left-10 -left-75 w-80 h-80 bg-blue-600 rounded-full blur-3xl"></div>
+            <div className="absolute top-40 -lg:right-10 -right-75 w-80 h-80 bg-blue-600 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="flex lg:h-3/4 w-3/4 rounded-2xl overflow-hidden z-10" style={{
         boxShadow: "-5px 4px 10px rgba(255, 255, 255, 0.1)"
     }}>
            

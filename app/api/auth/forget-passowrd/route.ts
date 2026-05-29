@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
         // Send reset email
         await resend.emails.send({
-            from: 'Wakil <noreply@wakil.dz>',
+            from: 'Wakil <onboarding@resend.dev>',
             to: email,
             subject: 'Verify your email',
             html: `<div style="font-family: sans-serif; line-height: 1.5; color: #333; height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center;">

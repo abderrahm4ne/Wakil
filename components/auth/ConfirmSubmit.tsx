@@ -106,6 +106,12 @@ export function ConfirmSubmit({ formData, plan }: ConfirmSubmitProps) {
                 >
                     {isLoading ? "Creating account..." : "Create account"}
                 </Button>
+                <p className="text-center text-sm text-muted-foreground text-nowrap">
+                    {"Existing account? "}
+                        <a href="/login" className="text-foreground hover:underline">
+                        Sign in
+                        </a>
+                </p>
             </div>
         </div>
     )

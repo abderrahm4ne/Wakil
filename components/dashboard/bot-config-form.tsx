@@ -98,7 +98,7 @@ export function BotConfigForm({ onSuccess, initialData }: BotConfigFormProps) {
   };
 
   const toggleLanguage = (lang: string) => {
-    if (lang === "DARIJA" && (formData.type === "RULE_BASED" || plan === "FREE_TRIAL")) {
+    if (lang === "DARIJA" && (formData.type === "RULE_BASED" )) {
       return;
     }
 
@@ -141,11 +141,13 @@ export function BotConfigForm({ onSuccess, initialData }: BotConfigFormProps) {
                 className="w-full bg-slate-950 border-slate-800 text-white rounded-md p-2"
               >
                 <option value="RULE_BASED">Rule Based</option>
-                <option 
-                    value="AI_POWERED" 
-                    disabled={plan === "FREE_TRIAL" || plan === "STARTER"}
+                <option
+                  value="AI_POWERED"
+                  disabled={plan === "FREE_TRIAL" || plan === "STARTER"}
                 >
-                    AI Powered {(plan === "FREE_TRIAL" || plan === "STARTER") ? "(Pro+ only)" : ""}
+                  {plan === "FREE_TRIAL" || plan === "STARTER"
+                    ? "AI Powered (Pro+ only)"
+                    : "AI Powered"}
                 </option>
               </select>
             </div>

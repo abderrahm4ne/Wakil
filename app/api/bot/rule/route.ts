@@ -2,6 +2,37 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 
+export async function GET() {
+    try {
+        const session = await auth()
+        if (!session) return NextResponse.json(
+            { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
+        )
+
+        const bot = await prisma.bot.findUnique({ where: { userId: session.user.id } })
+        if (!bot) return NextResponse.json(
+            { success: false, error: 'BOT_NOT_FOUND' }, { status: 404 }
+        )
+
+        if (bot.type === 'AI_POWERED') return NextResponse.json(
+            { success: false, error: 'AI_BOTS_HAVE_NO_RULES' }, { status: 403 }
+        )
+
+        const rules = await prisma.rule.findMany({
+            where: { botId: bot.id },
+            orderBy: { order: 'asc' }
+        })
+
+        return NextResponse.json({ success: true, data: rules })
+
+    } catch (err) {
+        console.error('error in rule bulk GET route', err)
+        return NextResponse.json(
+            { success: false, error: 'SERVER_ERROR' }, { status: 500 }
+        )
+    }
+}
+
 export async function POST(req: NextRequest) {
     try {
         const session = await auth()
