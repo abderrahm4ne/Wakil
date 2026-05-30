@@ -41,11 +41,13 @@ export default function Register() {
     }
 
     return (
-        <div className="relative flex items-center justify-center h-screen bg-background">
-            <div className="absolute inset-0 opacity-20 overflow-x-hidden">
-                <div className="absolute top-40 lg:-left-10 -left-75 w-80 h-80 bg-blue-600 rounded-full blur-3xl"></div>
-                <div className="absolute top-40 -lg:right-10 -right-75 w-80 h-80 bg-blue-600 rounded-full blur-3xl"></div>
+        <div className="relative flex items-center justify-center h-screen bg-black/90">
+
+            <div className="absolute inset-0 opacity-30 overflow-hidden">
+                <div className="absolute top-40 -left-40 w-80 h-80 bg-linear-to-r from-secondary/70 to-green-600/45 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-40 -right-40 w-80 h-80 bg-linear-to-r from-secondary/70 to-green-600/45 rounded-full blur-3xl"></div>
             </div>
+
             <div
                 className="flex w-3/4 rounded-2xl overflow-hidden z-10"
                 style={{ boxShadow: "-5px 4px 10px rgba(255, 255, 255, 0.1)", height: "75vh" }}

@@ -27,7 +27,7 @@ export default function LandingHowItWorks() {
   return (
     <section id="how-it-works" className="bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 font-display">
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
             How It Works
           </h2>
@@ -47,7 +47,7 @@ export default function LandingHowItWorks() {
                   <div className="w-20 h-20 bg-linear-to-br from-secondary/70 to-green-600/45 rounded-full flex items-center justify-center mb-4">
                     <Icon className="w-10 h-10 text-white" />
                   </div>
-                  <div className="absolute -top-3 -right-3 w-8 h-8 bg-black border-2 border-cyan-600 rounded-full flex items-center justify-center text-cyan-400 font-bold text-sm">
+                  <div className="absolute -top-3 -right-3 w-8 h-8 bg-black border-2 border-green-600/75 rounded-full flex items-center justify-center text-green-400 font-bold text-sm">
                     {step.number}
                   </div>
                 </div>

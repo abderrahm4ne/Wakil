@@ -33,7 +33,7 @@ export default function LandingNavbar() {
           {/* CTA Button */}
           <Link
             href="/register"
-            className="px-6 py-2.5 bg-linear-to-r from-secondary/70 to-green-600/45 text-white rounded-full font-semibold hover:shadow-sm hover:shadow-cyan-500/50 transition-all"
+            className="px-6 py-2.5 bg-linear-to-r from-secondary/70 to-green-600/45 text-white rounded-full font-semibold hover:shadow-sm hover:shadow-green-300/50 transition-all"
           >
             Start Free Trial
           </Link>

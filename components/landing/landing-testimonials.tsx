@@ -8,21 +8,18 @@ const testimonials = [
     role: 'Fashion Store Owner, Algiers',
     content: 'Botify a complètement changé ma façon de gérer mes commandes. Je réponds maintenant à 10x plus de clients en même temps, tout en dormant! Mes ventes ont augmenté de 40% en deux mois.',
     rating: 5,
-    avatar: '👩‍💼'
   },
   {
     name: 'Karim Djakoum',
     role: 'Electronics Seller, Oran',
     content: 'L\'IA comprend le Darija et l\'arabe parfaitement. Mes clients se sentent respectés quand le bot répond dans leur langue maternelle. C\'est incroyable pour la confiance et les conversions!',
     rating: 5,
-    avatar: '👨‍💼'
   },
   {
     name: 'Leila Chabane',
     role: 'Beauty Products Entrepreneur, Constantine',
     content: 'Le setup a pris 3 minutes, pas plus! Pas besoin de développeur ou de configuration compliquée. Juste brancher mon Facebook et c\'était parti. Meilleur investissement pour mon business.',
     rating: 5,
-    avatar: '👩‍🔬'
   }
 ];
 
@@ -30,7 +27,7 @@ export default function LandingTestimonials() {
   return (
     <section className="bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 font-display">
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
             Loved by Algerian Merchants
           </h2>
@@ -41,12 +38,12 @@ export default function LandingTestimonials() {
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="backdrop-blur-sm bg-white/10 border border-neutral-700 rounded-xl p-6 hover:border-cyan-500/50 transition-colors"
+              className="backdrop-blur-sm bg-white/10 border border-border rounded-xl p-6 hover:border-green-500/50 transition-colors"
             >
               {/* Stars */}
               <div className="flex gap-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-cyan-400 text-cyan-400" />
+                  <Star key={i} className="w-4 h-4 fill-green-400 text-green-400" />
                 ))}
               </div>
 
@@ -54,13 +51,10 @@ export default function LandingTestimonials() {
               <p className="text-neutral-200 mb-6 italic">"{testimonial.content}"</p>
 
               {/* Author */}
-              <div className="flex items-center gap-3">
-                <div className="text-3xl">{testimonial.avatar}</div>
                 <div>
                   <p className="text-white font-semibold text-sm">{testimonial.name}</p>
                   <p className="text-neutral-400 text-xs">{testimonial.role}</p>
                 </div>
-              </div>
             </div>
           ))}
         </div>

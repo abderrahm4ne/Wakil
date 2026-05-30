@@ -11,10 +11,10 @@ export default function LandingFooter() {
           {/* Brand */}
           <div>
             <Link href="/" className="flex items-center gap-2 font-bold text-lg mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-linear-to-r from-secondary/70 to-green-600/45 rounded-lg flex items-center justify-center">
                 <MessageCircle className="w-5 h-5 text-white" />
               </div>
-              <span className="text-white">Botify</span>
+              <span className="text-white font-semibold">Botify</span>
             </Link>
             <p className="text-neutral-400 text-sm">AI-powered chatbot for Algerian e-commerce merchants</p>
           </div>
@@ -44,7 +44,7 @@ export default function LandingFooter() {
             <h4 className="text-white font-semibold mb-4">Get Started</h4>
             <Link
               href="/register"
-              className="inline-block px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all text-sm"
+              className="inline-block px-4 py-2 bg-linear-to-r from-secondary/70 to-green-600/45 text-white rounded-lg font-semibold hover:shadow-sm hover:shadow-green-500/50 transition-all text-sm"
             >
               Start Free Trial
             </Link>
@@ -52,9 +52,9 @@ export default function LandingFooter() {
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-neutral-800 pt-8 flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-neutral-500 text-sm">© 2024 Botify. All rights reserved.</p>
-          <p className="text-neutral-500 text-sm mt-4 sm:mt-0">Made in Algeria 🇩🇿</p>
+        <div className="border-t border-neutral-800 pt-8 flex flex-col sm:flex-row justify-between items-center ">
+          <p className="text-neutral-500 text-sm">© 2026 Botify. All rights reserved.</p>
+          <p className="text-neutral-500 text-sm mt-4 sm:mt-0">Made in Algeria </p>
         </div>
       </div>
     </footer>
