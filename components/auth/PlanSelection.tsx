@@ -2,40 +2,7 @@
 
 
 import { Check } from "lucide-react"
-
-const plans = [
-    {
-        id: "0",
-        name: "FreeTrial",
-        price: 0,
-        description: "Perfect for discovering Wakil",
-        features: ["500 DMs/month", "Rule-based bot", "Basic analytics"],
-        popular: false,
-    },{
-        id: "1",
-        name: "Starter",
-        price: 1500,
-        description: "Perfect for getting started",
-        features: ["2000 DMs/month", "Rule-based bot", "Basic analytics", "Email support"],
-        popular: false,
-    },
-    {
-        id: "2",
-        name: "Pro",
-        price: 4000,
-        description: "For growing businesses",
-        features: ["10,000 DMs/month", "AI-powered bot", "Advanced analytics", "Priority support"],
-        popular: true,
-    },
-    {
-        id: "3",
-        name: "Business",
-        price: 9000,
-        description: "For large scale operations",
-        features: ["Unlimited DMs", "AI-powered bot", "Full analytics", "24/7 support"],
-        popular: false,
-    },
-]
+import { useTranslation } from "react-i18next"
 
 interface PlanSelectionProps {
     selected: string
@@ -43,6 +10,41 @@ interface PlanSelectionProps {
 }
 
 export function PlanSelection({ selected, onSelect }: PlanSelectionProps) {
+    const { t } = useTranslation(['auth', 'landing'])
+
+    const plans = [
+        {
+            id: "0",
+            name: "FreeTrial",
+            price: 0,
+            description: t('pricing.plans.free.description', { ns: 'landing' }),
+            features: t('pricing.plans.free.features', { ns: 'landing', returnObjects: true }) as string[],
+            popular: false,
+        },{
+            id: "1",
+            name: "Starter",
+            price: 1500,
+            description: t('pricing.plans.starter.description', { ns: 'landing' }),
+            features: t('pricing.plans.starter.features', { ns: 'landing', returnObjects: true }) as string[],
+            popular: false,
+        },
+        {
+            id: "2",
+            name: "Pro",
+            price: 4000,
+            description: t('pricing.plans.pro.description', { ns: 'landing' }),
+            features: t('pricing.plans.pro.features', { ns: 'landing', returnObjects: true }) as string[],
+            popular: true,
+        },
+        {
+            id: "3",
+            name: "Business",
+            price: 9000,
+            description: t('pricing.plans.business.description', { ns: 'landing' }),
+            features: t('pricing.plans.business.features', { ns: 'landing', returnObjects: true }) as string[],
+            popular: false,
+        },
+    ]
 
     return (
       <div
@@ -50,8 +52,8 @@ export function PlanSelection({ selected, onSelect }: PlanSelectionProps) {
         >
           <div className="sm:w-[85%] w-full space-y-4">
             <div className="space-y-1 place-self-center">
-              <h2 className="font-bold md:text-3xl text-xl font-sans tracking-tight">Choose your plan</h2>
-              <p className="text-xs text-muted-foreground">Pick the plan that works best for you</p>
+              <h2 className="font-bold md:text-3xl text-xl font-sans tracking-tight">{t('pricing.title', { ns: 'landing' })}</h2>
+              <p className="text-xs text-muted-foreground">{t('pricing.subtitle', { ns: 'landing' })}</p>
             </div>
 
             <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
@@ -74,7 +76,7 @@ export function PlanSelection({ selected, onSelect }: PlanSelectionProps) {
                   {tier.popular && (
                       <div className="absolute -top-2 left-4">
                           <span className="inline-block bg-emerald-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                              Popular
+                              {t('pricing.plans.pro.badge', { ns: 'landing' })}
                           </span>
                       </div>
                     )}

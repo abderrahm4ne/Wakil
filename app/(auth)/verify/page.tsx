@@ -5,10 +5,12 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import WakilLogo from '@/components/common/WakilLogo'
 import { X, Check } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 type Status = 'loading' | 'success' | 'error'
 
 export default function VerifyPage() {
+  const { t } = useTranslation('auth')
   const searchParams = useSearchParams()
   const router = useRouter()
   const token = searchParams.get('token')
@@ -18,7 +20,7 @@ export default function VerifyPage() {
   useEffect(() => {
     if (!token) {
       setStatus('error')
-      setMessage('Invalid verification link.')
+      setMessage(t('verify.invalidToken'))
       return
     }
 
@@ -29,21 +31,21 @@ export default function VerifyPage() {
 
       if (res.status === 0 || res.ok || res.type === 'opaqueredirect') {
         setStatus('success')
-        setMessage('Your email has been verified successfully!')
+        setMessage(t('verify.successMessage'))
         setTimeout(() => router.push('/login?verified=true'), 3000)
       } else {
         const data = await res.json().catch(() => ({}))
         setStatus('error')
         setMessage(
           data.error === 'INVALID_OR_EXPIRED_TOKEN'
-            ? 'This link has expired or already been used.'
-            : 'Something went wrong. Please try again.'
+            ? t('verify.expiredToken')
+            : t('verify.somethingWrong')
         )
       }
     }
 
     verify()
-  }, [token])
+  }, [token, t, router])
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background px-4">
@@ -60,8 +62,8 @@ export default function VerifyPage() {
             <>
               <div className="w-16 h-16 rounded-full border-4 border-secondary border-t-transparent animate-spin" />
               <div className="text-center space-y-2">
-                <h1 className="text-2xl font-bold text-foreground">Verifying your email</h1>
-                <p className="text-muted-foreground">Please wait a moment...</p>
+                <h1 className="text-2xl font-bold text-foreground" suppressHydrationWarning>{t('verify.verifying')}</h1>
+                <p className="text-muted-foreground" suppressHydrationWarning>{t('verify.wait')}</p>
               </div>
             </>
           )}
@@ -73,15 +75,15 @@ export default function VerifyPage() {
                 <Check className='text-green-600 ' size={74} />
               </div>
               <div className="text-center space-y-2">
-                <h1 className="text-2xl font-bold text-foreground">You're verified!</h1>
-                <p className="text-muted-foreground">{message}</p>
-                <p className="text-sm text-muted-foreground">Redirecting to login in 3 seconds...</p>
+                <h1 className="text-2xl font-bold text-foreground" suppressHydrationWarning>{t('verify.success')}</h1>
+                <p className="text-muted-foreground" suppressHydrationWarning>{message}</p>
+                <p className="text-sm text-muted-foreground" suppressHydrationWarning>{t('verify.redirecting')}</p>
               </div>
               <Link
                 href="/login?verified=true"
                 className="w-full text-center py-2.5 px-4 rounded-lg bg-secondary text-white font-medium hover:bg-secondary/90 transition-colors"
               >
-                Sign in now
+                {t('verify.signInNow')}
               </Link>
             </>
           )}
@@ -93,28 +95,28 @@ export default function VerifyPage() {
                 <X className='text-red-700' size={74}/>
               </div>
               <div className="text-center space-y-2">
-                <h1 className="text-2xl font-bold text-foreground">Verification Failed</h1>
-                <p className="text-muted-foreground">{message}</p>
+                <h1 className="text-2xl font-bold text-foreground" suppressHydrationWarning>{t('verify.failed')}</h1>
+                <p className="text-muted-foreground" suppressHydrationWarning>{message}</p>
               </div>
               <div className="w-full flex flex-col gap-3">
                 <Link
                   href="/register"
                   className="w-full text-center py-2.5 px-4 rounded-lg bg-secondary text-white font-medium hover:bg-secondary/90 transition-colors"
                 >
-                  Register again
+                  {t('verify.registerAgain')}
                 </Link>
                 <Link
                   href="/login"
                   className="w-full text-center py-2.5 px-4 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
                 >
-                  Back to login
+                  {t('verify.backToLogin')}
                 </Link>
               </div>
             </>
           )}
         </div>
 
-        <p className="text-sm text-muted-foreground">© 2026 Wakil. All rights reserved.</p>
+        <p className="text-sm text-muted-foreground">© 2026 Wakil. {t('footer.rights', { ns: 'landing' })}.</p>
       </div>
     </div>
   )

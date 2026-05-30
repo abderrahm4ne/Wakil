@@ -1,49 +1,52 @@
 'use client';
 
 import { Globe, Bot, MessageCircle, BarChart3, Zap, Bell } from 'lucide-react';
-
-const features = [
-  {
-    icon: Globe,
-    title: 'Multilingual Replies',
-    description: 'Arabic, French, and Darija support for seamless communication'
-  },
-  {
-    icon: Bot,
-    title: 'Rule-Based or AI',
-    description: 'Choose your automation style based on your business needs'
-  },
-  {
-    icon: MessageCircle,
-    title: 'Facebook & Instagram',
-    description: 'Manage all your DMs in one unified dashboard'
-  },
-  {
-    icon: BarChart3,
-    title: 'Usage Analytics',
-    description: 'Track your messages and bot performance monthly'
-  },
-  {
-    icon: Zap,
-    title: 'Instant Setup',
-    description: 'Connect your pages in under 5 minutes, no coding required'
-  },
-  {
-    icon: Bell,
-    title: 'Smart Escalation',
-    description: 'Get notified instantly when your bot needs human help'
-  }
-];
+import { useTranslation } from 'react-i18next';
 
 export default function LandingFeatures() {
+  const { t } = useTranslation('landing');
+
+  const features = [
+    {
+      icon: Globe,
+      title: t('features.items.multilingual.title'),
+      description: t('features.items.multilingual.description')
+    },
+    {
+      icon: Bot,
+      title: t('features.items.ai.title'),
+      description: t('features.items.ai.description')
+    },
+    {
+      icon: MessageCircle,
+      title: t('features.items.meta.title'),
+      description: t('features.items.meta.description')
+    },
+    {
+      icon: BarChart3,
+      title: t('features.items.analytics.title'),
+      description: t('features.items.analytics.description')
+    },
+    {
+      icon: Zap,
+      title: t('features.items.setup.title'),
+      description: t('features.items.setup.description')
+    },
+    {
+      icon: Bell,
+      title: t('features.items.escalation.title'),
+      description: t('features.items.escalation.description')
+    }
+  ];
+
   return (
     <section id="features" className="bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-display font-semibold text-white mb-4">
-            Powerful Features for Smart Merchants
+            {t('features.title')}
           </h2>
-          <p className="text-muted-foreground text-lg font-display">Everything you need to automate your customer support</p>
+          <p className="text-muted-foreground text-lg font-display">{t('features.subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

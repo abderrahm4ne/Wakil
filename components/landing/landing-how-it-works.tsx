@@ -1,42 +1,45 @@
 'use client';
 
 import { Settings, Link as LinkIcon, Zap } from 'lucide-react';
-
-const steps = [
-  {
-    icon: Settings,
-    number: '1',
-    title: 'Create Your Bot',
-    description: 'Configure your bot name, language, and automation rules'
-  },
-  {
-    icon: LinkIcon,
-    number: '2',
-    title: 'Connect Your Page',
-    description: 'Link your Instagram & Facebook pages in one click'
-  },
-  {
-    icon: Zap,
-    number: '3',
-    title: 'Instant Replies',
-    description: 'Your customers get instant, intelligent responses 24/7'
-  }
-];
+import { useTranslation } from 'react-i18next';
 
 export default function LandingHowItWorks() {
+  const { t } = useTranslation('landing');
+
+  const steps = [
+    {
+      icon: Settings,
+      number: '1',
+      title: t('howItWorks.steps.step1.title'),
+      description: t('howItWorks.steps.step1.description')
+    },
+    {
+      icon: LinkIcon,
+      number: '2',
+      title: t('howItWorks.steps.step2.title'),
+      description: t('howItWorks.steps.step2.description')
+    },
+    {
+      icon: Zap,
+      number: '3',
+      title: t('howItWorks.steps.step3.title'),
+      description: t('howItWorks.steps.step3.description')
+    }
+  ];
+
   return (
     <section id="how-it-works" className="bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16 font-display">
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-            How It Works
+            {t('howItWorks.title')}
           </h2>
-          <p className="text-neutral-400 text-lg">Get started in three simple steps</p>
+          <p className="text-neutral-400 text-lg">{t('howItWorks.subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
           {/* Connecting lines  */}
-          <div className="hidden md:block absolute top-1/3 left-0 right-0 h-1 bg-linear-to-r from-transparent via-cyan-600/50 to-transparent -z-10"></div>
+          <div className="hidden md:block absolute top-1/3 left-0 right-0 h-1 bg-linear-to-r from-transparent via-green-600/50 to-transparent -z-10"></div>
 
           {steps.map((step, index) => {
             const Icon = step.icon;

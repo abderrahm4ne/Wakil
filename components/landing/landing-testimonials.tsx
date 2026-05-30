@@ -1,37 +1,25 @@
 'use client';
 
 import { Star } from 'lucide-react';
-
-const testimonials = [
-  {
-    name: 'Fatima Benali',
-    role: 'Fashion Store Owner, Algiers',
-    content: 'Botify a complètement changé ma façon de gérer mes commandes. Je réponds maintenant à 10x plus de clients en même temps, tout en dormant! Mes ventes ont augmenté de 40% en deux mois.',
-    rating: 5,
-  },
-  {
-    name: 'Karim Djakoum',
-    role: 'Electronics Seller, Oran',
-    content: 'L\'IA comprend le Darija et l\'arabe parfaitement. Mes clients se sentent respectés quand le bot répond dans leur langue maternelle. C\'est incroyable pour la confiance et les conversions!',
-    rating: 5,
-  },
-  {
-    name: 'Leila Chabane',
-    role: 'Beauty Products Entrepreneur, Constantine',
-    content: 'Le setup a pris 3 minutes, pas plus! Pas besoin de développeur ou de configuration compliquée. Juste brancher mon Facebook et c\'était parti. Meilleur investissement pour mon business.',
-    rating: 5,
-  }
-];
+import { useTranslation } from 'react-i18next';
 
 export default function LandingTestimonials() {
+  const { t } = useTranslation('landing');
+
+  const testimonials = t('testimonials.items', { returnObjects: true }) as Array<{
+    name: string;
+    role: string;
+    content: string;
+  }>;
+
   return (
     <section className="bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16 font-display">
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-            Loved by Algerian Merchants
+            {t('testimonials.title')}
           </h2>
-          <p className="text-neutral-400 text-lg">See what our customers are saying</p>
+          <p className="text-neutral-400 text-lg">{t('testimonials.subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -42,7 +30,7 @@ export default function LandingTestimonials() {
             >
               {/* Stars */}
               <div className="flex gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
+                {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 fill-green-400 text-green-400" />
                 ))}
               </div>

@@ -1,0 +1,143 @@
+{
+  "navbar": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "howItWorks": "How It Works",
+    "startFreeTrial": "Start Free Trial"
+  },
+  "hero": {
+    "tagline": "AI-Powered DM Assistant",
+    "title1": "Automate Your DMs.",
+    "title2": "Sell More.",
+    "title3": "Sleep Better.",
+    "description": "AI-powered chatbot for Algerian merchants on Instagram & Facebook. Reply instantly in Arabic, French, and Darija.",
+    "cta": "Start Free Trial",
+    "secondaryCta": "See How It Works"
+  },
+  "socialProof": {
+    "trustedBy": "Trusted by merchants in Algiers, Oran, Constantine & beyond",
+    "merchants": "Active Merchants",
+    "messages": "Messages Handled",
+    "responseTime": "Response Time"
+  },
+  "features": {
+    "title": "Powerful Features for Smart Merchants",
+    "subtitle": "Everything you need to automate your customer support",
+    "items": {
+      "multilingual": {
+        "title": "Multilingual Replies",
+        "description": "Arabic, French, and Darija support for seamless communication"
+      },
+      "ai": {
+        "title": "Rule-Based or AI",
+        "description": "Choose your automation style based on your business needs"
+      },
+      "meta": {
+        "title": "Facebook & Instagram",
+        "description": "Manage all your DMs in one unified dashboard"
+      },
+      "analytics": {
+        "title": "Usage Analytics",
+        "description": "Track your messages and bot performance monthly"
+      },
+      "setup": {
+        "title": "Instant Setup",
+        "description": "Connect your pages in under 5 minutes, no coding required"
+      },
+      "escalation": {
+        "title": "Smart Escalation",
+        "description": "Get notified instantly when your bot needs human help"
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "subtitle": "Get started in three simple steps",
+    "steps": {
+      "step1": {
+        "title": "Create Your Bot",
+        "description": "Configure your bot name, language, and automation rules"
+      },
+      "step2": {
+        "title": "Connect Your Page",
+        "description": "Link your Instagram & Facebook pages in one click"
+      },
+      "step3": {
+        "title": "Instant Replies",
+        "description": "Your customers get instant, intelligent responses 24/7"
+      }
+    }
+  },
+  "pricing": {
+    "title": "Simple, Transparent Pricing",
+    "subtitle": "Choose the perfect plan for your business",
+    "plans": {
+      "free": {
+        "name": "Free Trial",
+        "description": "Perfect for testing",
+        "period": "/14 days",
+        "cta": "Start Free Trial",
+        "features": ["500 messages", "Rule-based only", "Single page", "1 bot"]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "For small stores",
+        "period": "/month",
+        "cta": "Get Started",
+        "features": ["2,000 messages/month", "Rule-based only", "Unlimited pages", "3 bots"]
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Most popular choice",
+        "period": "/month",
+        "cta": "Get Started",
+        "badge": "Most Popular",
+        "features": ["10,000 messages/month", "AI included", "Unlimited pages", "Unlimited bots", "Smart escalation", "Advanced analytics"]
+      },
+      "business": {
+        "name": "Business",
+        "description": "For growing businesses",
+        "period": "/month",
+        "cta": "Get Started",
+        "badge": "Best Value",
+        "features": ["Unlimited messages", "AI included", "Unlimited pages", "Unlimited bots", "Priority support", "Custom integrations"]
+      }
+    }
+  },
+  "testimonials": {
+    "title": "Loved by Algerian Merchants",
+    "subtitle": "See what our customers are saying",
+    "items": [
+      {
+        "name": "Fatima Benali",
+        "role": "Fashion Store Owner, Algiers",
+        "content": "Wakil has completely changed how I manage my orders. I now reply to 10x more customers at the same time, while I sleep! My sales increased by 40% in two months."
+      },
+      {
+        "name": "Karim Djakoum",
+        "role": "Electronics Seller, Oran",
+        "content": "The AI understands Darija and Arabic perfectly. My customers feel respected when the bot replies in their native language. It's incredible for trust and conversions!"
+      },
+      {
+        "name": "Leila Chabane",
+        "role": "Beauty Products Entrepreneur, Constantine",
+        "content": "Setup took 3 minutes, no more! No need for a developer or complicated configuration. Just plugged in my Facebook and it was ready. Best investment for my business."
+      }
+    ]
+  },
+  "ctaBanner": {
+    "title": "Ready to automate your store?",
+    "subtitle": "Start your 14-day free trial today. No credit card required. Full access to all features.",
+    "cta": "Start Your Free Trial Now"
+  },
+  "footer": {
+    "description": "AI-powered chatbot for Algerian e-commerce merchants",
+    "product": "Product",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "contact": "Contact",
+    "rights": "All rights reserved",
+    "madeIn": "Made in Algeria"
+  }
+}

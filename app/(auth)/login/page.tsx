@@ -1,9 +1,26 @@
+"use client"
+
 import { LoginForm } from "@/components/auth/LoginForm"
 import WakilLogo from "@/components/common/WakilLogo"
+import { useTranslation } from "react-i18next"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
 
 export default function Login(){
+    const { t } = useTranslation(['auth', 'landing'])
+
     return(
     <div className="relative flex items-center justify-center h-screen bg-black/90" >
+        {/* Back to Home Button */}
+        <Link 
+            href="/" 
+            className="absolute start-6 top-6 z-50 flex items-center gap-2 text-neutral-400 hover:text-white transition-colors group"
+        >
+            <div className="p-2 rounded-full border border-neutral-800 group-hover:border-neutral-700 bg-black/50 backdrop-blur-sm">
+                <ArrowLeft className="w-5 h-5 rtl:rotate-180" />
+            </div>
+            <span className="text-sm font-medium" suppressHydrationWarning>{t('login.backToHome')}</span>
+        </Link>
 
         <div className="absolute inset-0 opacity-30 overflow-hidden">
             <div className="absolute top-40 -left-40 w-80 h-80 bg-linear-to-r from-secondary/70 to-green-600/45 rounded-full blur-3xl"></div>
@@ -28,15 +45,15 @@ export default function Login(){
                     
                     <div className="space-y-4">
                         <h1 className="text-4xl font-bold text-white text-balance ">
-                        Your AI-powered DM assistant
+                        {t('hero.tagline', { ns: 'landing' })}
                         </h1>
                         <p className="text-lg text-white/70 max-w-md">
-                        Automate your direct messages, engage with your audience, and grow your presence effortlessly.
+                        {t('hero.description', { ns: 'landing' })}
                         </p>
                     </div>
                     
                     <p className="text-sm text-white/90">
-                        © 2026 Wakil. All rights reserved.
+                        © 2026 Wakil. {t('footer.rights', { ns: 'landing' })}.
                     </p>
                     </div>
             </div>
@@ -46,8 +63,8 @@ export default function Login(){
 
                 {/* Welcoming */}
                 <div className="flex flex-col items-start lg:w-[45%] w-[80%] space-y-2">
-                    <h1 className="font-bold md:text-3xl text-xl font-sans tracking-tight text-nowrap">Welcome back</h1>
-                    <h3 className="font-semibold md:text-md text-xs text-muted-foreground tracking-tight text-nowrap">Sign in to your account to continue</h3>
+                    <h1 className="font-bold md:text-3xl text-xl font-sans tracking-tight text-nowrap">{t('login.title')}</h1>
+                    <h3 className="font-semibold md:text-md text-xs text-muted-foreground tracking-tight text-nowrap">{t('login.subtitle')}</h3>
                 </div>
                 
                 {/* login form */}

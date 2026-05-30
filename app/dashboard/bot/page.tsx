@@ -67,7 +67,7 @@ export default function MyBotPage() {
             <Badge className={bot.isActive ? "bg-[#00D4AA] text-slate-950" : "bg-slate-700 text-slate-400"}>
               {bot.isActive ? "Active" : "Inactive"}
             </Badge>
-            <span className="text-slate-500 text-sm">Created on {new Date(bot.createdAt).toLocaleDateString()}</span>
+            <span className="text-slate-500 text-sm" suppressHydrationWarning>Created on {new Date(bot.createdAt).toLocaleDateString()}</span>
           </div>
         </div>
         <Link href="/dashboard/bot/settings">

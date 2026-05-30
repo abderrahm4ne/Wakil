@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label"
 
 import { EyeOff, Eye } from 'lucide-react';
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface RegisterFormProps {
     data: {
@@ -17,6 +18,7 @@ interface RegisterFormProps {
 }
 
 export function RegisterForm({ data, onChange }: RegisterFormProps) {
+    const { t } = useTranslation('auth')
     const { name, email, password, confirmPassword } = data 
     const update = (field: string, value: string) => {
         onChange({ ...data, [field]: value })
@@ -33,21 +35,21 @@ export function RegisterForm({ data, onChange }: RegisterFormProps) {
         >
           <div className="flex flex-col items-start lg:w-[45%] w-[80%] space-y-2">
             <h1 className="font-bold md:text-3xl text-xl font-sans tracking-tight text-wrap">
-              Get started
+              {t('register.title')}
             </h1>
             <h3 className="font-semibold md:text-md text-xs text-muted-foreground tracking-tight text-wrap">
-              Create your account and choose your plan
+              {t('register.subtitle')}
             </h3>
           </div>
 
           <form className="space-y-4 lg:w-[45%] w-[80%] font-sans">
 
             <div className="space-y-2">
-              <Label htmlFor="fullName">Name</Label>
+              <Label htmlFor="fullName">{t('register.name')}</Label>
               <Input
                 id="fullName"
                 type="text"
-                placeholder="John Doe"
+                placeholder={t('register.namePlaceholder')}
                 value={name}
                 onChange={(e) => update("name" ,e.target.value)}
                 className="bg-transparent border-border"
@@ -55,11 +57,11 @@ export function RegisterForm({ data, onChange }: RegisterFormProps) {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('register.email')}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="name@gmail.com"
+                placeholder={t('register.emailPlaceholder')}
                 value={email}
                 onChange={(e) => update("email" ,e.target.value)}
                 className="bg-transparent border-border"
@@ -67,11 +69,11 @@ export function RegisterForm({ data, onChange }: RegisterFormProps) {
             </div>
 
             <div className="space-y-2 relative">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('register.password')}</Label>
               <Input
                 id="password"
                 type={passType}
-                placeholder="••••••••"
+                placeholder={t('register.passwordPlaceholder')}
                 value={password}
                 onChange={(e) => update("password" ,e.target.value)}
                 className="bg-transparent border-border"
@@ -84,11 +86,11 @@ export function RegisterForm({ data, onChange }: RegisterFormProps) {
             </div>
             
             <div className="space-y-2 bg relative">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">{t('register.confirmPassword')}</Label>
               <Input
                 id="confirmPassword"
                 type={ConfPassType}
-                placeholder="••••••••"
+                placeholder={t('register.confirmPasswordPlaceholder')}
                 value={confirmPassword}
                 onChange={(e) => update("confirmPassword" ,e.target.value)}
                 className="bg-transparent border-border"

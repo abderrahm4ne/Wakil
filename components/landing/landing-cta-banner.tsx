@@ -2,8 +2,11 @@
 
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function LandingCtaBanner() {
+  const { t } = useTranslation('landing');
+
   return (
     <section className="bg-black py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Gradient Background */}
@@ -13,17 +16,17 @@ export default function LandingCtaBanner() {
 
       <div className="max-w-4xl mx-auto relative z-10 text-center font-display">
         <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-          Ready to automate your store?
+          {t('ctaBanner.title')}
         </h2>
         <p className="text-lg text-neutral-400 mb-8 max-w-2xl mx-auto">
-          Start your 14-day free trial today. No credit card required. Full access to all features.
+          {t('ctaBanner.subtitle')}
         </p>
 
         <Link
           href="/register"
           className="inline-flex items-center gap-2 px-8 py-4 bg-linear-to-r from-secondary/70 to-green-600/45 text-white rounded-full font-semibold hover:shadow-sm hover:shadow-green-500/50 transition-all text-lg"
         >
-          Start Your Free Trial Now <ArrowRight className="w-5 h-5" />
+          {t('ctaBanner.cta')} <ArrowRight className="w-5 h-5 rtl:rotate-180" />
         </Link>
       </div>
     </section>

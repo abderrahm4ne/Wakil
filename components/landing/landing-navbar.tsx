@@ -1,9 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function LandingNavbar() {
+  const { t, i18n } = useTranslation('landing');
+
+  const toggleLanguage = () => {
+    const langs = ['fr', 'en', 'ar'];
+    const currentIndex = langs.indexOf(i18n.language);
+    const nextIndex = (currentIndex + 1) % langs.length;
+    i18n.changeLanguage(langs[nextIndex]);
+  };
+
   return (
     <nav className="fixed top-0 w-full z-50 bg-black/50 backdrop-blur-lg border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,29 +24,40 @@ export default function LandingNavbar() {
             <div className="w-8 h-8 bg-linear-to-br from-secondary/70 to-green-600/90 rounded-lg flex items-center justify-center">
               <MessageCircle className="w-5 h-5 text-white" />
             </div>
-            <span className="text-white">Botify</span>
+            <span className="text-white">Wakil</span>
           </Link>
 
           {/* Center Links */}
           <div className="hidden md:flex items-center gap-6">
             <Link href="#features" className="text-neutral-400 hover:text-white transition-colors">
-              Features
+              {t('navbar.features')}
             </Link>
             <Link href="#pricing" className="text-neutral-400 hover:text-white transition-colors">
-              Pricing
+              {t('navbar.pricing')}
             </Link>
             <Link href="#how-it-works" className="text-neutral-400 hover:text-white transition-colors">
-              How it works
+              {t('navbar.howItWorks')}
             </Link>
           </div>
 
-          {/* CTA Button */}
-          <Link
-            href="/register"
-            className="px-6 py-2.5 bg-linear-to-r from-secondary/70 to-green-600/45 text-white rounded-full font-semibold hover:shadow-sm hover:shadow-green-300/50 transition-all"
-          >
-            Start Free Trial
-          </Link>
+          <div className="flex items-center gap-4">
+            {/* Language Toggle */}
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors px-3 py-1 rounded-md border border-neutral-800"
+            >
+              <Globe className="w-4 h-4" />
+              <span className="text-sm font-medium uppercase">{i18n.language}</span>
+            </button>
+
+            {/* CTA Button */}
+            <Link
+              href="/register"
+              className="px-3 py-2 bg-linear-to-r from-secondary/70 to-green-600/45 text-white text-sm rounded-full font-semibold hover:shadow-sm hover:shadow-green-300/50 transition-all"
+            >
+              {t('navbar.startFreeTrial')}
+            </Link>
+          </div>
         </div>
       </div>
     </nav>

@@ -10,8 +10,10 @@ import { useRouter } from "next/navigation"
 
 import { EyeOff, Eye } from "lucide-react"
 import { validateLogin } from "@/app/action/login"
+import { useTranslation } from "react-i18next"
 
 export function LoginForm() {
+    const { t } = useTranslation('auth')
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -27,19 +29,19 @@ export function LoginForm() {
           e.preventDefault()
           setIsLoading(true)
           if (email.trim() === "" || password.trim() === ""){
-            setError("Fill required fields");
+            setError(t('login.errors.fillFields'));
             setIsLoading(false)
             return
           }
           const check = await validateLogin(email, password);
           if (check.error === "USER_NOT_FOUND"){
-            setError("Email or Password is wrong")
+            setError(t('login.errors.wrongCredentials'))
             setIsLoading(false)
             return
           }
 
           if (check.error === "EMAIL_NOT_VERIFIED"){
-            setError("Email is not verified")
+            setError(t('login.errors.notVerified'))
             setIsLoading(false)
             return
           }
@@ -50,7 +52,7 @@ export function LoginForm() {
             redirect: false
           })
           if (res?.error) {
-              setError("Email or Password is wrong")
+              setError(t('login.errors.wrongCredentials'))
               setIsLoading(false)
               return
           }
@@ -70,26 +72,26 @@ export function LoginForm() {
         })
         const data = await res.json()
         if (data.error === 'RATE_LIMITED') {
-            setError("Too many attempts. Try again in an hour.")
+            setError(t('login.errors.rateLimited'))
             return
         }
         if (data.error === 'EMAIL_ALREADY_VERIFIED') {
-            setError("Email already verified")
+            setError(t('login.errors.alreadyVerified'))
             return
         }
-        setEmailSent("Verification email sent. Check your inbox.")
+        setEmailSent(t('login.emailSent'))
     }
   return (
     <form onSubmit={(e) => (handleSubmit(e))} className="space-y-7 lg:w-[45%] w-[80%] font-sans">
       <div className="flex flex-col space-y-3">
           <div className="space-y-2">
             <Label htmlFor="email" className="text-foreground">
-              Email
+              {t('login.email')}
             </Label>
             <Input
               id="email"
               type="email"
-              placeholder="name@example.com"
+              placeholder={t('login.emailPlaceholder')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="bg-transparent border-border "
@@ -98,12 +100,12 @@ export function LoginForm() {
 
           <div className="space-y-2 relative">
             <Label htmlFor="password" className="text-foreground ">
-              Password
+              {t('login.password')}
             </Label>
             <Input
               id="password"
               type={inputType}
-              placeholder="••••••••"
+              placeholder={t('login.passwordPlaceholder')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="bg-transparent border-border "
@@ -121,19 +123,19 @@ export function LoginForm() {
               href="#"
               className="text-sm text-muted-foreground hover:text-muted-foreground transition-colors"
             >
-              Forgot password?
+              {t('login.forgotPassword')}
             </a>
           </div>
       </div>
 
       <div className="flex flex-col space-y-2">
           <Button type="submit" className="w-full bg-primary text-black py-4.5" disabled={isLoading}>
-            {isLoading ? "Signing in..." : "Sign in"}
+            {isLoading ? t('login.signingIn') : t('login.signIn')}
           </Button>
           <p className="text-center text-sm text-muted-foreground text-nowrap">
-              {"Don't have an account? "}
+              {t('login.noAccount') + " "}
                 <a href="/register" className="text-foreground hover:underline">
-                  Sign up
+                  {t('login.signUp')}
                 </a>
           </p>
       </div>
@@ -141,13 +143,13 @@ export function LoginForm() {
       {error && (
           <div className="text-center space-y-2">
               <p className="text-red-500/70 text-sm">{error}</p>
-                  {error === "Email is not verified" && (
+                  {error === t('login.errors.notVerified') && (
                     <button
                       type="button"
                       onClick={handleResendVerification}
                       className="text-secondary text-sm hover:underline"
                     >
-                        Resend verification email
+                        {t('login.resendVerification')}
                     </button>
               )}
           </div>

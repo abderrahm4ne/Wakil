@@ -71,7 +71,7 @@ export function SubscriptionCard({
             <div className="mb-8">
                 <div className="flex items-center justify-between mb-3">
                     <label className="text-slate-300 font-semibold">Messages This Month</label>
-                    <span className="text-slate-400">
+                    <span className="text-slate-400" suppressHydrationWarning>
                         {messagesUsed.toLocaleString()} / {messagesLimit.toLocaleString()}
                     </span>
                 </div>
@@ -88,7 +88,7 @@ export function SubscriptionCard({
 
             <div className="p-4 rounded-lg mb-8 bg-bg">
                 <p className="text-slate-400 text-sm mb-1">Plan Renewal Date</p>
-                <p className="text-xl font-semibold text-white">{renewalDate}</p>
+                <p className="text-xl font-semibold text-white" suppressHydrationWarning>{renewalDate}</p>
             </div>
 
             <div className="flex gap-4">

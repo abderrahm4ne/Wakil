@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 };
 
 import { SessionProvider } from "@/providers/session-provider";
+import { I18nProvider } from "@/providers/i18n-provider";
 
 export default function RootLayout({
   children,
@@ -30,12 +31,14 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="fr"
       className={`${inter.variable} ${jakarta.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <SessionProvider>
-          {children}
+          <I18nProvider>
+            {children}
+          </I18nProvider>
         </SessionProvider>
       </body>
     </html>

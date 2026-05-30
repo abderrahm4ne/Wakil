@@ -6,10 +6,13 @@ import { ConfirmSubmit } from "@/components/auth/ConfirmSubmit"
 
 import WakilLogo from "@/components/common/WakilLogo"
 
-import { ChevronUp, ChevronDown } from "lucide-react"
+import { ChevronUp, ChevronDown, ArrowLeft } from "lucide-react"
 import { RefObject, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
+import Link from "next/link"
 
 export default function Register() {
+    const { t } = useTranslation(['auth', 'landing'])
     const [step, setStep] = useState(1)
     const [formData, setFormData] = useState({
         name: "",
@@ -42,6 +45,16 @@ export default function Register() {
 
     return (
         <div className="relative flex items-center justify-center h-screen bg-black/90">
+            {/* Back to Home Button */}
+            <Link 
+                href="/" 
+                className="absolute start-6 top-6 z-50 flex items-center gap-2 text-neutral-400 hover:text-white transition-colors group"
+            >
+                <div className="p-2 rounded-full border border-neutral-800 group-hover:border-neutral-700 bg-black/50 backdrop-blur-sm">
+                    <ArrowLeft className="w-5 h-5 rtl:rotate-180" />
+                </div>
+                <span className="text-sm font-medium" suppressHydrationWarning>{t('login.backToHome')}</span>
+            </Link>
 
             <div className="absolute inset-0 opacity-30 overflow-hidden">
                 <div className="absolute top-40 -left-40 w-80 h-80 bg-linear-to-r from-secondary/70 to-green-600/45 rounded-full blur-3xl"></div>
@@ -61,13 +74,13 @@ export default function Register() {
                         <WakilLogo />
                         <div className="space-y-4">
                             <h1 className="text-4xl font-bold text-white text-balance">
-                                Your AI-powered DM assistant
+                                {t('hero.tagline', { ns: 'landing' })}
                             </h1>
                             <p className="text-lg text-white/70 max-w-md">
-                                Automate your direct messages, engage with your audience, and grow your presence effortlessly.
+                                {t('hero.description', { ns: 'landing' })}
                             </p>
                         </div>
-                        <p className="text-sm text-white/90">© 2026 Wakil. All rights reserved.</p>
+                        <p className="text-sm text-white/90">© 2026 Wakil. {t('footer.rights', { ns: 'landing' })}.</p>
                     </div>
                 </div>
 

@@ -1,0 +1,143 @@
+{
+  "navbar": {
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "howItWorks": "Comment ça marche",
+    "startFreeTrial": "Essai gratuit"
+  },
+  "hero": {
+    "tagline": "Assistant DM propulsé par l'IA",
+    "title1": "Automatisez vos DMs.",
+    "title2": "Vendez plus.",
+    "title3": "Dormez mieux.",
+    "description": "Chatbot IA pour les commerçants algériens sur Instagram & Facebook. Répondez instantanément en arabe, français et darija.",
+    "cta": "Essai gratuit",
+    "secondaryCta": "Voir comment ça marche"
+  },
+  "socialProof": {
+    "trustedBy": "Approuvé par les commerçants à Alger, Oran, Constantine et au-delà",
+    "merchants": "Commerçants actifs",
+    "messages": "Messages traités",
+    "responseTime": "Temps de réponse"
+  },
+  "features": {
+    "title": "Fonctionnalités puissantes pour les commerçants intelligents",
+    "subtitle": "Tout ce dont vous avez besoin pour automatiser votre support client",
+    "items": {
+      "multilingual": {
+        "title": "Réponses multilingues",
+        "description": "Support de l'arabe, du français et de la darija pour une communication fluide"
+      },
+      "ai": {
+        "title": "Basé sur des règles ou IA",
+        "description": "Choisissez votre style d'automatisation en fonction de vos besoins"
+      },
+      "meta": {
+        "title": "Facebook & Instagram",
+        "description": "Gérez tous vos messages privés dans un tableau de bord unifié"
+      },
+      "analytics": {
+        "title": "Analyses d'utilisation",
+        "description": "Suivez vos messages et les performances du bot mensuellement"
+      },
+      "setup": {
+        "title": "Configuration instantanée",
+        "description": "Connectez vos pages en moins de 5 minutes, sans code"
+      },
+      "escalation": {
+        "title": "Escalade intelligente",
+        "description": "Soyez notifié instantanément quand le bot a besoin d'aide humaine"
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "Comment ça marche",
+    "subtitle": "Commencez en trois étapes simples",
+    "steps": {
+      "step1": {
+        "title": "Créez votre bot",
+        "description": "Configurez le nom, la langue et les règles d'automatisation"
+      },
+      "step2": {
+        "title": "Connectez votre page",
+        "description": "Liez vos pages Instagram & Facebook en un clic"
+      },
+      "step3": {
+        "title": "Réponses instantanées",
+        "description": "Vos clients reçoivent des réponses intelligentes 24/7"
+      }
+    }
+  },
+  "pricing": {
+    "title": "Tarifs simples et transparents",
+    "subtitle": "Choisissez le plan parfait pour votre entreprise",
+    "plans": {
+      "free": {
+        "name": "Essai gratuit",
+        "description": "Parfait pour tester",
+        "period": "/14 jours",
+        "cta": "Démarrer l'essai",
+        "features": ["500 messages", "Règles uniquement", "Page unique", "1 bot"]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "Pour les petites boutiques",
+        "period": "/mois",
+        "cta": "Commencer",
+        "features": ["2 000 messages/mois", "Règles uniquement", "Pages illimitées", "3 bots"]
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Le choix le plus populaire",
+        "period": "/mois",
+        "cta": "Commencer",
+        "badge": "Populaire",
+        "features": ["10 000 messages/mois", "IA incluse", "Pages illimitées", "Bots illimités", "Escalade intelligente", "Analyses avancées"]
+      },
+      "business": {
+        "name": "Business",
+        "description": "Pour les entreprises en croissance",
+        "period": "/mois",
+        "cta": "Commencer",
+        "badge": "Meilleure valeur",
+        "features": ["Messages illimités", "IA incluse", "Pages illimitées", "Bots illimités", "Support prioritaire", "Intégrations personnalisées"]
+      }
+    }
+  },
+  "testimonials": {
+    "title": "Aimé par les commerçants algériens",
+    "subtitle": "Découvrez ce que disent nos clients",
+    "items": [
+      {
+        "name": "Fatima Benali",
+        "role": "Propriétaire de magasin de mode, Alger",
+        "content": "Wakil a complètement changé ma façon de gérer mes commandes. Je réponds maintenant à 10x plus de clients en même temps, tout en dormant ! Mes ventes ont augmenté de 40% en deux mois."
+      },
+      {
+        "name": "Karim Djakoum",
+        "role": "Vendeur d'électronique, Oran",
+        "content": "L'IA comprend parfaitement le Darija et l'arabe. Mes clients se sentent respectés quand le bot répond dans leur langue maternelle. C'est incroyable pour la confiance et les conversions !"
+      },
+      {
+        "name": "Leila Chabane",
+        "role": "Entrepreneuse en produits de beauté, Constantine",
+        "content": "La configuration a pris 3 minutes, pas plus ! Pas besoin de développeur ou de configuration compliquée. Juste brancher mon Facebook et c'était parti. Meilleur investissement pour mon business."
+      }
+    ]
+  },
+  "ctaBanner": {
+    "title": "Prêt à automatiser votre boutique ?",
+    "subtitle": "Commencez votre essai gratuit de 14 jours dès aujourd'hui. Aucune carte de crédit requise. Accès complet à toutes les fonctionnalités.",
+    "cta": "Commencez votre essai gratuit maintenant"
+  },
+  "footer": {
+    "description": "Chatbot IA pour les commerçants e-commerce algériens",
+    "product": "Produit",
+    "legal": "Légal",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "contact": "Contact",
+    "rights": "Tous droits réservés",
+    "madeIn": "Fait en Algérie"
+  }
+}

@@ -1,13 +1,16 @@
 'use client';
 
 import { MessageSquare, Zap, Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function LandingSocialProof() {
+  const { t } = useTranslation('landing');
+
   return (
     <section className="bg-black border-y border-neutral-800 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <p className="text-center text-neutral-400 mb-8">
-          Trusted by merchants in Algiers, Oran, Constantine & beyond
+          {t('socialProof.trustedBy')}
         </p>
         
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -17,7 +20,7 @@ export default function LandingSocialProof() {
               <MessageSquare className="w-8 h-8 text-secondary" />
             </div>
             <div className="text-3xl font-bold text-white mb-2">500+</div>
-            <p className="text-neutral-400">Active Merchants</p>
+            <p className="text-neutral-400">{t('socialProof.merchants')}</p>
           </div>
 
           {/* Metric 2 */}
@@ -26,7 +29,7 @@ export default function LandingSocialProof() {
               <Zap className="w-8 h-8 text-secondary" />
             </div>
             <div className="text-3xl font-bold text-white mb-2">2M+</div>
-            <p className="text-neutral-400">Messages Handled</p>
+            <p className="text-neutral-400">{t('socialProof.messages')}</p>
           </div>
 
           {/* Metric 3 */}
@@ -35,7 +38,7 @@ export default function LandingSocialProof() {
               <Clock className="w-8 h-8 text-secondary" />
             </div>
             <div className="text-3xl font-bold text-white mb-2">{'<'}2s</div>
-            <p className="text-neutral-400">Response Time</p>
+            <p className="text-neutral-400">{t('socialProof.responseTime')}</p>
           </div>
         </div>
       </div>
