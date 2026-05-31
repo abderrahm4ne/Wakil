@@ -16,7 +16,7 @@ export default function LandingNavbar() {
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-black/50 backdrop-blur-lg border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div className="flex items-center justify-between h-16">
           
           {/* Logo */}
@@ -44,7 +44,7 @@ export default function LandingNavbar() {
             {/* Language Toggle */}
             <button
               onClick={toggleLanguage}
-              className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors px-3 py-1 rounded-md border border-neutral-800"
+              className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors px-3 py-1 rounded-md border border-neutral-800 hover:cursor-pointer"
             >
               <Globe className="w-4 h-4" />
               <span className="text-sm font-medium uppercase">{i18n.language}</span>

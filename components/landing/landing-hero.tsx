@@ -8,11 +8,11 @@ export default function LandingHero() {
   const { t } = useTranslation('landing');
 
   return (
-    <section className="min-h-screen bg-black pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden ">
+    <section className="min-h-screen bg-black pt-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden ">
       {/* Gradient Background */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-40 -left-40 w-80 h-80 bg-linear-to-r from-secondary/70 to-green-600/45 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-40 -right-40 w-80 h-80 bg-linear-to-r from-secondary/70 to-green-600/45 rounded-full blur-3xl"></div>
+        <div className="absolute -right-40 w-80 h-80 bg-linear-to-r from-secondary/70 to-green-600/45 rounded-full blur-3xl"></div>
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10">

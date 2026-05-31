@@ -13,6 +13,7 @@ const LIMITS: Record<Plan, number | null> = {
 export async function GET() {
     try {
         const session = await auth()
+        
         if (!session) return NextResponse.json(
         { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
         )
