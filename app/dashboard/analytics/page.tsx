@@ -90,9 +90,9 @@ export default function AnalyticsPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white">Analytique</h1>
+        <h1 className="text-3xl font-bold text-white">Analytics</h1>
         <p className="mt-2 text-slate-400">
-          Suivez les performances de votre bot et l&apos;utilisation des messages
+          Monitor your bot's performance and message usage
         </p>
       </div>
 
@@ -106,26 +106,26 @@ export default function AnalyticsPage() {
       {/* Metric Cards */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <AnalyticsMetricCard
-          label="Conversations totales"
+          label="Total Conversations"
           value={isLoading ? '-' : (data?.totalConversations ?? 0).toLocaleString('fr-FR')}
           icon={Users}
           isLoading={isLoading}
         />
         <AnalyticsMetricCard
-          label="Messages totaux"
+          label="Total messages"
           value={isLoading ? '-' : (data?.totalMessages ?? 0).toLocaleString('fr-FR')}
           icon={MessageCircle}
           isLoading={isLoading}
         />
         <AnalyticsMetricCard
-          label="Jour le plus actif"
+          label="Most active day"
           value={isLoading ? '-' : mostActiveDay ?? 'N/A'}
           icon={TrendingUp}
           isLoading={isLoading}
-          subtext="7 derniers jours"
+          subtext="Last 7 days"
         />
         <AnalyticsMetricCard
-          label="Messages ce mois"
+          label="Messages this month"
           value={isLoading ? '-' : (data?.messagesThisMonth ?? 0).toLocaleString('fr-FR')}
           icon={MessageSquare}
           isLoading={isLoading}
@@ -141,9 +141,9 @@ export default function AnalyticsPage() {
       {!isLoading && data && data.totalMessages === 0 && (
         <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-12 text-center">
           <MessageSquare className="mx-auto h-12 w-12 text-slate-500" />
-          <h3 className="mt-4 text-lg font-semibold text-white">Aucune donnée disponible</h3>
+          <h3 className="mt-4 text-lg font-semibold text-white">No data available</h3>
           <p className="mt-2 text-slate-400">
-            Les données apparaîtront ici une fois que votre bot commencera à traiter les messages.
+            The data will appear here once your bot starts processing messages.
           </p>
         </div>
       )}

@@ -22,11 +22,11 @@ export function AnalyticsUsageCard({
     <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-white">
-          Messages ce mois-ci
+          Messages this month
         </h3>
         <p className="text-sm text-slate-400">
           {isUnlimited
-            ? 'Limite illimitée'
+            ? 'Unlimited limit'
             : `${messagesUsed.toLocaleString()} / ${messageLimit.toLocaleString()}`}
         </p>
       </div>
@@ -49,12 +49,12 @@ export function AnalyticsUsageCard({
           <div className="flex items-center justify-between">
             <p className="text-sm text-slate-400">
               {isUnlimited
-                ? 'Plan illimité'
-                : `${((messagesUsed / messageLimit) * 100).toFixed(0)}% utilisé`}
+                ? 'Unlimited plan'
+                : `${((messagesUsed / messageLimit) * 100).toFixed(0)}% used`}
             </p>
             {isHigh && (
               <p className="text-xs font-semibold text-red-400">
-                Limite approchante
+                Approaching limit
               </p>
             )}
           </div>

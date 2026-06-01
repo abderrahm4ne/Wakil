@@ -34,7 +34,7 @@ export function AnalyticsDailyChart({
   return (
     <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
       <h3 className="mb-6 text-lg font-semibold text-white">
-        Messages par jour (30 derniers jours)
+        Messages per day (last 30 days)
       </h3>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart
