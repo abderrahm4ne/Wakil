@@ -16,11 +16,11 @@ export default function LandingNavbar() {
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-black/50 backdrop-blur-lg border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto ">
+        <div className="flex items-center justify-around h-16">
           
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 font-semibold text-xl">
+          <Link href="/" className="flex gap-2 font-semibold text-xl ">
             <div className="w-8 h-8 bg-linear-to-br from-secondary/70 to-green-600/90 rounded-lg flex items-center justify-center">
               <MessageCircle className="w-5 h-5 text-white" />
             </div>
@@ -28,7 +28,7 @@ export default function LandingNavbar() {
           </Link>
 
           {/* Center Links */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex flex-1 justify-center gap-6 ">
             <Link href="#features" className="text-neutral-400 hover:text-white transition-colors">
               {t('navbar.features')}
             </Link>
@@ -40,7 +40,7 @@ export default function LandingNavbar() {
             </Link>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex  justify-end gap-4 ">
             {/* Language Toggle */}
             <button
               onClick={toggleLanguage}
@@ -53,7 +53,7 @@ export default function LandingNavbar() {
             {/* CTA Button */}
             <Link
               href="/register"
-              className="px-3 py-2 bg-linear-to-r from-secondary/70 to-green-600/45 text-white text-sm rounded-full font-semibold hover:shadow-sm hover:shadow-green-300/50 transition-all"
+              className="px-3 py-2 bg-linear-to-r from-secondary/70 to-green-600/45 text-white text-[0.9rem] rounded-full font-semibold hover:shadow-sm hover:shadow-green-300/50 transition-all"
             >
               {t('navbar.startFreeTrial')}
             </Link>
