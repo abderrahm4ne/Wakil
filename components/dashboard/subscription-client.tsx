@@ -9,16 +9,12 @@ import { PlanSelection } from "@/components/auth/PlanSelection"
 interface Props {
     currentPlan: string
     isActive: boolean
-    messagesUsed: number
-    messagesLimit: number
     renewalDate: string | null
 }
 
 export function SubscriptionClient({
     currentPlan,
     isActive,
-    messagesUsed,
-    messagesLimit,
     renewalDate,
 }: Props) {
     const [showPlanSelection, setShowPlanSelection] = useState(false)
@@ -107,8 +103,6 @@ export function SubscriptionClient({
                 <SubscriptionCard
                     planName={planDisplayName}
                     status={isActive ? "active" : "expired"}
-                    messagesUsed={messagesUsed}
-                    messagesLimit={messagesLimit}
                     renewalDate={formattedRenewal}
                     onUpgrade={() => setShowPlanSelection(true)}
                     onRenew={handleRenew}

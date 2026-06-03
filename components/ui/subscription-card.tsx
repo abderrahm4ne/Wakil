@@ -7,8 +7,6 @@ import { AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 interface SubscriptionCardProps {
     planName: string;
     status: 'active' | 'pending_payment' | 'expired';
-    messagesUsed: number;
-    messagesLimit: number;
     renewalDate: string;
     onUpgrade: () => void;
     onRenew: () => void;
@@ -19,15 +17,12 @@ interface SubscriptionCardProps {
 export function SubscriptionCard({
     planName,
     status,
-    messagesUsed,
-    messagesLimit,
     renewalDate,
     onUpgrade,
     onRenew,
     onCancel,
     isLoading,
 }: SubscriptionCardProps) {
-    const messagesPercentage = (messagesUsed / messagesLimit) * 100;
 
     const getStatusBadge = () => {
         switch (status) {
@@ -52,11 +47,6 @@ export function SubscriptionCard({
         }
     };
 
-    const getProgressBarColor = () => {
-        if (messagesPercentage < 70) return 'bg-[#00D4AA]';
-        if (messagesPercentage < 90) return 'bg-yellow-500';
-        return 'bg-red-500';
-    };
 
     return (
         <div className="p-8 rounded-lg border border-border bg-card">
@@ -66,24 +56,6 @@ export function SubscriptionCard({
                     <p className="text-slate-400">Your current subscription</p>
                 </div>
                 {getStatusBadge()}
-            </div>
-
-            <div className="mb-8">
-                <div className="flex items-center justify-between mb-3">
-                    <label className="text-slate-300 font-semibold">Messages This Month</label>
-                    <span className="text-slate-400" suppressHydrationWarning>
-                        {messagesUsed.toLocaleString()} / {messagesLimit.toLocaleString()}
-                    </span>
-                </div>
-                <div className="w-full h-3 rounded-full overflow-hidden bg-border">
-                    <div
-                        className={`h-full transition-all duration-300 ${getProgressBarColor()}`}
-                        style={{ width: `${Math.min(messagesPercentage, 100)}%` }}
-                    />
-                </div>
-                <p className="text-sm text-slate-500 mt-2">
-                    {Math.round(messagesPercentage)}% of your monthly limit used
-                </p>
             </div>
 
             <div className="p-4 rounded-lg mb-8 bg-bg">
