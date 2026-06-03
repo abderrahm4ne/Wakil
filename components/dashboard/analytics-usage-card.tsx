@@ -14,7 +14,7 @@ export function AnalyticsUsageCard({
   messageLimit,
   isLoading = false,
 }: UsageCardProps) {
-  const isUnlimited = messageLimit === Infinity;
+  const isUnlimited = messageLimit === null;
   const percentage = isUnlimited ? 100 : (messagesUsed / messageLimit) * 100;
   const isHigh = percentage >= 90 && !isUnlimited;
 
@@ -24,7 +24,7 @@ export function AnalyticsUsageCard({
         <h3 className="text-lg font-semibold text-white">
           Messages this month
         </h3>
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-white/50">
           {isUnlimited
             ? 'Unlimited limit'
             : `${messagesUsed.toLocaleString()} / ${messageLimit.toLocaleString()}`}
@@ -53,7 +53,7 @@ export function AnalyticsUsageCard({
                 : `${((messagesUsed / messageLimit) * 100).toFixed(0)}% used`}
             </p>
             {isHigh && (
-              <p className="text-xs font-semibold text-red-400">
+              <p className="text-xs font-semibold text-red-600">
                 Approaching limit
               </p>
             )}

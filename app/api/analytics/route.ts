@@ -45,10 +45,10 @@ export async function GET() {
 
         // Total messages
         const totalMessages = await prisma.message.count({
-        where: {
-            conversation: { botId: bot.id },
-            fromCustomer: false
-        }
+            where: {
+                conversation: { botId: bot.id },
+                fromCustomer: false
+            }
         })
 
         // Last 7 days daily messages
@@ -56,13 +56,13 @@ export async function GET() {
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
         const dailyMessages = await prisma.message.groupBy({
-        by: ['createdAt'],
-        where: {
-            conversation: { botId: bot.id },
-            fromCustomer: false,
-            createdAt: { gte: sevenDaysAgo }
-        },
-        _count: { id: true }
+            by: ['createdAt'],
+            where: {
+                conversation: { botId: bot.id },
+                fromCustomer: false,
+                createdAt: { gte: sevenDaysAgo }
+            },
+            _count: { id: true }
         })
 
         // Top triggered rules (rule-based only)

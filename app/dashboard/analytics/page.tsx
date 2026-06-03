@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import { AnalyticsMetricCard } from '@/components/dashboard/analytics-metric-card';
 import { AnalyticsUsageCard } from '@/components/dashboard/analytics-usage-card';
-import { AnalyticsMonthlyChart } from '@/components/dashboard/analytics-monthly-chart';
 import { AnalyticsDailyChart } from '@/components/dashboard/analytics-daily-chart';
 
 interface DailyMessage {
@@ -32,33 +31,32 @@ export default function AnalyticsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchAnalytics = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch('/api/analytics');
+      const fetchAnalytics = async () => {
+          try {
+              setIsLoading(true);
+              const res = await fetch('/api/analytics');
+              const data = await res.json();
+              if (!data.success) {
+                  if (data.status === 401) {
+                      setError('Not Authenticated. Login again.');
+                      return;
+                  }
+                  if (data.status === 404) {
+                      setError('No bot found.');
+                      return;
+                  }
+                  setError('Error in fetching analytics data, try again later.');
+                  return;
+              }
 
-        if (!response.ok) {
-          if (response.status === 401) {
-            setError('Non authentifié. Veuillez vous reconnecter.');
-            return;
+              setData(data.data);
+          } catch (err) {
+              console.error('[Analytics Page] Error:', err);
+              setError('Error in fetching analytics data, try again later.');
+          } finally {
+              setIsLoading(false);
           }
-          if (response.status === 404) {
-            setError('Bot non trouvé.');
-            return;
-          }
-          setError('Erreur lors du chargement des données.');
-          return;
-        }
-
-        const json = await response.json();
-        setData(json.data);
-      } catch (err) {
-        console.error('[Analytics Page] Error:', err);
-        setError('Erreur lors du chargement des données.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+        };
 
     fetchAnalytics();
   }, []);
@@ -68,9 +66,8 @@ export default function AnalyticsPage() {
     messages: d.count,
   }));
 
-  const mostActiveDay = dailyData.length
-    ? dailyData.reduce((a, b) => (a.messages >= b.messages ? a : b)).date
-    : null;
+  const messagesLast7Days = dailyData.reduce((sum, d) => sum + d.messages, 0)
+  const mostTriggeredRule = data?.topTriggers?.[0]?.trigger ?? ''
 
   if (error) {
     return (
@@ -96,7 +93,7 @@ export default function AnalyticsPage() {
         </p>
       </div>
 
-      {/* Usage Card - Full Width */}
+      {/* Usage Card */}
       <AnalyticsUsageCard
         messagesUsed={data?.messagesThisMonth ?? 0}
         messageLimit={data?.messageLimit ?? 500}
@@ -107,26 +104,31 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <AnalyticsMetricCard
           label="Total Conversations"
-          value={isLoading ? '-' : (data?.totalConversations ?? 0).toLocaleString('fr-FR')}
+          value={isLoading ? '-' : data?.totalConversations ?? 0}
           icon={Users}
           isLoading={isLoading}
         />
         <AnalyticsMetricCard
           label="Total messages"
-          value={isLoading ? '-' : (data?.totalMessages ?? 0).toLocaleString('fr-FR')}
+          value={isLoading ? '-' : data?.totalMessages ?? 0}
           icon={MessageCircle}
           isLoading={isLoading}
         />
         <AnalyticsMetricCard
-          label="Most active day"
-          value={isLoading ? '-' : mostActiveDay ?? 'N/A'}
+          label="Most Triggered Rule"
+          value={isLoading ? '-' : mostTriggeredRule}
           icon={TrendingUp}
           isLoading={isLoading}
-          subtext="Last 7 days"
+        />
+        <AnalyticsMetricCard
+          label="Messages last 7 days"
+          value={isLoading ? '-' : messagesLast7Days ?? 0}
+          icon={MessageSquare}
+          isLoading={isLoading}
         />
         <AnalyticsMetricCard
           label="Messages this month"
-          value={isLoading ? '-' : (data?.messagesThisMonth ?? 0).toLocaleString('fr-FR')}
+          value={isLoading ? '-' : data?.messagesThisMonth ?? 0}
           icon={MessageSquare}
           isLoading={isLoading}
         />
@@ -137,7 +139,7 @@ export default function AnalyticsPage() {
         <AnalyticsDailyChart data={dailyData} isLoading={isLoading} />
       </div>
 
-      {/* Empty State */}
+      {/* Empty State (ADDITIONAL)*/}
       {!isLoading && data && data.totalMessages === 0 && (
         <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-12 text-center">
           <MessageSquare className="mx-auto h-12 w-12 text-slate-500" />
