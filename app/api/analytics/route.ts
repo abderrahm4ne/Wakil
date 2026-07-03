@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+// @ts-ignore: No types available in this environment for @prisma/client
 import { Plan } from '@prisma/client'
 
 const LIMITS: Record<Plan, number | null> = {
