@@ -4,9 +4,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function DELETE(
     _req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         const session = await auth()
         if (!session) return NextResponse.json(
             { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
@@ -19,13 +20,13 @@ export async function DELETE(
 
         // Make sure rule belongs to this bot
         const rule = await prisma.rule.findFirst({
-            where: { id: params.id, botId: bot.id }
+            where: { id: id, botId: bot.id }
         })
         if (!rule) return NextResponse.json(
             { success: false, error: 'RULE_NOT_FOUND' }, { status: 404 }
         )
 
-        await prisma.rule.delete({ where: { id: params.id } })
+        await prisma.rule.delete({ where: { id: id } })
 
         return NextResponse.json({ success: true })
 
@@ -39,9 +40,10 @@ export async function DELETE(
 
 export async function PATCH(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         const session = await auth()
         if (!session) return NextResponse.json(
             { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
@@ -53,7 +55,7 @@ export async function PATCH(
         )
 
         const rule = await prisma.rule.findFirst({
-            where: { id: params.id, botId: bot.id }
+            where: { id: id, botId: bot.id }
         })
         if (!rule) return NextResponse.json(
             { success: false, error: 'RULE_NOT_FOUND' }, { status: 404 }
@@ -62,7 +64,7 @@ export async function PATCH(
         const { trigger, response, language, order } = await req.json()
 
         const updated = await prisma.rule.update({
-            where: { id: params.id },
+            where: { id: id },
             data: {
                 ...(trigger && { trigger }),
                 ...(response && { response }),

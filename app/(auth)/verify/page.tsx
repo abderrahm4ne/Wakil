@@ -7,9 +7,11 @@ import WakilLogo from '@/components/common/WakilLogo'
 import { X, Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { Suspense } from 'react'
+
 type Status = 'loading' | 'success' | 'error'
 
-export default function VerifyPage() {
+function VerifyContent() {
   const { t } = useTranslation('auth')
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -119,5 +121,14 @@ export default function VerifyPage() {
         <p className="text-sm text-muted-foreground">© 2026 Wakil. {t('footer.rights', { ns: 'landing' })}.</p>
       </div>
     </div>
+  )
+}
+
+export default function VerifyPage() {
+
+  return (
+    <Suspense fallback={<div>loading..</div>} >
+      <VerifyContent />
+    </Suspense>
   )
 }

@@ -4,9 +4,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         const session = await auth()
         if (!session) return NextResponse.json(
         { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
@@ -20,7 +21,7 @@ export async function GET(
         )
 
         const conversation = await prisma.conversation.findFirst({
-        where: { id: params.id, botId: bot.id },
+        where: { id: id, botId: bot.id },
         include: {
             messages: {
             orderBy: { createdAt: 'asc' }

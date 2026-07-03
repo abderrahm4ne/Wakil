@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
         // Update user with reset token
         await prisma.user.update({
             where: { email },
-            date: {
+            data: {
                 resetToken: token,
                 resetTokenExpires: expires
             }

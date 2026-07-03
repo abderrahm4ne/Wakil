@@ -29,7 +29,7 @@ export async function GET(){
                 isActive: subscription?.isActive ?? false,
                 startDate: subscription?.startDate,
                 endDate: subscription?.endDate,
-                messageUsed: usageLog?.mssageCount ?? 0
+                messageUsed: usageLog?.messageCount ?? 0
             }
         })
     }

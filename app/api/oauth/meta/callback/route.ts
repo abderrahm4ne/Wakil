@@ -15,6 +15,12 @@ export async function GET(req: NextRequest){
             )
         }
 
+        if (!state) {
+            return NextResponse.redirect(
+                new URL('/dashboard/channels?error=INVALID_STATE', req.url)
+            )
+        }
+
         const tokenRes = await fetch(
         `https://graph.facebook.com/v21.0/oauth/access_token?` +
         new URLSearchParams({

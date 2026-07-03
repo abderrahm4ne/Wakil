@@ -4,9 +4,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function PATCH(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+      const { id } = await params
       const session = await auth()
       if (!session) return NextResponse.json(
         { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
@@ -20,7 +21,7 @@ export async function PATCH(
       )
 
       const channel = await prisma.channel.findFirst({
-          where: { id: params.id, botId: bot.id }
+          where: { id: id, botId: bot.id }
       })
       if (!channel) return NextResponse.json(
           { success: false, error: 'CHANNEL_NOT_FOUND' }, { status: 404 }
@@ -29,7 +30,7 @@ export async function PATCH(
       const { isActive } = await req.json()
 
       const updated = await prisma.channel.update({
-        where: { id: params.id },
+        where: { id: id },
         data: { isActive }
       })
 
@@ -45,9 +46,10 @@ export async function PATCH(
 
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params
         const session = await auth()
         if (!session) return NextResponse.json(
             { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
@@ -62,13 +64,13 @@ export async function DELETE(
 
       // belong to user
       const channel = await prisma.channel.findFirst({
-          where: { id: params.id, botId: bot.id }
+          where: { id: id, botId: bot.id }
       })
       if (!channel) return NextResponse.json(
           { success: false, error: 'CHANNEL_NOT_FOUND' }, { status: 404 }
       )
 
-      await prisma.channel.delete({ where: { id: params.id } })
+      await prisma.channel.delete({ where: { id: id } })
 
       return NextResponse.json({ success: true })
 
