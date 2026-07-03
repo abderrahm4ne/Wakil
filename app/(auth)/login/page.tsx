@@ -10,6 +10,7 @@ export default function Login(){
     const { t } = useTranslation(['auth', 'landing'])
 
     return(
+<<<<<<< HEAD
     <div className="relative flex items-center justify-center h-screen bg-black/90" >
         {/* Back to Home Button */}
         <Link 
@@ -25,6 +26,13 @@ export default function Login(){
         <div className="absolute inset-0 opacity-30 overflow-hidden">
             <div className="absolute top-40 -left-40 w-80 h-80 bg-linear-to-r from-secondary/70 to-green-600/45 rounded-full blur-3xl"></div>
             <div className="absolute bottom-40 -right-40 w-80 h-80 bg-linear-to-r from-secondary/70 to-green-600/45 rounded-full blur-3xl"></div>
+=======
+    <div className="relative flex items-center justify-center h-screen bg-background" >
+
+        <div className="absolute inset-0 opacity-20 overflow-x-hidden">
+            <div className="absolute top-40 lg:-left-10 -left-75 w-80 h-80 bg-blue-600 rounded-full blur-3xl"></div>
+            <div className="absolute top-40 -lg:right-10 -right-75 w-80 h-80 bg-blue-600 rounded-full blur-3xl"></div>
+>>>>>>> 725af48 ( style: working on home page sections)
         </div>
 
         <div className="flex lg:h-3/4 w-3/4 rounded-2xl overflow-hidden z-10" style={{
