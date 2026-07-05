@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import { Plan } from '@prisma/client'
+import { Plan } from '@/generated/prisma/enums'
 
 const PLAN_ORDER: Record<Plan, number> = {
   FREE_TRIAL: 0,
