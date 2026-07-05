@@ -109,15 +109,9 @@ export function ConfirmSubmit({ formData, plan }: ConfirmSubmitProps) {
                     {isLoading ? t('register.creating') : t('register.submit')}
                 </Button>
                 <p className="text-center text-sm text-muted-foreground text-nowrap">
-<<<<<<< HEAD
                     {t('register.existingAccount') + " "}
                         <a href="/login" className="text-foreground hover:underline">
                         {t('register.signIn')}
-=======
-                    {"Existing account? "}
-                        <a href="/login" className="text-foreground hover:underline">
-                        Sign in
->>>>>>> 725af48 ( style: working on home page sections)
                         </a>
                 </p>
             </div>
