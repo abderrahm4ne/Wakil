@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { Plan } from '@prisma/client'
+import { Plan } from "@/generated/prisma/enums";
 
 const LIMITS: Record<Plan, number | null> = {
     FREE_TRIAL: 500,

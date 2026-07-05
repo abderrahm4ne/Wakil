@@ -3,7 +3,7 @@ import CheckAndIncrementUsage from "./usage";
 import { matchRule } from "./rulesMatcher";
 import { callLLM } from "./llm";
 import { sendMetaReply } from "./messenger";
-import { BotType, Language } from "@prisma/client";
+import { BotType, Language } from "@/generated/prisma/enums";
 
 export async function handleMetaMessage(
     pageId: string,

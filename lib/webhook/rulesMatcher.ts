@@ -1,4 +1,5 @@
-import { Rule, Language } from '@prisma/client'
+import { Language } from '@/generated/prisma/enums'
+import { Rule } from '@/generated/prisma/client'
 
 export function matchRule(rules: Rule[], message: string, language: Language): Rule | null {
     const msg = message.toLowerCase()
