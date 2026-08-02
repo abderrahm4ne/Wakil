@@ -18,7 +18,7 @@ interface RegisterFormProps {
 }
 
 export function RegisterForm({ data, onChange }: RegisterFormProps) {
-    const { t } = useTranslation('auth')
+    const { t, i18n } = useTranslation('auth')
     const { name, email, password, confirmPassword } = data 
     const update = (field: string, value: string) => {
         onChange({ ...data, [field]: value })
@@ -79,9 +79,9 @@ export function RegisterForm({ data, onChange }: RegisterFormProps) {
                 className="bg-transparent border-border"
               />
               {showPassword ? (
-                <button type="button" onClick={() => setShowPassword(s => !s)}><EyeOff size={19} className="absolute right-3 top-10 -translate-y-1/2 text-white/60 hover:text-white/40 transition-colors hover:cursor-pointer"/></button>
+                <button type="button" onClick={() => setShowPassword(s => !s)}><EyeOff size={19} className={`absolute ${i18n.language === "ar" ? 'left-3' : 'right-3'} top-10 -translate-y-1/2 text-white/60 hover:text-white/40 transition-colors hover:cursor-pointer`}/></button>
               ) : (
-                <button type="button" onClick={() => setShowPassword(s => !s)}><Eye size={19} className="absolute right-3 top-10 -translate-y-1/2 text-white/60 hover:text-white/40 transition-colors hover:cursor-pointer"/></button>
+                <button type="button" onClick={() => setShowPassword(s => !s)}><Eye size={19} className={`absolute ${i18n.language === "ar" ? 'left-3' : 'right-3'} top-10 -translate-y-1/2 text-white/60 hover:text-white/40 transition-colors hover:cursor-pointer`}/></button>
               )}
             </div>
             
@@ -96,9 +96,9 @@ export function RegisterForm({ data, onChange }: RegisterFormProps) {
                 className="bg-transparent border-border"
               />
               {showConfirmPassword ? (
-                <button type="button" onClick={() => setShowConfirmPassword(s => !s)}><EyeOff size={19} className="absolute right-3 top-10 -translate-y-1/2 text-white/60 hover:text-white/40 transition-colors hover:cursor-pointer"/></button>
+                <button type="button" onClick={() => setShowConfirmPassword(s => !s)}><EyeOff size={19} className={`absolute ${i18n.language === "ar" ? 'left-3' : 'right-3'} top-10 -translate-y-1/2 text-white/60 hover:text-white/40 transition-colors hover:cursor-pointer`}/></button>
               ) : (
-                <button type="button" onClick={() => setShowConfirmPassword(s => !s)}><Eye size={19} className="absolute right-3 top-10 -translate-y-1/2 text-white/60 hover:text-white/40 transition-colors hover:cursor-pointer"/></button>
+                <button type="button" onClick={() => setShowConfirmPassword(s => !s)}><Eye size={19} className={`absolute ${i18n.language === "ar" ? 'left-3' : 'right-3'} top-10 -translate-y-1/2 text-white/60 hover:text-white/40 transition-colors hover:cursor-pointer`}/></button>
               )}
             </div>
 

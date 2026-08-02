@@ -64,6 +64,22 @@ export function ConfirmSubmit({ formData, plan }: ConfirmSubmitProps) {
                 setError(data.error || t('register.errors.somethingWrong'))
                 return
             }
+            if (prismaPlan === "FREE_TRIAL") {
+                alert(t('register.alerts.success'))
+                router.push("/login?registered=true")
+                return
+            }
+            const checkoutRes = await fetch("/api/stripe/checkout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ plan: prismaPlan }),
+            })
+            const checkoutData = await checkoutRes.json()
+            if (!checkoutData.url) {
+                setError(t('register.errors.error in payment'))
+                return
+            }
+            window.location.href = checkoutData.url
             alert(t('register.alerts.success'))
             router.push("/login?registered=true")
         } catch (err){
@@ -75,11 +91,11 @@ export function ConfirmSubmit({ formData, plan }: ConfirmSubmitProps) {
     }
 
     return (
-        <div className="h-full flex flex-col justify-center items-center px-12 ">
+        <div className="h-full  flex flex-col justify-center items-center md:px-10 px-3 ">
             <h2 className="text-3xl font-bold text-white mb-1 font-sans">{t('register.confirmTitle')}</h2>
             <p className="text-muted-foreground text-sm mb-8">{t('register.confirmSubtitle')}</p>
 
-            <div className="space-y-4 w-3/4">
+            <div className="space-y-4 w-full">
                 <div className="p-4 rounded-lg border border-secondary/40 space-y-3">
                     <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">{t('register.name')}</span>

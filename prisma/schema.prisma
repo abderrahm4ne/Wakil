@@ -33,8 +33,12 @@ model User {
 model Subscription {
   id        String    @id @default(uuid())
   plan      Plan
+  provider  PaymentProvider
+  providerCustomerId String
+  providerSusbscriptionId String
   startDate DateTime  @default(now())
   endDate   DateTime?
+  currentPeriodEnd DateTime?
   isActive  Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -148,4 +152,8 @@ enum Language {
 enum ChannelType {
   FACEBOOK
   INSTAGRAM
+}
+
+enum PaymentProvider {
+  CHARGILY
 }

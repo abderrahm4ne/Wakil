@@ -10,6 +10,23 @@ export async function PATCH(req: NextRequest) {
         )
 
         const { isActive } = await req.json()
+
+        if (typeof isActive !== "boolean") {
+            return NextResponse.json(
+                { success: false, error: 'INVALID_INPUT' }, { status: 400 }
+            )
+        }
+
+        if (isActive === true) {
+            const subscription = await prisma.subscription.findUnique({
+                where: { userId: session.user.id }
+            })
+            if (!subscription?.isActive) {
+                return NextResponse.json(
+                    { success: false, error: 'SUBSCRIPTION_INACTIVE' }, { status: 403 }
+                )
+            }
+        }
         
         const updateData: any = [
           prisma.bot.update({
@@ -17,6 +34,7 @@ export async function PATCH(req: NextRequest) {
             data: { isActive }
           })
         ]
+        
 
         if (isActive === true) {
           updateData.push(

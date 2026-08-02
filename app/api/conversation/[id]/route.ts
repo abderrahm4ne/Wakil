@@ -14,9 +14,10 @@ export async function GET(
         )
 
         const bot = await prisma.bot.findUnique({
-        where: { userId: session.user.id }
+        where: { userId: session.user.id },
+        include: { user: { include: { subscription: true } } }
         })
-        if (!bot) return NextResponse.json(
+        if (!bot?.user.subscription?.isActive || !bot) return NextResponse.json(
         { success: false, error: 'BOT_NOT_FOUND' }, { status: 404 }
         )
 

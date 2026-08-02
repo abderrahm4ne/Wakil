@@ -23,7 +23,7 @@ export function PlanSelection({ selected, onSelect }: PlanSelectionProps) {
         },{
             id: "1",
             name: "Starter",
-            price: 1500,
+            price: 2500,
             description: t('pricing.plans.starter.description', { ns: 'landing' }),
             features: t('pricing.plans.starter.features', { ns: 'landing', returnObjects: true }) as string[],
             popular: false,
@@ -48,7 +48,7 @@ export function PlanSelection({ selected, onSelect }: PlanSelectionProps) {
 
     return (
       <div
-          className="w-full h-full flex flex-col justify-center items-center py-7 overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          className="w-full h-full flex flex-col md:justify-center justify-start items-center py-7 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         >
           <div className="sm:w-[85%] w-full space-y-4">
             <div className="space-y-1 place-self-center">
