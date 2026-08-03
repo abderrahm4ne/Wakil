@@ -28,6 +28,13 @@ export async function POST(req: NextRequest) {
             where: { userId: session.user.id }
         })
 
+        const expired = current && current.endDate && current.endDate < new Date();
+        if (!expired) {
+            return NextResponse.json(
+                { sucess: false, error: 'SUBSCRIPTION_NOT_EXPIRED' }, { status: 400 }
+            )
+        }
+
         if (current && PLAN_ORDER[plan as Plan] <= PLAN_ORDER[current.plan as Plan]) {
             return NextResponse.json(
                 { success: false, error: 'CANNOT_DOWNGRADE_HERE' }, { status: 400 }

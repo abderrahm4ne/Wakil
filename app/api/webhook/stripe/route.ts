@@ -19,9 +19,11 @@ export async function POST(req: Request) {
         const session = event.data.object
         const userId = session.client_reference_id
         const plan = session.metadata?.plan
+        const providerSubscriptionId = session.subscription as string
+        const providerCustomerId = session.customer as string
 
         if (userId && plan) {
-            await activateSubscription(userId, plan as any)
+            await activateSubscription(userId, plan as any, providerSubscriptionId, providerCustomerId)
         }
     }
 

@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 
-export async function activateSubscription(userId: string, plan: 'STARTER' | 'PRO' | 'BUSINESS') {
+export async function activateSubscription(userId: string, plan: 'STARTER' | 'PRO' | 'BUSINESS', providerSubscriptionId: string, providerCustomerId: string) {
     const start = new Date()
     const currentPeriodEnd = new Date(start)
     currentPeriodEnd.setMonth(currentPeriodEnd.getMonth() + 1)
@@ -12,6 +12,8 @@ export async function activateSubscription(userId: string, plan: 'STARTER' | 'PR
             isActive: true,
             startDate: start,
             currentPeriodEnd,
+            providerSubscriptionId,
+            providerCustomerId
         }
     })
 }

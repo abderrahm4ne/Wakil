@@ -9,7 +9,7 @@ import {
   MessageSquare,
   Radio,
   Settings,
-  Zap,
+  Wallet,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -44,6 +44,11 @@ const navItems = [
     href: '/dashboard/subscription',
     icon: Settings,
   },
+  {
+    label: 'Billing',
+    href: '/dashboard/billing',
+    icon: Wallet,
+  }
 ]
 
 export function DashboardSidebar() {

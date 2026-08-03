@@ -33,9 +33,9 @@ model User {
 model Subscription {
   id        String    @id @default(uuid())
   plan      Plan
-  provider  PaymentProvider
-  providerCustomerId String
-  providerSusbscriptionId String
+  provider  PaymentProvider?
+  providerCustomerId String?
+  providerSubscriptionId String?
   startDate DateTime  @default(now())
   endDate   DateTime?
   currentPeriodEnd DateTime?
