@@ -10,12 +10,14 @@ interface Props {
     currentPlan: string
     isActive: boolean
     renewalDate: string | null
+    endDate: string | null
 }
 
 export function SubscriptionClient({
     currentPlan,
     isActive,
     renewalDate,
+    endDate,
 }: Props) {
     const [showPlanSelection, setShowPlanSelection] = useState(false)
     const [isUpgrading, setIsUpgrading] = useState(false)
@@ -23,6 +25,13 @@ export function SubscriptionClient({
 
     const formattedRenewal = renewalDate
         ? new Date(renewalDate).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+          })
+        : "N/A"
+
+    const formattedEndDate = endDate ? new Date(endDate).toLocaleTimeString("en-US", {
                 month: "long",
                 day: "numeric",
                 year: "numeric",
@@ -46,27 +55,6 @@ export function SubscriptionClient({
                 router.refresh()
             } else {
                 alert(result.error || "Failed to upgrade plan")
-            }
-        } catch {
-            alert("An error occurred")
-        } finally {
-            setIsUpgrading(false)
-        }
-    }
-
-    const handleRenew = async () => {
-        setIsUpgrading(true)
-        try {
-            const res = await fetch("/api/subscription/renew", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ plan: currentPlan }),
-            })
-            const result = await res.json()
-            if (result.success) {
-                router.refresh()
-            } else {
-                alert(result.error || "Failed to renew plan")
             }
         } catch {
             alert("An error occurred")
@@ -104,8 +92,8 @@ export function SubscriptionClient({
                     planName={planDisplayName}
                     status={isActive ? "active" : "expired"}
                     renewalDate={formattedRenewal}
+                    endDate={formattedEndDate}
                     onUpgrade={() => setShowPlanSelection(true)}
-                    onRenew={handleRenew}
                     onCancel={handleCancel}
                     isLoading={isUpgrading}
                 />

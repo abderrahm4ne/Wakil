@@ -21,6 +21,8 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })
     }
 
+    console.log('creating checkout session for user: ')
+
     const checkoutSession = await stripe.checkout.sessions.create({
         mode: 'subscription',
         line_items: [{ price: planId, quantity: 1 }],
@@ -30,8 +32,8 @@ export async function POST(req: Request) {
             plan: normalizedPlan,
             userId: session.user.id,
         },
-        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?checkout=success`,
-        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/billing?checkout=cancelled`,
+        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard?checkout=success`,
+        cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/billing?checkout=cancelled`,
     })
 
     if (!checkoutSession.url) {

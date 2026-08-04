@@ -23,7 +23,8 @@ export default async function SubscriptionPage() {
             <SubscriptionClient
                 currentPlan={currentPlan}
                 isActive={subscription?.isActive ?? false}
-                renewalDate={subscription?.endDate?.toISOString() ?? null}
+                renewalDate={subscription?.currentPeriodEnd?.toISOString() ?? null}
+                endDate={subscription?.endDate?.toISOString() ?? null}
             />
         </div>
     )

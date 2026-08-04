@@ -8,8 +8,8 @@ interface SubscriptionCardProps {
     planName: string;
     status: 'active' | 'pending_payment' | 'expired';
     renewalDate: string;
+    endDate: string;
     onUpgrade: () => void;
-    onRenew: () => void;
     onCancel: () => void;
     isLoading?: boolean;
 }
@@ -18,8 +18,8 @@ export function SubscriptionCard({
     planName,
     status,
     renewalDate,
+    endDate,
     onUpgrade,
-    onRenew,
     onCancel,
     isLoading,
 }: SubscriptionCardProps) {
@@ -62,6 +62,12 @@ export function SubscriptionCard({
                 <p className="text-slate-400 text-sm mb-1">Plan Renewal Date</p>
                 <p className="text-xl font-semibold text-white" suppressHydrationWarning>{renewalDate}</p>
             </div>
+            {endDate && (
+                <div className="p-4 rounded-lg mb-8 bg-bg">
+                <p className="text-slate-400 text-sm mb-1">Plan End date</p>
+                <p className="text-xl font-semibold text-white" suppressHydrationWarning>{endDate}</p>
+            </div>
+            )}
 
             <div className="flex gap-4">
                 <Button
@@ -70,14 +76,6 @@ export function SubscriptionCard({
                     className="flex-1 bg-secondary text-black hover:bg-secondary/90 hover:cursor-pointer"
                 >
                     Upgrade Plan
-                </Button>
-                <Button
-                    onClick={onRenew}
-                    disabled={isLoading}
-                    variant="outline"
-                    className="flex-1 border-border text-black hover:text-black bg-blue-600 hover:bg-blue-600/80 hover:cursor-pointer"
-                >
-                    Renew Plan
                 </Button>
                 <Button
                     onClick={onCancel}
