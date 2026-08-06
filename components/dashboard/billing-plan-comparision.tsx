@@ -1,5 +1,4 @@
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Check } from 'lucide-react';
 
 interface BillingPlanComparisonProps {
@@ -21,11 +20,10 @@ const plans: PlanDetails[] = [
     price: 0,
     messageLimit: 500,
     features: [
-      'Up to 500 messages/month',
-      'Single bot',
-      'Basic analytics',
-      'Email support',
-    ],
+      "500 messages", 
+      "Rule-based only", 
+      "1 Channel"
+    ]
   },
   {
     id: 'STARTER',
@@ -33,12 +31,11 @@ const plans: PlanDetails[] = [
     price: 1500,
     messageLimit: 2000,
     features: [
-      'Up to 2,000 messages/month',
-      'Single bot',
-      'Advanced analytics',
-      'Priority support',
-      'Multi-language support',
-    ],
+      "2,000 messages/month", 
+      "Rule-based only", 
+      "Unlimited pages", 
+      "1 Channel"
+    ]
   },
   {
     id: 'PRO',
@@ -46,13 +43,12 @@ const plans: PlanDetails[] = [
     price: 4000,
     messageLimit: 10000,
     features: [
-      'Up to 10,000 messages/month',
-      'Multiple bots',
-      'Real-time analytics',
-      '24/7 support',
-      'Multi-language support',
-      'Custom integrations',
-    ],
+      "10,000 messages/month", 
+      "AI included", 
+      "2 Channels", 
+      "Smart escalation", 
+      "Advanced analytics"
+    ]
   },
   {
     id: 'BUSINESS',
@@ -60,14 +56,11 @@ const plans: PlanDetails[] = [
     price: 9000,
     messageLimit: null,
     features: [
-      'Unlimited messages',
-      'Unlimited bots',
-      'Custom analytics',
-      'Dedicated support',
-      'Multi-language support',
-      'Custom integrations',
-      'API access',
-    ],
+      "Unlimited messages", 
+      "AI included", 
+      "2 Channels", 
+      "Priority support" 
+    ]
   },
 ];
 

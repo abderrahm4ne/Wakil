@@ -77,14 +77,14 @@
         "description": "Perfect for testing",
         "period": "/14 days",
         "cta": "Start Free Trial",
-        "features": ["500 messages", "Rule-based only", "Single page", "1 bot"]
+        "features": ["500 messages", "Rule-based only", "Single page", "1 Channel"]
       },
       "starter": {
         "name": "Starter",
         "description": "For small stores",
         "period": "/month",
         "cta": "Get Started",
-        "features": ["2,000 messages/month", "Rule-based only", "Unlimited pages", "3 bots"]
+        "features": ["2,000 messages/month", "Rule-based only", "Unlimited pages", "1 Channel"]
       },
       "pro": {
         "name": "Pro",
@@ -92,7 +92,7 @@
         "period": "/month",
         "cta": "Get Started",
         "badge": "Most Popular",
-        "features": ["10,000 messages/month", "AI included", "Unlimited pages", "Unlimited bots", "Smart escalation", "Advanced analytics"]
+        "features": ["10,000 messages/month", "AI included", "2 Channels", "Smart escalation", "Advanced analytics"]
       },
       "business": {
         "name": "Business",
@@ -100,7 +100,7 @@
         "period": "/month",
         "cta": "Get Started",
         "badge": "Best Value",
-        "features": ["Unlimited messages", "AI included", "Unlimited pages", "Unlimited bots", "Priority support", "Custom integrations"]
+        "features": ["Unlimited messages", "AI included", "2 Channels", "Priority support" ]
       }
     }
   },

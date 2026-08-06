@@ -79,7 +79,7 @@ export default function MyBotPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="bg-slate-900/50 border-slate-800">
+        <Card className="bg-card border-slate-800">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-400">Store Information</CardTitle>
             <Store className="h-4 w-4 text-[#00D4AA]" />
@@ -90,7 +90,7 @@ export default function MyBotPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900/50 border-slate-800">
+        <Card className="bg-card border-slate-800">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-400">Languages</CardTitle>
             <Globe className="h-4 w-4 text-[#00D4AA]" />
@@ -106,7 +106,7 @@ export default function MyBotPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900/50 border-slate-800">
+        <Card className="bg-card border-slate-800">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-400">Contact</CardTitle>
             <Phone className="h-4 w-4 text-[#00D4AA]" />
@@ -117,7 +117,7 @@ export default function MyBotPage() {
         </Card>
       </div>
 
-      <Card className="bg-slate-900/50 border-slate-800">
+      <Card className="bg-card border-slate-800">
         <CardHeader>
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-[#00D4AA]" />
