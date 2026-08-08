@@ -28,7 +28,7 @@ export default function Login(){
         </div>
 
         <div className="flex lg:h-3/4 w-3/4 rounded-2xl overflow-hidden z-10" style={{
-        boxShadow: "-5px 4px 10px rgba(255, 255, 255, 0.1)"
+        boxShadow: "-2px 1px 10px rgba(255, 255, 255, 0.1)"
     }}>
            
             {/* left side gradient */}

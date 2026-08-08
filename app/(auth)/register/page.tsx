@@ -63,7 +63,7 @@ export default function Register() {
 
             <div
                 className="flex w-3/4 rounded-2xl overflow-hidden z-10"
-                style={{ boxShadow: "-5px 4px 10px rgba(255, 255, 255, 0.1)", height: "75vh" }}
+                style={{ boxShadow: "-2px 1px 10px rgba(255, 255, 255, 0.1)", height: "75vh" }}
             >
                 {/* left side gradient */}
                 <div className="hidden lg:flex lg:w-2/4 h-full relative overflow-hidden font-display">

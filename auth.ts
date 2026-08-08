@@ -1,12 +1,17 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
+import Google from 'next-auth/providers/google'
 import { prisma } from '@/lib/prisma'
 import { authConfig } from "@/auth.config"
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
     providers: [
+        Google({
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+        }),
         Credentials({
             credentials: {
                 email: { label: 'Email', type: 'email' },
@@ -29,8 +34,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                 // console.log("User found, emailVerified:", user.emailVerified)
 
                 if (!user.emailVerified) {
-                    console.log("Auth failed: Email not verified")
+                    // console.log("Auth failed: Email not verified")
                     throw new Error ("EMAIL_NOT_VERIFIED")
+                }
+
+                if (!user.password) {
+                    // console.log("Auth failed: No password set")
+                    return null
                 }
 
                 const valid = await bcrypt.compare(
@@ -55,12 +65,48 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     ],
     callbacks: {
         ...authConfig.callbacks,
-        async jwt({ token, user }) {
+        async signIn({ user, account }) {
+            if (account?.provider === 'google') {
+                console.log("Google sign-in attempt for:", user.email)
+                console.log("Google env :", process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET)
+                const existingUser = await prisma.user.findUnique({
+                    where: { email: user.email as string }
+                })
+
+                if (existingUser && !existingUser.emailVerified) {
+                    return "/login?error=EMAIL_NOT_VERIFIED"
+                }
+
+                if (!existingUser) {
+                    const newUser = await prisma.user.create({
+                        data: {
+                            name: user.name ?? "",
+                            email: user.email ?? "",
+                            password: null,
+                            emailVerified: new Date(),
+                        }
+                    })
+                    return `/onboarding/plan?userId=${newUser.id}`
+                }
+            }
+
+            return true
+        },
+        async jwt({ token, user, account }) {
             if (user) {
-                token.id = user.id
-                // set plan to cookie
+                let dbUser = user;
+
+                if (account?.provider === 'google') {
+                    dbUser = await prisma.user.findUnique({
+                        where: { email: user.email as string }
+                    }) ?? user
+                }
+
+                token.id = dbUser.id
                 const sub = await prisma.subscription.findFirst({
-                    where : { userId: user.id },
+                    where: {
+                        userId: dbUser.id
+                    }
                 })
                 token.plan = sub?.plan || 'FREE_TRIAL'
             }

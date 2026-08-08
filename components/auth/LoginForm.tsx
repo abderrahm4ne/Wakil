@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation"
 import { EyeOff, Eye } from "lucide-react"
 import { validateLogin } from "@/app/action/login"
 import { useTranslation } from "react-i18next"
+import GoogleButton from "./googleButton"
 
 export function LoginForm() {
     const { t } = useTranslation('auth')
@@ -129,7 +130,7 @@ export function LoginForm() {
       </div>
 
       <div className="flex flex-col space-y-2">
-          <Button type="submit" className="w-full bg-primary text-black py-4.5" disabled={isLoading}>
+          <Button type="submit" className="w-full bg-primary text-black py-4.5 hover:cursor-pointer" disabled={isLoading}>
             {isLoading ? t('login.signingIn') : t('login.signIn')}
           </Button>
           <p className="text-center text-sm text-muted-foreground text-nowrap">
@@ -139,6 +140,7 @@ export function LoginForm() {
                 </a>
           </p>
       </div>
+      <GoogleButton />
 
       {error && (
           <div className="text-center space-y-2">
