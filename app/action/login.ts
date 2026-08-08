@@ -15,11 +15,15 @@ export async function validateLogin(email: string, password: string) {
       return { error: "EMAIL_NOT_VERIFIED" }
    }
 
+   if (!user.password) {
+      return { error: "USER_NOT_FOUND" }
+   }
+
    const passwordCheck = await bcrypt.compare(
                             password,
                             user.password
                         )
-    if (!passwordCheck) {
+   if (!passwordCheck) {
       return { error: "USER_NOT_FOUND" }
    }
 
