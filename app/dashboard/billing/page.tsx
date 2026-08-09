@@ -54,7 +54,7 @@ export default async function BillingPage() {
     const subscription = await prisma.subscription.findUnique({
     where: { userId: session.user.id },
     })
-    if (!subscription) redirect('/dashboard')
+    if (!subscription) redirect('/dashboard/billing')
 
     const subscriptionData = {
         plan: subscription.plan,

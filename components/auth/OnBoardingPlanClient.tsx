@@ -21,11 +21,11 @@ export default function OnBoardingPlanClient() {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-background px-4">
+        <div className="flex items-center justify-center min-h-screen bg-background px-4 py-10">
             <div className="flex flex-col items-center gap-8 max-w-2xl w-full">
                 <WakilLogo />
 
-                <div className="text-center space-y-2">
+                <div className="text-center space-y-1">
                     <h1 className="text-2xl font-bold text-foreground">Choose your plan</h1>
                     <p className="text-muted-foreground">You can change this anytime from billing.</p>
                 </div>

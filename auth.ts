@@ -67,19 +67,19 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         ...authConfig.callbacks,
         async signIn({ user, account }) {
             if (account?.provider === 'google') {
-                console.log("Google sign-in attempt for:", user.email)
-                console.log("Google env :", process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET)
+                // console.log("Google sign-in attempt for:", user.email)
+                // console.log("Google env :", process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET)
                 const existingUser = await prisma.user.findUnique({
                     where: { email: user.email as string }
                 })
 
                 if (existingUser && !existingUser.emailVerified) {
-                    console.log("Existing user found", existingUser.email)
+                    // console.log("Existing user found", existingUser.email)
                     return "/login?error=EMAIL_NOT_VERIFIED"
                 }
 
                 if (!existingUser) {
-                    console.log("Creating new user :", user.email)
+                    // console.log("Creating new user :", user.email)
                     const newUser = await prisma.user.create({
                         data: {
                             name: user.name ?? "",
@@ -88,7 +88,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                             emailVerified: new Date(),
                         }
                     })
-                    console.log("New user created:", newUser.email)
+                    // console.log("New user created:", newUser.email)
                 }
             }
 

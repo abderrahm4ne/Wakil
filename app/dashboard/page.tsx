@@ -1,28 +1,18 @@
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { BarChart3, Bot, MessageSquare, Zap } from 'lucide-react'
-import { headers } from 'next/headers'
-
-async function getDashboardData() {
-    const host = (await headers()).get('host')
-    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https'
-    const baseUrl = `${protocol}://${host}`
-
-    const [analyticsRes, botRes] = await Promise.all([
-        fetch(`${baseUrl}/api/analytics`, { headers: await headers() }),
-        fetch(`${baseUrl}/api/bot`, { headers: await headers() })
-    ])
-
-    const analytics = await analyticsRes.json()
-    const bot = await botRes.json()
-
-    return {
-        analytics: analytics.success ? analytics.data : null,
-        bot: bot.success ? bot.data : null
-    }
-}
+import { planChecking } from '../action/plan'
+import { auth } from '@/auth'
+import { redirect } from 'next/navigation'
+import { getDashboardData } from '@/lib/data/dashboard'
 
 export default async function DashboardPage() {
+    const session = await auth()
+    const hasPlan = await planChecking(session?.user.id)
+    if(!hasPlan){
+        redirect('/onboarding/plan-selection')
+    }
+
     const { analytics, bot } = await getDashboardData()
 
     const stats = [
@@ -58,7 +48,11 @@ export default async function DashboardPage() {
                 Welcome back! Here&apos;s what&apos;s happening with your bot today.
             </p>
             </div>
-            {!bot && <Button className='text-secondary bg-card hover:bg-card/60 hover:cursor-pointer px-10' size="lg">Create Bot</Button>}
+            {!bot && 
+            <Button 
+            className='text-secondary bg-card hover:bg-card/60 hover:cursor-pointer px-10' 
+            size="lg" 
+            >Create Bot</Button>}
         </div>
 
         {/* Stats Grid */}
@@ -83,7 +77,7 @@ export default async function DashboardPage() {
             <Card className="p-6">
                 <h2 className="text-lg font-semibold text-foreground">Top Triggers</h2>
                 <div className="mt-6 space-y-4">
-                {analytics?.topTriggers?.length > 0 ? (
+                {analytics && analytics.topTriggers && analytics.topTriggers.length > 0 ? (
                     analytics.topTriggers.map((trigger: any, index: number) => (
                         <div
                         key={index}
