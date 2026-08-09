@@ -74,10 +74,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                 })
 
                 if (existingUser && !existingUser.emailVerified) {
+                    console.log("Existing user found", existingUser.email)
                     return "/login?error=EMAIL_NOT_VERIFIED"
                 }
 
                 if (!existingUser) {
+                    console.log("Creating new user :", user.email)
                     const newUser = await prisma.user.create({
                         data: {
                             name: user.name ?? "",
@@ -86,7 +88,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                             emailVerified: new Date(),
                         }
                     })
-                    return `/onboarding/plan?userId=${newUser.id}`
+                    console.log("New user created:", newUser.email)
                 }
             }
 
