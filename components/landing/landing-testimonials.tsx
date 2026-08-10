@@ -3,8 +3,13 @@
 import { Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { useRef } from 'react';
+
 export default function LandingTestimonials() {
   const { t } = useTranslation('landing');
+  const sectionRef = useRef(null)
+  useScrollReveal(sectionRef)
 
   const testimonials = t('testimonials.items', { returnObjects: true }) as Array<{
     name: string;
@@ -13,8 +18,8 @@ export default function LandingTestimonials() {
   }>;
 
   return (
-    <section className="bg-black py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
+    <section ref={sectionRef} className="bg-black py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto reveal">
         <div className="text-center mb-16 font-display">
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
             {t('testimonials.title')}
@@ -22,7 +27,7 @@ export default function LandingTestimonials() {
           <p className="text-neutral-400 text-lg">{t('testimonials.subtitle')}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal">
           {testimonials.map((testimonial, index) => (
             <div
               key={index}

@@ -2,9 +2,13 @@
 
 import { Settings, Link as LinkIcon, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { useRef } from 'react';
 
 export default function LandingHowItWorks() {
   const { t } = useTranslation('landing');
+  const sectionRef = useRef<HTMLDivElement>(null)
+  useScrollReveal(sectionRef)
 
   const steps = [
     {
@@ -28,8 +32,8 @@ export default function LandingHowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="bg-black py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
+    <section ref={sectionRef}  id="how-it-works" className="bg-black py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto reveal">
         <div className="text-center mb-16 font-display">
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
             {t('howItWorks.title')}
@@ -37,7 +41,7 @@ export default function LandingHowItWorks() {
           <p className="text-neutral-400 text-lg">{t('howItWorks.subtitle')}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative reveal">
           {/* Connecting lines  */}
           <div className="hidden md:block absolute top-1/3 left-0 right-0 h-1 bg-linear-to-r from-transparent via-green-600/50 to-transparent -z-10"></div>
 
@@ -56,8 +60,8 @@ export default function LandingHowItWorks() {
                 </div>
 
                 {/* Content */}
-                <h3 className="text-xl font-semibold text-white mb-2 text-center">{step.title}</h3>
-                <p className="text-neutral-400 text-center">{step.description}</p>
+                <h3 className="text-xl font-semibold text-white mb-2 text-center reveal">{step.title}</h3>
+                <p className="text-neutral-400 text-center reveal">{step.description}</p>
               </div>
             );
           })}

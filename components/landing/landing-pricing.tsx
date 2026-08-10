@@ -4,8 +4,13 @@ import Link from 'next/link';
 import { Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+import { useScrollReveal } from '@/hooks/useScrollReveal';
+import { useRef } from 'react';
+
 export default function LandingPricing() {
   const { t } = useTranslation('landing');
+  const sectionRef = useRef(null)
+  useScrollReveal(sectionRef)
 
   const plans = [
     {
@@ -51,8 +56,8 @@ export default function LandingPricing() {
   ];
 
   return (
-    <section id="pricing" className="bg-black py-20 px-4 sm:px-6 lg:px-8">
-      <div className="flex flex-col justify-center max-w-6xl mx-auto">
+    <section ref={sectionRef} id="pricing" className="bg-black py-20 px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col justify-center max-w-6xl mx-auto reveal">
         <div className="text-center mb-16 font-display">
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
             {t('pricing.title')}
@@ -60,7 +65,7 @@ export default function LandingPricing() {
           <p className="text-neutral-400 text-lg">{t('pricing.subtitle')}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
           {plans.map((plan, index) => (
             <div
               key={index}

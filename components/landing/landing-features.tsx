@@ -2,9 +2,13 @@
 
 import { Globe, Bot, MessageCircle, BarChart3, Zap, Bell } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useRef } from 'react';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 
 export default function LandingFeatures() {
   const { t } = useTranslation('landing');
+  const sectionRef = useRef<HTMLElement>(null)
+  useScrollReveal(sectionRef)
 
   const features = [
     {
@@ -40,8 +44,8 @@ export default function LandingFeatures() {
   ];
 
   return (
-    <section id="features" className="bg-black py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
+    <section id="features" ref={sectionRef} className="bg-black py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto reveal">
         <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-display font-semibold text-white mb-4">
             {t('features.title')}
@@ -49,7 +53,7 @@ export default function LandingFeatures() {
           <p className="text-muted-foreground text-lg font-display">{t('features.subtitle')}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 reveal">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
