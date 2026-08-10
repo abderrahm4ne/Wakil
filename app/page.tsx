@@ -9,7 +9,7 @@ import LandingCtaBanner from '@/components/landing/landing-cta-banner';
 import LandingFooter from '@/components/landing/landing-footer';
 
 export const metadata = {
-  title: 'Botify - AI Chatbot for Algerian E-commerce Merchants',
+  title: 'Wakil - AI Chatbot for Algerian E-commerce Merchants',
   description: 'Automate your Instagram & Facebook DMs with AI-powered replies in Arabic, French, and Darija. Start your 14-day free trial today.',
 };
 

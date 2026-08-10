@@ -8,6 +8,8 @@ import { getDashboardData } from '@/lib/data/dashboard'
 
 export default async function DashboardPage() {
     const session = await auth()
+    console.log(session)
+    if(!session) redirect("/login")
     const hasPlan = await planChecking(session?.user.id)
     if(!hasPlan){
         redirect('/onboarding/plan-selection')
@@ -48,11 +50,6 @@ export default async function DashboardPage() {
                 Welcome back! Here&apos;s what&apos;s happening with your bot today.
             </p>
             </div>
-            {!bot && 
-            <Button 
-            className='text-secondary bg-card hover:bg-card/60 hover:cursor-pointer px-10' 
-            size="lg" 
-            >Create Bot</Button>}
         </div>
 
         {/* Stats Grid */}

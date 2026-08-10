@@ -5,16 +5,21 @@ import { useRouter } from "next/navigation"
 import { PlanSelection } from "@/components/auth/PlanSelection"
 import WakilLogo from "@/components/common/WakilLogo"
 import { createSubscriptionForCurrentUser } from "@/lib/actions/planSelection"
+import { useSession } from "next-auth/react"
+
 
 export default function OnBoardingPlanClient() {
     const [selectedPlan, setSelectedPlan] = useState("Starter")
     const [isPending, startTransition] = useTransition()
     const router = useRouter()
+    const { update } = useSession()
+
 
     const handleConfirm = () => {
         startTransition(async () => {
             const res = await createSubscriptionForCurrentUser(selectedPlan)
             if (res.success) {
+                await update()
                 router.push("/dashboard")
             }
         })

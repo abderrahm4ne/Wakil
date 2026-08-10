@@ -94,7 +94,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
             return true
         },
-        async jwt({ token, user, account }) {
+        async jwt({ token, user, account, trigger }) {
             if (user) {
                 let dbUser = user;
 
@@ -109,6 +109,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                     where: {
                         userId: dbUser.id
                     }
+                })
+                token.plan = sub?.plan || 'FREE_TRIAL'
+            }
+            if (trigger === "update") {
+                const sub = await prisma.subscription.findFirst({
+                    where: { userId: token.id as string }
                 })
                 token.plan = sub?.plan || 'FREE_TRIAL'
             }
