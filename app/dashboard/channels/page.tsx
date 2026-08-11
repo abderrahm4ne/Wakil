@@ -53,7 +53,7 @@ export default async function ChannelsPage() {
                             <Card key={type} className="p-6">
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-center gap-3">
-                                        <Image src={meta.icon} alt={meta.label} className={`h-8 w-8 ${meta.color}`} />
+                                        <Image src={meta.icon} alt={meta.label} className={`h-10 w-10 ${meta.color}`} />
                                         <div>
                                             <p className="font-semibold text-foreground">{meta.label}</p>
                                             <div className="mt-1 flex items-center gap-1.5">
@@ -121,7 +121,13 @@ export default async function ChannelsPage() {
                                             <tr key={channel.id} className="border-b border-border last:border-0">
                                                 <td className="py-3">
                                                     <div className="flex items-center gap-2">
-                                                        <meta.icon className={`h-4 w-4 ${meta.color}`} />
+                                                        <Image
+                                                            src={meta.icon}
+                                                            alt={meta.label}
+                                                            className={`h-4 w-4 ${meta.color}`}
+                                                            width={16}
+                                                            height={16}
+                                                        />
                                                         <span className="text-foreground">{meta.label}</span>
                                                     </div>
                                                 </td>
