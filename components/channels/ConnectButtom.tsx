@@ -9,7 +9,7 @@ type Props = {
 
 export function ConnectButton({ platform, botId }: Props) {
     const handleConnect = () => {
-        window.location.href = `/api/channels/connect?platform=${platform}&botId=${botId}`
+        window.location.href = `/api/channels/connect?platform=${platform.toLowerCase()}&botId=${botId}`
     }
 
     return (
