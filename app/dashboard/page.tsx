@@ -1,6 +1,5 @@
 import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { BarChart3, Bot, MessageSquare, Zap } from 'lucide-react'
+import { BarChart3, Bot, MessageSquare, Zap, Check, X, CreditCard } from 'lucide-react'
 import { planChecking } from '../action/plan'
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
@@ -15,12 +14,23 @@ export default async function DashboardPage() {
         redirect('/onboarding/plan-selection')
     }
 
-    const { analytics, bot } = await getDashboardData()
+    const { analytics, bot, subscription } = await getDashboardData()
+    // console.log(subscription)
+    const planDisplayed =
+         subscription?.plan
+        ? subscription.plan.charAt(0).toUpperCase() +
+        subscription.plan.slice(1).toLowerCase()
+        : "";
 
     const stats = [
         {
-            label: 'Active Bots',
-            value: bot ? 1 : 0,
+            label: 'Plan',
+            value: planDisplayed,
+            icon: CreditCard
+        },
+        {
+            label: 'Bot Alive',
+            value: bot ? <Check className='text-emerald-400' size={34}/> : <X className='text-red-500' size={34}/>,
             icon: Bot,
         },
         {

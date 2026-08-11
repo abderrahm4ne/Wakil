@@ -97,6 +97,7 @@ model Rule {
 model Conversation {
   id         String    @id @default(cuid())
   customerId String
+  label      String?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   botId      String

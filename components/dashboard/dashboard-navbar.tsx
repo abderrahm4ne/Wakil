@@ -12,6 +12,7 @@ import {
 import { useSession } from 'next-auth/react'
 import { logout } from '@/app/action/logout'
 import { LogOut, Settings, User } from 'lucide-react'
+import { redirect } from 'next/navigation'
 
 export function DashboardNavbar() {
   const { data: session } = useSession()
@@ -58,14 +59,14 @@ export function DashboardNavbar() {
       {/* Right side  */}
       <div className="flex items-center gap-4">
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger className='hover:cursor-pointer hover:scale-[1.02] focus:scale-[0.99] ' asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0">
               <div className={`h-10 w-10 rounded-full bg-linear-to-br ${userGradient} flex items-center justify-center text-white font-medium border-2 border-background shadow-sm`}>
                 {user?.name?.substring(0, 2).toUpperCase() || 'WK'}
               </div>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-60">
+          <DropdownMenuContent align="end" className="w-70">
             <div className="flex items-center gap-2 px-2 py-3 ">
               <div className={`h-9 w-9 rounded-full bg-linear-to-br ${userGradient} flex items-center justify-center text-white font-medium shadow-sm`}>
                 {user?.name?.substring(0, 2).toUpperCase() || 'WK'}
@@ -78,7 +79,7 @@ export function DashboardNavbar() {
               </div>
             </div>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem className='hover:cursor-pointer' onClick={() => {redirect("/dashboard/settings")}}>
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>
@@ -86,7 +87,7 @@ export function DashboardNavbar() {
             <DropdownMenuItem
               onClick={handleLogout}
               disabled={isLoading}
-              className="text-destructive focus:text-destructive"
+              className="text-destructive focus:text-destructive hover:cursor-pointer"
             >
               <LogOut className="mr-2 h-4 w-4" />
               <span>{isLoading ? 'Logging out...' : 'Logout'}</span>
