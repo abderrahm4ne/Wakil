@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'default_key_change_this_in_production'
+const ENCRYPTION_KEY = crypto.createHash('sha256').update(process.env.ENCRYPTION_KEY!).digest()
 const ALGORITHM = 'aes-256-gcm'
 
 export function encrypt(text: string): string {

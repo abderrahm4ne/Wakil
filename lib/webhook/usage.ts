@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { Plan } from "@/generated/prisma/enums";
+import { Plan } from "@/generated/prisma/enums"
 
 const LIMITS: Record<Plan, number | null> = {
     FREE_TRIAL: 500,
@@ -13,29 +13,31 @@ export default async function CheckAndIncrementUsage(botId: string, plan: Plan):
     const month = now.getMonth() + 1
     const year = now.getFullYear()
 
-    // create log for this month
-    const log = await prisma.usageLog.upsert({
-        where: { botId_month_year: { botId, month, year } },
-        update: {},
-        create: { botId, month, year, messageCount: 0 }
-    })
-
-    const limit = LIMITS[plan]
-    if (limit == null) {
-        await prisma.usageLog.update({
-            where : { id: log.id },
-            data: { messageCount: log.messageCount + 1 }
+    return await prisma.$transaction(async (tx) => {
+        await tx.usageLog.upsert({
+            where: { botId_month_year: { botId, month, year } },
+            update: {},
+            create: { botId, month, year, messageCount: 0 }
         })
+
+        const log = await tx.$queryRaw<{ id: string; messageCount: number }[]>`
+            SELECT id, "messageCount" FROM "UsageLog"
+            WHERE "botId" = ${botId} AND month = ${month} AND year = ${year}
+            FOR UPDATE
+        `
+
+        const current = log[0]
+        const limit = LIMITS[plan]
+
+        if (limit !== null && current.messageCount >= limit) {
+            return false
+        }
+
+        await tx.usageLog.update({
+            where: { id: current.id },
+            data: { messageCount: { increment: 1 } }
+        })
+
         return true
-    }
-
-    if (log.messageCount >= limit) return false
-
-    // increment
-    await prisma.usageLog.update({
-        where: { id: log.id },
-        data: { messageCount: { increment: 1 } }
     })
-    
-    return true
 }

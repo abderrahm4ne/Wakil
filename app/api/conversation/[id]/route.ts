@@ -17,9 +17,12 @@ export async function GET(
         where: { userId: session.user.id },
         include: { user: { include: { subscription: true } } }
         })
-        if (!bot?.user.subscription?.isActive || !bot) return NextResponse.json(
-        { success: false, error: 'BOT_NOT_FOUND' }, { status: 404 }
-        )
+
+        if(!bot) {
+            return NextResponse.json(
+                { success: false, error: 'NO_BOT_FOUND'}, { status: 404}
+            )
+        }
 
         const conversation = await prisma.conversation.findFirst({
         where: { id: id, botId: bot.id },
