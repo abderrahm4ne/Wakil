@@ -9,8 +9,11 @@ export async function getDashboardData() {
         where: { userId: session.user.id },
         include: { channels: true }
     })
+    const subscription = await prisma.subscription.findFirst({
+        where: {userId: session.user.id}
+    })
 
-    if (!bot) return { analytics: null, bot: null }
+    if (!bot) return { analytics: null, bot: null, subscription}
 
     const now = new Date()
     const [usage, totalConversations, topTriggers] = await Promise.all([
@@ -41,6 +44,7 @@ export async function getDashboardData() {
                 trigger: r.trigger,
                 count: r._count.messages
             }))
-        }
+        },
+        subscription
     }
 }
