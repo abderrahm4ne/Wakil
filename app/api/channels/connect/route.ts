@@ -23,11 +23,12 @@ export async function GET(req: NextRequest) {
     
     const state = signState({ botId, platform, userId: session.user.id })
 
-    const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/channels/connect/callback`
-    const scopes = 'pages_show_list,pages_messaging,instagram_basic,instagram_manage_messages'
+    const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/api/channels/connect/callback`
+    const scopes = 'pages_show_list,pages_manage_metadata,instagram_basic,instagram_manage_messages'
 
     const authUrl = new URL('https://www.facebook.com/v21.0/dialog/oauth')
     authUrl.searchParams.set('client_id', process.env.META_APP_ID!)
+    authUrl.searchParams.set('config_id', process.env.META_CONFIG_ID!)
     authUrl.searchParams.set('redirect_uri', redirectUri)
     authUrl.searchParams.set('state', state)
     authUrl.searchParams.set('scope', scopes)

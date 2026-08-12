@@ -33,13 +33,13 @@ export async function GET(req: NextRequest) {
 
     const { botId, platform } = payload
 
-    // re-verify bot ownership (state could theoretically be old/stale)
+    // re-verify bot ownership (state could be old/stale)
     const bot = await prisma.bot.findUnique({ where: { id: botId } })
     if (!bot || bot.userId !== session.user.id) {
         return NextResponse.redirect(new URL('/dashboard/channels?error=FORBIDDEN', req.url))
     }
 
-    const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/channels/connect/callback`
+    const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/api/channels/connect/callback`
 
     try {
         // Step 1: exchange code -> short-lived user access token
