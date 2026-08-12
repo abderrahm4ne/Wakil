@@ -10,6 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { useTranslation } from 'react-i18next';
 
 interface DailyChartProps {
   data: Array<{
@@ -23,6 +24,7 @@ export function AnalyticsDailyChart({
   data,
   isLoading = false,
 }: DailyChartProps) {
+  const { t } = useTranslation('dashboard');
   if (isLoading) {
     return (
       <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
@@ -34,7 +36,7 @@ export function AnalyticsDailyChart({
   return (
     <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
       <h3 className="mb-6 text-lg font-semibold text-white">
-        Messages per day (last 30 days)
+        {t('analytics.perDay')}
       </h3>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart

@@ -1,18 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import crypto from 'crypto'
 import { signState } from '@/lib/oauthstate'
 
 export async function GET(req: NextRequest) {
     const session = await auth()
     if (!session) return NextResponse.redirect(new URL('/login', req.url))
 
-    const platform = req.nextUrl.searchParams.get('platform')
+    const requestedPlatform = req.nextUrl.searchParams.get('platform')
     const botId = req.nextUrl.searchParams.get('botId')
+    const platform = requestedPlatform?.toUpperCase()
 
     if (!platform || !botId) {
         return NextResponse.json({ error: 'MISSING_PARAMS' }, { status: 400 })
+    }
+    if (platform !== 'FACEBOOK' && platform !== 'INSTAGRAM') {
+        return NextResponse.json({ error: 'INVALID_PLATFORM' }, { status: 400 })
     }
 
     // ownership check
@@ -23,7 +26,7 @@ export async function GET(req: NextRequest) {
     
     const state = signState({ botId, platform, userId: session.user.id })
 
-    const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/channels/connect/callback`
+    const redirectUri = `${process.env.NEXT_PUBLIC_BASE_URL}/api/channels/connect/callback`
     const scopes = 'pages_show_list,pages_messaging,instagram_basic,instagram_manage_messages'
 
     const authUrl = new URL('https://www.facebook.com/v21.0/dialog/oauth')

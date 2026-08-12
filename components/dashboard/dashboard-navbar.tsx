@@ -13,10 +13,12 @@ import { useSession } from 'next-auth/react'
 import { logout } from '@/app/action/logout'
 import { LogOut, Settings, User } from 'lucide-react'
 import { redirect } from 'next/navigation'
+import { useTranslation } from 'react-i18next'
 
 export function DashboardNavbar() {
   const { data: session } = useSession()
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useTranslation('dashboard')
 
   const handleLogout = async () => {
     setIsLoading(true)
@@ -50,10 +52,10 @@ export function DashboardNavbar() {
   const userGradient = user?.email ? getGradient(user.email) : 'from-gray-500 to-slate-500'
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/95 backdrop-blur px-6 ml-64">
+    <header className="sticky top-0 z-30 ms-64 flex h-16 items-center justify-between border-b border-border bg-background/95 px-6 backdrop-blur">
       {/* Left side */}
       <div className="flex items-center gap-4">
-        <h1 className="text-lg font-semibold text-foreground">Dashboard</h1>
+        <h1 className="text-lg font-semibold text-foreground">{t('navbar.title')}</h1>
       </div>
 
       {/* Right side  */}
@@ -72,7 +74,7 @@ export function DashboardNavbar() {
                 {user?.name?.substring(0, 2).toUpperCase() || 'WK'}
               </div>
               <div className="flex flex-col gap-1 ">
-                <p className="text-sm font-medium leading-none text-wrap">{user?.name || 'Wakil User'}</p>
+                <p className="text-sm font-medium leading-none text-wrap">{user?.name || t('navbar.userFallback')}</p>
                 <p className="text-xs leading-none text-muted-foreground text-wrap">
                   {user?.email || 'user@wakil.ai'}
                 </p>
@@ -80,8 +82,8 @@ export function DashboardNavbar() {
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem className='hover:cursor-pointer' onClick={() => {redirect("/dashboard/settings")}}>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
+              <Settings className="me-2 h-4 w-4" />
+              <span>{t('navbar.settings')}</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -89,8 +91,8 @@ export function DashboardNavbar() {
               disabled={isLoading}
               className="text-destructive focus:text-destructive hover:cursor-pointer"
             >
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>{isLoading ? 'Logging out...' : 'Logout'}</span>
+              <LogOut className="me-2 h-4 w-4" />
+              <span>{isLoading ? t('navbar.loggingOut') : t('navbar.logout')}</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

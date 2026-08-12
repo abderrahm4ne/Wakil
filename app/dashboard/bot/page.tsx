@@ -6,8 +6,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from 'react-i18next';
 
 export default function MyBotPage() {
+  const { t, i18n } = useTranslation('dashboard');
   const [loading, setLoading] = useState(true);
   const [bot, setBot] = useState<any>(null);
 
@@ -44,14 +46,14 @@ export default function MyBotPage() {
            <Settings className="h-12 w-12" />
         </div>
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-white">Bot Not Configured</h1>
+          <h1 className="text-3xl font-bold text-white">{t('bot.notConfigured')}</h1>
           <p className="text-slate-400 max-w-md">
-            You haven't configured your bot yet. Please set up your store information to get started.
+            {t('bot.notConfiguredDescription')}
           </p>
         </div>
         <Link href="/dashboard/bot/settings">
           <Button className="bg-[#00D4AA] text-slate-950 hover:bg-[#00D4AA]/90">
-            Go to Settings to Configure
+            {t('bot.configure')}
           </Button>
         </Link>
       </div>
@@ -65,15 +67,15 @@ export default function MyBotPage() {
           <h1 className="text-3xl font-bold text-white mb-2">{bot.name}</h1>
           <div className="flex items-center gap-2">
             <Badge className={bot.isActive ? "bg-[#00D4AA] text-slate-950" : "bg-slate-700 text-slate-400"}>
-              {bot.isActive ? "Active" : "Inactive"}
+              {bot.isActive ? t('bot.active') : t('bot.inactive')}
             </Badge>
-            <span className="text-slate-500 text-sm" suppressHydrationWarning>Created on {new Date(bot.createdAt).toLocaleDateString()}</span>
+            <span className="text-slate-500 text-sm" suppressHydrationWarning>{t('bot.created', { date: new Date(bot.createdAt).toLocaleDateString(i18n.language) })}</span>
           </div>
         </div>
         <Link href="/dashboard/bot/settings">
           <Button variant="outline" className="border-slate-800 text-white hover:bg-slate-800 hover:text-white hover:cursor-pointer">
-            <Settings className="mr-2 h-4 w-4 " />
-            Bot Settings
+            <Settings className="me-2 h-4 w-4 " />
+            {t('bot.settings')}
           </Button>
         </Link>
       </div>
@@ -81,7 +83,7 @@ export default function MyBotPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="bg-card border-slate-800">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Store Information</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-400">{t('bot.store')}</CardTitle>
             <Store className="h-4 w-4 text-[#00D4AA]" />
           </CardHeader>
           <CardContent>
@@ -92,7 +94,7 @@ export default function MyBotPage() {
 
         <Card className="bg-card border-slate-800">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Languages</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-400">{t('bot.languages')}</CardTitle>
             <Globe className="h-4 w-4 text-[#00D4AA]" />
           </CardHeader>
           <CardContent>
@@ -108,7 +110,7 @@ export default function MyBotPage() {
 
         <Card className="bg-card border-slate-800">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Contact</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-400">{t('bot.contact')}</CardTitle>
             <Phone className="h-4 w-4 text-[#00D4AA]" />
           </CardHeader>
           <CardContent>
@@ -121,10 +123,10 @@ export default function MyBotPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-[#00D4AA]" />
-            <CardTitle className="text-white">Current Mode</CardTitle>
+            <CardTitle className="text-white">{t('bot.mode')}</CardTitle>
           </div>
           <CardDescription className="text-slate-400">
-            {bot.type === 'AI_POWERED' ? 'Your bot is powered by advanced AI for natural conversations.' : 'Your bot is currently following fixed rules for responses.'}
+            {bot.type === 'AI_POWERED' ? t('bot.aiDescription') : t('bot.rulesDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent>

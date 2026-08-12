@@ -157,4 +157,17 @@ enum ChannelType {
 
 enum PaymentProvider {
   CHARGILY
+  STRIPE
+}
+
+model PendingChannelConnection {
+  id        String      @id @default(uuid())
+  platform  ChannelType
+  pages     Json
+  expiresAt DateTime
+  createdAt DateTime    @default(now())
+  userId    String
+  botId     String
+
+  @@index([userId, expiresAt])
 }
