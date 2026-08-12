@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import crypto from 'crypto'
 import { signState } from '@/lib/oauthstate'
 
 export async function GET(req: NextRequest) {

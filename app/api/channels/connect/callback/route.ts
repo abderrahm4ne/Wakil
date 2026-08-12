@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
 
         const shortLivedToken: string = tokenData.access_token
 
-        // Step 2: exchange short-lived user token -> long-lived user token (~60 days)
+        // Step 2: exchange short-lived user token -> long-lived user token (60 days)
         const longLivedUrl = new URL('https://graph.facebook.com/v21.0/oauth/access_token')
         longLivedUrl.searchParams.set('grant_type', 'fb_exchange_token')
         longLivedUrl.searchParams.set('client_id', process.env.META_APP_ID!)
@@ -88,9 +88,7 @@ export async function GET(req: NextRequest) {
             return NextResponse.redirect(new URL('/dashboard/channels?error=NO_PAGES_FOUND', req.url))
         }
 
-        // NOTE: if a merchant manages multiple Pages, this takes the first one.
-        // For a real page-picker UI, list pagesData.data and let them choose
-        // before completing the connect flow.
+        // if a merchant manages multiple Pages, this takes the first one.
         const page = pagesData.data[0]
         const pageAccessToken: string = page.access_token
         const pageId: string = page.id
