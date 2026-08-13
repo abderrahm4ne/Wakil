@@ -2,6 +2,7 @@
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { Progress } from '@/components/ui/progress';
+import { useTranslation } from 'react-i18next';
 
 interface UsageCardProps {
   messagesUsed: number;
@@ -14,6 +15,7 @@ export function AnalyticsUsageCard({
   messageLimit,
   isLoading = false,
 }: UsageCardProps) {
+  const { t } = useTranslation('dashboard');
   const isUnlimited = messageLimit === null;
   const percentage = isUnlimited ? 100 : (messagesUsed / messageLimit) * 100;
   const isHigh = percentage >= 90 && !isUnlimited;
@@ -22,11 +24,11 @@ export function AnalyticsUsageCard({
     <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-6">
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-white">
-          Messages this month
+          {t('analytics.thisMonth')}
         </h3>
         <p className="text-sm text-white/50">
           {isUnlimited
-            ? 'Unlimited limit'
+            ? t('analytics.unlimited')
             : `${messagesUsed.toLocaleString()} / ${messageLimit.toLocaleString()}`}
         </p>
       </div>
@@ -49,12 +51,12 @@ export function AnalyticsUsageCard({
           <div className="flex items-center justify-between">
             <p className="text-sm text-slate-400">
               {isUnlimited
-                ? 'Unlimited plan'
-                : `${((messagesUsed / messageLimit) * 100).toFixed(0)}% used`}
+                ? t('analytics.unlimited')
+                : t('analytics.used', { percent: ((messagesUsed / messageLimit) * 100).toFixed(0) })}
             </p>
             {isHigh && (
               <p className="text-xs font-semibold text-red-600">
-                Approaching limit
+                {t('analytics.approaching')}
               </p>
             )}
           </div>

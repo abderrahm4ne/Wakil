@@ -12,40 +12,41 @@ import {
   Wallet,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useTranslation } from 'react-i18next'
 
 const navItems = [
   {
-    label: 'Overview',
+    key: 'overview',
     href: '/dashboard',
     icon: BarChart3,
   },
   {
-    label: 'My Bot',
+    key: 'bot',
     href: '/dashboard/bot',
     icon: Bot,
   },
   {
-    label: 'Channels',
+    key: 'channels',
     href: '/dashboard/channels',
     icon: Radio,
   },
   {
-    label: 'Conversations',
+    key: 'conversations',
     href: '/dashboard/conversations',
     icon: MessageSquare,
   },
   {
-    label: 'Analytics',
+    key: 'analytics',
     href: '/dashboard/analytics',
     icon: BarChart3,
   },
   {
-    label: 'Subscription',
+    key: 'subscription',
     href: '/dashboard/subscription',
     icon: Settings,
   },
   {
-    label: 'Billing',
+    key: 'billing',
     href: '/dashboard/billing',
     icon: Wallet,
   }
@@ -53,9 +54,10 @@ const navItems = [
 
 export function DashboardSidebar() {
     const pathname = usePathname()
+    const { t } = useTranslation('dashboard')
 
     return (
-        <div className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-sidebar-border bg-sidebar text-sidebar-foreground">
+        <div className="fixed start-0 top-0 z-40 h-screen w-64 border-e border-sidebar-border bg-sidebar text-sidebar-foreground">
             {/* Logo Section */}
             <div className="px-6 py-6">
               <WakilLogo />
@@ -78,7 +80,7 @@ export function DashboardSidebar() {
                           )}
                         >
                           <Icon className="h-5 w-5" />
-                          <span>{item.label}</span>
+                          <span>{t(`nav.${item.key}`)}</span>
                         </Link>
                     )
                 })}

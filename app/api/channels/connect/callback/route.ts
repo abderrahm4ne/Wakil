@@ -88,49 +88,48 @@ export async function GET(req: NextRequest) {
             return NextResponse.redirect(new URL('/dashboard/channels?error=NO_PAGES_FOUND', req.url))
         }
 
-        // if a merchant manages multiple Pages, this takes the first one.
-        const page = pagesData.data[0]
-        const pageAccessToken: string = page.access_token
-        const pageId: string = page.id
-
-        let finalPageId = pageId
-
-        // Instagram: the Page must have a linked Instagram Business Account
-        if (platform === 'INSTAGRAM') {
-            const igRes = await fetch(
-                `https://graph.facebook.com/v21.0/${pageId}?fields=instagram_business_account&access_token=${pageAccessToken}`
-            )
-            const igData = await igRes.json()
-
-            if (!igData.instagram_business_account?.id) {
-                return NextResponse.redirect(
-                    new URL('/dashboard/channels?error=NO_INSTAGRAM_ACCOUNT_LINKED', req.url)
+        const candidates = await Promise.all(pagesData.data.map(async (page: {
+            id: string
+            name?: string
+            access_token: string
+        }) => {
+            let channelPageId = page.id
+            if (platform === 'INSTAGRAM') {
+                const igRes = await fetch(
+                    `https://graph.facebook.com/v21.0/${page.id}?fields=instagram_business_account&access_token=${page.access_token}`
                 )
+                const igData = await igRes.json()
+                if (!igRes.ok || !igData.instagram_business_account?.id) return null
+                channelPageId = igData.instagram_business_account.id
             }
 
-            finalPageId = igData.instagram_business_account.id
+            return {
+                id: page.id,
+                name: page.name ?? `Page ${page.id}`,
+                channelPageId,
+                encryptedToken: encrypt(page.access_token)
+            }
+        }))
+        const pages = candidates.filter((page): page is NonNullable<typeof page> => page !== null)
+
+        if (pages.length === 0) {
+            const error = platform === 'INSTAGRAM' ? 'NO_INSTAGRAM_ACCOUNT_LINKED' : 'NO_PAGES_FOUND'
+            return NextResponse.redirect(new URL(`/dashboard/channels?error=${error}`, req.url))
         }
 
-        // Step 4: encrypt and persist
-        const encryptedToken = encrypt(pageAccessToken)
-
-        await prisma.channel.upsert({
-            where: { botId_type: { botId, type: platform as 'INSTAGRAM' | 'FACEBOOK' } },
-            update: {
-                pageId: finalPageId,
-                accessToken: encryptedToken,
-                isActive: true
-            },
-            create: {
-                botId,
-                type: platform as 'INSTAGRAM' | 'FACEBOOK',
-                pageId: finalPageId,
-                accessToken: encryptedToken,
-                isActive: true
+        const connection = await prisma.pendingChannelConnection.create({
+            data: {
+                platform: platform as 'INSTAGRAM' | 'FACEBOOK',
+                pages,
+                expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+                userId: session.user.id,
+                botId
             }
         })
 
-        return NextResponse.redirect(new URL('/dashboard/channels?connected=true', req.url))
+        return NextResponse.redirect(
+            new URL(`/dashboard/channels/select?connection=${connection.id}`, req.url)
+        )
     } catch (err) {
         console.error('Meta OAuth callback error', err)
         return NextResponse.redirect(new URL('/dashboard/channels?error=SERVER_ERROR', req.url))

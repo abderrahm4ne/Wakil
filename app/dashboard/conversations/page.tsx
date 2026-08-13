@@ -3,6 +3,7 @@
 import { Card } from '@/components/ui/card'
 import { Search, MessageSquare, Pencil, Check, X as XIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type ConversationListItem = {
     id: string
@@ -27,23 +28,24 @@ type ConversationDetail = {
     messages: MessageItem[]
 }
 
-function timeAgo(dateStr: string): string {
+function timeAgo(dateStr: string, t: (key: string, options?: { count?: number }) => string): string {
     const diffMs = Date.now() - new Date(dateStr).getTime()
     const mins = Math.floor(diffMs / 60000)
-    if (mins < 1) return 'now'
-    if (mins < 60) return `${mins}m ago`
+    if (mins < 1) return t('conversations.now')
+    if (mins < 60) return t('conversations.minutesAgo', { count: mins })
     const hours = Math.floor(mins / 60)
-    if (hours < 24) return `${hours}h ago`
+    if (hours < 24) return t('conversations.hoursAgo', { count: hours })
     const days = Math.floor(hours / 24)
-    return `${days}d ago`
+    return t('conversations.daysAgo', { count: days })
 }
 
-function displayName(c: { customerId: string; label: string | null }): string {
+function displayName(c: { customerId: string; label: string | null }, t: (key: string, options?: { id?: string }) => string): string {
     if (c.label) return c.label
-    return `Customer ${c.customerId.slice(0, 8)}...`
+    return t('conversations.name', { id: c.customerId.slice(0, 8) })
 }
 
 export default function ConversationsPage() {
+    const { t } = useTranslation('dashboard')
     const [conversations, setConversations] = useState<ConversationListItem[]>([])
     const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState('')
@@ -108,9 +110,9 @@ export default function ConversationsPage() {
     return (
         <div className="flex flex-col h-[calc(100vh-3rem)] p-6 font-display gap-6">
             <div>
-                <h1 className="text-3xl font-bold text-foreground">Conversations</h1>
+                <h1 className="text-3xl font-bold text-foreground">{t('conversations.title')}</h1>
                 <p className="mt-2 text-sm text-muted-foreground">
-                    Customer conversations across all channels.
+                    {t('conversations.subtitle')}
                 </p>
             </div>
 
@@ -119,23 +121,23 @@ export default function ConversationsPage() {
                 <Card className="w-full md:w-[32%] flex flex-col p-0 overflow-hidden">
                     <div className="p-4 border-b border-border">
                         <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <input
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Search by name or message..."
-                                className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                                placeholder={t('conversations.search')}
+                                className="w-full rounded-lg border border-border bg-background py-2 ps-9 pe-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                             />
                         </div>
                     </div>
 
                     <div className="flex-1 overflow-y-auto">
                         {loading ? (
-                            <p className="p-4 text-sm text-muted-foreground italic">Loading...</p>
+                            <p className="p-4 text-sm text-muted-foreground italic">{t('conversations.loading')}</p>
                         ) : filtered.length === 0 ? (
                             <p className="p-4 text-sm text-muted-foreground italic">
-                                {conversations.length === 0 ? 'No conversations yet.' : 'No matches found.'}
+                                {conversations.length === 0 ? t('conversations.noConversations') : t('conversations.noMatches')}
                             </p>
                         ) : (
                             filtered.map((c) => {
@@ -159,11 +161,11 @@ export default function ConversationsPage() {
                                                     unread ? 'font-semibold text-foreground' : 'font-medium text-foreground'
                                                 }`}
                                             >
-                                                {displayName(c)}
+                                                {displayName(c, t)}
                                             </span>
                                             {last && (
                                                 <span className="text-xs text-muted-foreground shrink-0">
-                                                    {timeAgo(last.createdAt)}
+                                                    {timeAgo(last.createdAt, t)}
                                                 </span>
                                             )}
                                         </div>
@@ -172,7 +174,7 @@ export default function ConversationsPage() {
                                                 unread ? 'text-foreground/80' : 'text-muted-foreground'
                                             }`}
                                         >
-                                            {last ? last.content.slice(0, 40) : 'No messages yet'}
+                                            {last ? last.content.slice(0, 40) : t('conversations.noMessages')}
                                         </p>
                                     </button>
                                 )
@@ -188,7 +190,7 @@ export default function ConversationsPage() {
                             <div className="text-center">
                                 <MessageSquare className="mx-auto h-8 w-8 text-muted-foreground/50" />
                                 <p className="mt-3 text-sm text-muted-foreground">
-                                    Select a conversation to view messages
+                                    {t('conversations.select')}
                                 </p>
                             </div>
                         </div>
@@ -201,7 +203,7 @@ export default function ConversationsPage() {
                                             autoFocus
                                             value={labelDraft}
                                             onChange={(e) => setLabelDraft(e.target.value)}
-                                            placeholder="Add a name for this customer"
+                                            placeholder={t('conversations.addName')}
                                             className="flex-1 rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                                         />
                                         <button onClick={saveLabel} className="text-emerald-400 hover:cursor-pointer">
@@ -217,7 +219,7 @@ export default function ConversationsPage() {
                                 ) : (
                                     <div className="flex items-center gap-2">
                                         <span className="font-semibold text-foreground">
-                                            {detail ? displayName(detail) : ''}
+                                            {detail ? displayName(detail, t) : ''}
                                         </span>
                                         <button
                                             onClick={() => {
@@ -234,7 +236,7 @@ export default function ConversationsPage() {
 
                             <div className="flex-1 overflow-y-auto p-4 space-y-3">
                                 {detailLoading ? (
-                                    <p className="text-sm text-muted-foreground italic">Loading messages...</p>
+                                    <p className="text-sm text-muted-foreground italic">{t('conversations.loadingMessages')}</p>
                                 ) : (
                                     detail?.messages.map((m) => (
                                         <div

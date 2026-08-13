@@ -52,10 +52,10 @@ export default function LandingNavbar() {
 
             {/* CTA Button */}
             <Link
-              href="/register"
+              href="/login"
               className="px-3 py-2 bg-linear-to-r from-secondary/70 to-green-600/45 text-white text-[0.9rem] rounded-full font-semibold hover:shadow-sm hover:shadow-green-300/50 transition-all"
             >
-              {t('navbar.startFreeTrial')}
+              {t('navbar.completeYourWork')}
             </Link>
           </div>
         </div>

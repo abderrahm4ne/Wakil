@@ -4,7 +4,7 @@ const SECRET = process.env.ENCRYPTION_KEY!
 
 type StatePayload = {
     botId: string
-    platform: string
+    platform: 'FACEBOOK' | 'INSTAGRAM'
     userId: string
     exp: number
 }
@@ -24,6 +24,7 @@ export function verifyState(token: string): StatePayload | null {
     if (sig !== expectedSig) return null
 
     const payload: StatePayload = JSON.parse(Buffer.from(data, 'base64url').toString())
+    if (payload.platform !== 'FACEBOOK' && payload.platform !== 'INSTAGRAM') return null
     if (Date.now() > payload.exp) return null
 
     return payload
