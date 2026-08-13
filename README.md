@@ -54,10 +54,6 @@ The application is under active development. Authentication, dashboard, billing,
 
 Visit `http://localhost:3000`.
 
-## Environment variables
-
-Only configure services you enable, but `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `NEXT_PUBLIC_BASE_URL`, and `ENCRYPTION_KEY` are required for the core application.
-
 | Variable | Purpose |
 | --- | --- |
 | `DATABASE_URL` | PostgreSQL connection string. |
@@ -82,47 +78,6 @@ Only configure services you enable, but `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXT
 | `GROQ_API_KEY` | Reserved for Groq integrations. |
 | `OPENAI_API_KEY` | Reserved for OpenAI integrations. |
 
-Never commit `.env`, `.env.local`, or real API keys. The provided `.env.example` contains names only.
-
-## Meta channel connection
-
-The Channels page starts a Meta OAuth flow. After the user authorizes Wakil, they select a Facebook Page from the pages they manage. For Instagram, the picker includes only Facebook Pages that have a linked Instagram Business Account.
-
-The selection expires after ten minutes. The selected page token is encrypted before it is stored in the database. Meta must be configured with this exact redirect URL:
-
-```text
-https://your-domain.com/api/channels/connect/callback
-```
-
-For local testing, use a public HTTPS tunnel and set both `NEXTAUTH_URL` and `NEXT_PUBLIC_BASE_URL` to that tunnel URL. Add its callback URL to the Meta app as well.
-
-## Deploying on Vercel
-
-1. Push this project to GitHub, GitLab, or Bitbucket.
-2. In Vercel, choose **New Project**, import the repository, and accept the detected Next.js framework preset.
-3. Add a production PostgreSQL database and copy its connection string into `DATABASE_URL`.
-4. In **Project Settings → Environment Variables**, add the values from `.env.example` for the services you are using. Set both `NEXTAUTH_URL` and `NEXT_PUBLIC_BASE_URL` to your final HTTPS production domain, without a trailing slash.
-5. Deploy. Vercel runs `npm run build`; Prisma client generation runs through the project's `postinstall` script.
-6. Attach your custom domain in **Project Settings → Domains**, then update `NEXTAUTH_URL` and `NEXT_PUBLIC_BASE_URL` if the domain changed and redeploy.
-7. Add production callback and webhook URLs to each external provider:
-
-   - Google OAuth callback: `https://your-domain.com/api/auth/callback/google`
-   - Meta OAuth callback: `https://your-domain.com/api/channels/connect/callback`
-   - Meta webhook endpoint, when messaging work begins: `https://your-domain.com/api/webhooks/meta`
-   - Stripe webhook endpoint: `https://your-domain.com/api/webhooks/stripe`
-
-8. Apply database migrations against the production database before relying on a deployment:
-
-   ```bash
-   npx prisma migrate deploy
-   ```
-
-Environment-variable changes only apply to new Vercel deployments, so redeploy after changing one. Vercel can automatically create preview deployments for branch pushes and production deployments for the configured production branch. See the [Vercel Git deployment guide](https://vercel.com/docs/git) and [environment-variable guide](https://vercel.com/docs/environment-variables) for the current dashboard workflow.
-
-## Database changes included in this version
-
-This version adds `PendingChannelConnection`, which holds encrypted candidate page tokens during the brief page-selection step. Apply the included migration before deploying this change.
-
 ## Useful commands
 
 ```bash
@@ -143,9 +98,3 @@ prisma/                 Database schema and migrations
 providers/              React providers
 locales/                Translation files
 ```
-
-## Known limitations
-
-- The message receive/reply pipeline is not complete or ready for production.
-- Channel connection does not yet finish the later Meta webhook-subscription work required for live messaging.
-- Automated tests and a dedicated lint command have not been added yet.
