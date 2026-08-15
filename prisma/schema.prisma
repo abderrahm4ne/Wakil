@@ -113,6 +113,7 @@ model Message {
   fromCustomer   Boolean
   tokensUsed     Int          @default(0)
   ruleId         String?
+  metaMessageId  String?      @unique
   createdAt      DateTime     @default(now())
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)

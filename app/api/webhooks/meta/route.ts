@@ -3,6 +3,7 @@ import { verifyMetaSignature } from '@/lib/webhook/verify'
 import { handleMetaMessage } from '@/lib/webhook/handler'
 
 export async function GET(req: NextRequest) {
+    console.log('get webhook facebook')
     const params = req.nextUrl.searchParams
     const mode = params.get('hub.mode')
     const token = params.get('hub.verify_token')
@@ -16,6 +17,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+    console.log("facebook webhook hit")
     const signature = req.headers.get('x-hub-signature-256') ?? ''
     const rawBody = await req.text()
 
@@ -33,9 +35,10 @@ export async function POST(req: NextRequest) {
         const pageId = entry.id
         const senderId = messaging.sender.id
         const message = messaging.message?.text
+        const mid = messaging.message?.mid
 
-        if (message) {
-            handleMetaMessage(pageId, senderId, message).catch(console.error)
+        if (message && mid) {
+            handleMetaMessage(pageId, senderId, message, mid).catch(console.error)
         }
     }
 
