@@ -34,11 +34,14 @@ export async function POST(req: NextRequest) {
     if (messaging) {
         const pageId = entry.id
         const senderId = messaging.sender.id
-        const message = messaging.message?.text
+        const text = messaging.message?.text
+        const postBackPayload = messaging.postback?.payload
         const mid = messaging.message?.mid
 
-        if (message && mid) {
-            handleMetaMessage(pageId, senderId, message, mid).catch(console.error)
+        if (text && mid) {
+            handleMetaMessage(pageId, senderId, { type: 'text', content: text, mid }).catch(console.error)
+        } else if (postBackPayload) {
+            handleMetaMessage(pageId, senderId, { type: 'postback', content: postBackPayload }).catch(console.error)
         }
     }
 
