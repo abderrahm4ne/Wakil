@@ -64,7 +64,6 @@ model Bot {
   channels      Channel[]
   conversations Conversation[]
   rules         Rule[]
-  menuNodes     MenuNode[]
   usageLogs     UsageLog[]
 }
 
@@ -93,20 +92,6 @@ model Rule {
   botId     String
   messages  Message[]
   bot       Bot       @relation(fields: [botId], references: [id], onDelete: Cascade)
-}
-
-model MenuNode {
-  id         String     @id @default(cuid())
-  label      String
-  language   Language
-  responseText String?
-  nodeType   NodeType   @default(MENU)
-  order      Int        @default(0)
-  botId      String
-  bot        Bot        @relation(fields: [botId], references: [id], onDelete: Cascade)
-  parentId   String?
-  parent     MenuNode?  @relation("NodeChildren", fields: [parentId], references: [id])
-  children   MenuNode[] @relation("NodeChildren")
 }
 
 model Conversation {
