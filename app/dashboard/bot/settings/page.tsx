@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BotConfigForm } from "@/components/dashboard/bot-config-form";
-import { RuleManager } from "@/components/dashboard/rule-manager";
+import { MenuNodeManager } from "@/components/dashboard/rule-manager";
 import { Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -67,7 +67,7 @@ export default function BotSettingsPage() {
 
       {bot && bot.type === "RULE_BASED" && (
         <div className="pt-8 border-t border-slate-800">
-          <RuleManager />
+          <MenuNodeManager />
         </div>
       )}
     </div>
