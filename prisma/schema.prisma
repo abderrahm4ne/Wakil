@@ -65,6 +65,7 @@ model Bot {
   conversations Conversation[]
   rules         Rule[]
   usageLogs     UsageLog[]
+  product       Product[]
 }
 
 model Channel {
@@ -143,6 +144,21 @@ model PendingChannelConnection {
   botId     String
 
   @@index([userId, expiresAt])
+}
+
+model Product {
+  id        String   @id @default(cuid())
+  botId     String
+  bot       Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+  name      String
+  variant   String?
+  price     Decimal
+  stock     Int      @default(0)
+  sku       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([botId, name])
 }
 
 enum Plan {

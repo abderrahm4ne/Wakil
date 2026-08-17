@@ -60,7 +60,7 @@ export async function handleMetaMessage(
                 content: m.content
             }))
 
-        const reply = await callLLM(plan, bot.systemPrompt, text, history)
+        const reply = await callLLM(bot.id, plan, bot.systemPrompt, text, history)
 
         const sendResult = await sendMetaReply(senderId, reply, channel.accessToken)
 
