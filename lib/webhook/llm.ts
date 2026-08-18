@@ -31,8 +31,8 @@ export async function callLLM(
     }
 
     const model = plan === 'PRO'
-        ? groq('llama-3.3-70b-versatile')
-        : groq('llama-3.3-70b-versatile')
+        ? google('gemini-3.6-flash')
+        : google('gemini-3.6-flash')
 
     const { text } = await generateText({
         model,
@@ -58,7 +58,13 @@ export async function callLLM(
                         take: 5,
                         select: { name: true, variant: true, price: true, stock: true}
                     })
-                    return products.length > 0 ? products : { message: 'No in-stock products matched this query. '}
+                    return products.length > 0 ? products.map(p => ({
+                        name: p.name,
+                        variant: p.variant,
+                        price: Number(p.price),
+                        stock: p.stock
+                    }))
+                    : { message: 'No in-stock products matched this query.' }
                 }
             }),
         },

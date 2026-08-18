@@ -5,6 +5,7 @@ import { BotConfigForm } from "@/components/dashboard/bot-config-form";
 import { Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ProductUpload } from "@/components/dashboard/product-upload";
 
 export default function BotSettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -64,8 +65,9 @@ export default function BotSettingsPage() {
 
       <BotConfigForm initialData={bot} onSuccess={handleSuccess} />
 
-      {bot && bot.type === "RULE_BASED" && (
+      {bot && bot.type === "AI_POWERED" && (
         <div className="pt-8 border-t border-slate-800">
+          <ProductUpload />
         </div>
       )}
     </div>

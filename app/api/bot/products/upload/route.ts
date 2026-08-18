@@ -41,7 +41,9 @@ export async function POST(req: NextRequest) {
         }
 
         const headers = Object.keys(rows[0]).map(h => h.trim().toLowerCase())
+        // console.log(headers)
         const missing = REQUIRED.filter(r => !headers.includes(r))
+        // console.log("missing, ", missing)
         if (missing.length > 0) {
             return NextResponse.json(
                 { success: false, error: 'MISSING_HEADERS', missing },
@@ -52,12 +54,14 @@ export async function POST(req: NextRequest) {
         const errors: { row: number; reason: string }[] = []
         const valid: { name: string; variant: string | null; price: number; stock: number; sku: string | null }[] = []
 
+
         rows.forEach((raw, i) => {
+            // console.log(i, raw)
             const rowNum = i + 2
             const norm: Record<string, any> = {}
             for (const key in raw) norm[key.trim().toLowerCase()] = raw[key]
 
-            if (norm.sku === EXAMPLE_SKU_MARKER) return
+            // if (norm.sku === EXAMPLE_SKU_MARKER) return
 
             const name = String(norm.name ?? '').trim()
             if (!name) {
@@ -89,6 +93,7 @@ export async function POST(req: NextRequest) {
                 sku: norm.sku ? String(norm.sku).trim() : null
             })
         })
+        console.log(valid)
 
         if (valid.length > limit) {
             return NextResponse.json(
@@ -103,7 +108,7 @@ export async function POST(req: NextRequest) {
                 data: valid.map(p => ({ ...p, botId: bot.id }))
             })
         ])
-
+ 
         return NextResponse.json({
             success: true,
             imported: valid.length,
