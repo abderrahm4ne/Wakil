@@ -188,10 +188,3 @@ enum PaymentProvider {
   CHARGILY
   STRIPE
 }
-
-enum NodeType {
-  MENU
-  CONFIRM
-  CALL_OWNER
-  FALLBACK
-}

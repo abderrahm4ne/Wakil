@@ -31,8 +31,8 @@ export async function callLLM(
     }
 
     const model = plan === 'PRO'
-        ? google('gemini-3.6-flash')
-        : google('gemini-3.6-flash')
+        ? groq('openai/gpt-oss-120b')
+        : groq('openai/gpt-oss-120b')
 
     const { text } = await generateText({
         model,
@@ -46,7 +46,16 @@ export async function callLLM(
     ],
         tools: {
             searchProduct: tool({
-                description: 'Search the merchant product catalog by name or variant. Only returns in-stock items.',
+                description: `
+                    Search the merchant's product catalog.
+
+                    IMPORTANT:
+                    - You MUST use this tool whenever the customer asks about product
+                    availability, price, stock, variants, or whether a product exists.
+                    - NEVER guess product information.
+                    - NEVER claim a product is in or out stock without calling this tool.
+                    - Search using the product name, keyword, or variant mentioned by the customer.
+                    `,
                 inputSchema: z.object({ query: z.string().describe('product name or keyword to search') }),
                 execute: async ({ query }) => {
                     const products = await prisma.product.findMany({
@@ -68,7 +77,8 @@ export async function callLLM(
                 }
             }),
         },
-        stopWhen: stepCountIs(3)
+        stopWhen: stepCountIs(3),
+        temperature: 1,
     })
 
     return text

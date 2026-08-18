@@ -56,7 +56,7 @@ export default function ConversationsPage() {
     const [labelDraft, setLabelDraft] = useState('')
 
     useEffect(() => {
-        fetch('/api/conversations')
+        fetch('/api/conversation')
             .then((res) => res.json())
             .then((res) => {
                 if (res.success) setConversations(res.data)
@@ -67,7 +67,7 @@ export default function ConversationsPage() {
     useEffect(() => {
         if (!selectedId) return
         setDetailLoading(true)
-        fetch(`/api/conversations/${selectedId}`)
+        fetch(`/api/conversation/${selectedId}`)
             .then((res) => res.json())
             .then((res) => {
                 if (res.success) setDetail(res.data)
@@ -121,7 +121,7 @@ export default function ConversationsPage() {
                 <Card className="w-full md:w-[32%] flex flex-col p-0 overflow-hidden">
                     <div className="p-4 border-b border-border">
                         <div className="relative">
-                            <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Search className="absolute inset-a-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <input
                                 type="text"
                                 value={searchQuery}
