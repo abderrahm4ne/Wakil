@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
                 plan: plan as Plan,
                 isActive: false,
                 startDate: start,
-                endDate: end,
+                currentPeriodEnd: end,
             }
         })
 

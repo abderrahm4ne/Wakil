@@ -47,7 +47,7 @@ export function SubscriptionClient({
             const res = await fetch("/api/subscription/upgrade", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ plan: planId }),
+                body: JSON.stringify({ plan: planId.toUpperCase() }),
             })
             const result = await res.json()
             if (result.success) {

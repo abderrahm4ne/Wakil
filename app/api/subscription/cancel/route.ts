@@ -28,7 +28,8 @@ export async function POST(req: NextRequest) {
             where: { userId: session.user.id },
             data: {
                 isActive: false,
-                endDate: new Date()
+                endDate: new Date(),
+                currentPeriodEnd: new Date()
             }
         })
 

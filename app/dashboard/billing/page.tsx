@@ -40,7 +40,8 @@ async function handleCheckout() {
         },
         success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard?checkout=success`,
         cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/billing?checkout=cancelled`,
-    })
+    }) 
+    console.log("checkout created")
 
     if (!checkoutSession.url) throw new Error('Failed to create checkout session')
 
@@ -52,7 +53,7 @@ export default async function BillingPage() {
     if (!session?.user?.id) redirect('/login')
 
     const subscription = await prisma.subscription.findUnique({
-    where: { userId: session.user.id },
+        where: { userId: session.user.id },
     })
     if (!subscription) redirect('/dashboard/billing')
 

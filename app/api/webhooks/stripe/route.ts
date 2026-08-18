@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server'
 export async function POST(req: Request) {
     const body = await req.text()
     const signature = (await headers()).get('stripe-signature')!
-
+    console.log('reached webhook')
     let event
     try {
         event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!)
@@ -14,10 +14,15 @@ export async function POST(req: Request) {
         console.error('Webhook signature verification failed', err)
         return NextResponse.json({ error: 'INVALID_SIGNATURE' }, { status: 400 })
     }
-
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object
-        const userId = session.client_reference_id
+        const userId = session.client_reference_id        
+        console.log('DEBUG session:', JSON.stringify({
+            userId: session.client_reference_id,
+            plan: session.metadata?.plan,
+            sub: session.subscription,
+            customer: session.customer
+        }))
         const plan = session.metadata?.plan
         const providerSubscriptionId = session.subscription as string
         const providerCustomerId = session.customer as string
