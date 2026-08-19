@@ -109,6 +109,7 @@ export default function ConversationsPage() {
 
     return (
         <div className="flex flex-col h-[calc(100vh-3rem)] p-6 font-display gap-6">
+
             <div>
                 <h1 className="text-3xl font-bold text-foreground">{t('conversations.title')}</h1>
                 <p className="mt-2 text-sm text-muted-foreground">
@@ -116,31 +117,35 @@ export default function ConversationsPage() {
                 </p>
             </div>
 
-            <div className="flex flex-1 gap-6 min-h-0">
-                {/* Sidebar */}
-                <Card className="w-full md:w-[32%] flex flex-col p-0 overflow-hidden">
-                    <div className="p-4 border-b border-border">
-                        <div className="relative">
-                            <Search className="absolute inset-a-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <div className='flex flex-1 gap-6 h-[50vh]'>
+                {/* Side Bar */}
+                <div className='w-full md:w-[32%] flex flex-col p-1 overflow-hidden bg-card rounded-md'>
+
+                    {/* Search bar */}
+                    <div className='p-4 border-b border-border '>
+                        <div className='relative'>
+                            <Search className='absolute inset-a-3 -translate-y-1/2 top-1/2 text-muted-foreground pl-2' size={27}/>
                             <input
-                                type="text"
+                                type='text'
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder={t('conversations.search')}
-                                className="w-full rounded-lg border border-border bg-background py-2 ps-9 pe-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                                className='w-full rounded-lg border border-border bg-background py-2 pl-8'
                             />
                         </div>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto">
-                        {loading ? (
-                            <p className="p-4 text-sm text-muted-foreground italic">{t('conversations.loading')}</p>
-                        ) : filtered.length === 0 ? (
-                            <p className="p-4 text-sm text-muted-foreground italic">
+                    <div className='flex-1 overflow-y-auto'>
+                        {loading ? 
+                        (
+                            <p className='p-4 text-sm text-muted-foreground italic'>{t('conversations.loading')}</p>
+                        ) : 
+                        filtered.length === 0 ? (
+                            <p className='p-4 text-sm text-muted-foreground italic'>
                                 {conversations.length === 0 ? t('conversations.noConversations') : t('conversations.noMatches')}
                             </p>
                         ) : (
-                            filtered.map((c) => {
+                            filtered.map( c => {
                                 const last = c.messages[0]
                                 const isSelected = c.id === selectedId
                                 const unread = last && last.fromCustomer
@@ -151,9 +156,8 @@ export default function ConversationsPage() {
                                             setSelectedId(c.id)
                                             setEditingLabel(false)
                                         }}
-                                        className={`w-full text-left px-4 py-3 border-b border-border last:border-0 transition-colors hover:bg-primary/5 ${
-                                            isSelected ? 'bg-primary/10' : ''
-                                        }`}
+                                        className={`w-full text-left px-3 py-3 border-b border-border last:border-0 transition-colors hover:bg-primary/5 hover:cursor-pointer${
+                                            isSelected ? 'bg-primary/10' : ''}`}
                                     >
                                         <div className="flex items-center justify-between gap-2">
                                             <span
@@ -179,12 +183,14 @@ export default function ConversationsPage() {
                                     </button>
                                 )
                             })
-                        )}
-                    </div>
-                </Card>
+                        )
 
-                {/* Thread panel */}
-                <Card className="flex-1 flex flex-col p-0 overflow-hidden">
+                    }
+                    </div>
+
+                </div>
+
+                <div className='flex-1 flex flex-col p-0 overflow-hidden bg-card/60 rounded-md w-[50%]'>
                     {!selectedId ? (
                         <div className="flex-1 flex items-center justify-center">
                             <div className="text-center">
@@ -247,13 +253,13 @@ export default function ConversationsPage() {
                                                 className={`max-w-[70%] rounded-2xl px-4 py-2 text-sm ${
                                                     m.fromCustomer
                                                         ? 'bg-muted text-foreground'
-                                                        : 'bg-primary text-primary-foreground'
+                                                        : 'bg-black text-primary-foreground'
                                                 }`}
                                             >
                                                 <p>{m.content}</p>
                                                 <p
                                                     className={`mt-1 text-[10px] ${
-                                                        m.fromCustomer ? 'text-muted-foreground' : 'text-primary-foreground/70'
+                                                        m.fromCustomer ? 'text-muted-foreground' : 'text-secondary-foreground/70'
                                                     }`}
                                                 >
                                                     {new Date(m.createdAt).toLocaleTimeString([], {
@@ -268,8 +274,10 @@ export default function ConversationsPage() {
                             </div>
                         </>
                     )}
-                </Card>
+                </div>
+
             </div>
+
         </div>
     )
 }

@@ -76,6 +76,28 @@ export async function callLLM(
                     : { message: 'No in-stock products matched this query.' }
                 }
             }),
+            confirmOrder: tool({
+                description: `
+                    Confirm the merchant's orders.
+
+                    IMPORTANT:
+                    - You MUST use this tool whenever the customer confirm the order after reviewing product availability, price, stock, variants, or whether a product exists.
+                    `,
+                inputSchema: z.object({ orderId: z.string() }),
+                execute: async ({ orderId }, {experimental_context})=> {
+                    const { botId } = experimental_context as { botId: string }
+                    const order = await prisma.order.findFirst({
+                        where: { id: orderId, botId, status: 'PENDING' }
+                    })
+                    if (!order) return { error: 'ORDER_NOT_FOUND_OR_ALREADY_HANDLED' }
+                    const updated = await prisma.order.update({
+                    where: { id: orderId },
+                    data: { status: 'CONFIRMED' }
+                    })
+                    return { success: true, orderId: updated.id }
+                }
+            })
+
         },
         stopWhen: stepCountIs(3),
         temperature: 1,
