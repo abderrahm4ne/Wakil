@@ -10,6 +10,7 @@ import {
   Radio,
   Settings,
   Wallet,
+  SendHorizontal
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
@@ -49,6 +50,11 @@ const navItems = [
     key: 'billing',
     href: '/dashboard/billing',
     icon: Wallet,
+  },
+  {
+    key: 'orders',
+    href: '/dashboard/orders',
+    icon: SendHorizontal
   }
 ]
 

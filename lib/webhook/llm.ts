@@ -5,6 +5,7 @@ import { generateText, ModelMessage, tool, stepCountIs } from 'ai'
 import { z } from 'zod'
 import { Plan } from "@/generated/prisma/enums"
 import { prisma } from '@/lib/prisma'
+import { stat } from 'fs'
 
 const google = createGoogleGenerativeAI({
     apiKey: process.env.GEMINI_API_KEY
@@ -76,26 +77,50 @@ export async function callLLM(
                     : { message: 'No in-stock products matched this query.' }
                 }
             }),
-            confirmOrder: tool({
+            createOrder: tool({
                 description: `
-                    Confirm the merchant's orders.
+                    Create a pending order from confirmed product selections and customer details.
 
                     IMPORTANT:
-                    - You MUST use this tool whenever the customer confirm the order after reviewing product availability, price, stock, variants, or whether a product exists.
-                    `,
-                inputSchema: z.object({ orderId: z.string() }),
-                execute: async ({ orderId }, {experimental_context})=> {
-                    const { botId } = experimental_context as { botId: string }
-                    const order = await prisma.order.findFirst({
-                        where: { id: orderId, botId, status: 'PENDING' }
-                    })
-                    if (!order) return { error: 'ORDER_NOT_FOUND_OR_ALREADY_HANDLED' }
-                    const updated = await prisma.order.update({
-                    where: { id: orderId },
-                    data: { status: 'CONFIRMED' }
-                    })
-                    return { success: true, orderId: updated.id }
-                }
+                    - You MUST use this tool whenever the customer create or confirm or ask you to complete process of his order after reviewing product availability, price, stock, variants, or whether a product exists.
+                `,
+                inputSchema: z.object({ 
+                    items: z.array(z.object({
+                        sku: z.string(),
+                        name: z.string(),
+                        variant: z.string().optional(),
+                        qty: z.number().int().positive(),
+                        price: z.number(),
+                    })),
+                    customerName: z.string().optional(),
+                    customerPhone: z.string().optional(),
+                    address: z.string().optional(), 
+                }),
+                execute: async ({ items, customerName, customerPhone, address }, {experimental_context})=> {
+                    const { botId, conversationId, customerId } = experimental_context as {
+                        botId: string
+                        conversationId: string
+                        customerId: string
+                        }
+                const totalPrice = items.reduce((sum, i) => sum + i.price * i.qty, 0)
+
+                const order = await prisma.order.create({
+                    data: {
+                        botId,
+                        conversationId,
+                        customerId,
+                        items,
+                        totalPrice,
+                        customerName,
+                        customerPhone,
+                        address,
+                        status: 'PENDING_REVIEW',
+                    }
+                })
+
+                return { orderId: order.id, totalPrice, status: 'PENDING_REVIEW' }
+
+            }
             })
 
         },

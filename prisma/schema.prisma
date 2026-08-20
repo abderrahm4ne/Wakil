@@ -210,6 +210,7 @@ enum PaymentProvider {
 
 enum OrderStatus {
   PENDING
+  PENDING_REVIEW
   CONFIRMED
   CANCELLED
 }
