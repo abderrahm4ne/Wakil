@@ -7,7 +7,7 @@ export async function sendMetaReply(
     options?: { quickReplies?: { title: string; payload: string }[] }
 ): Promise<{ success: boolean; error?: string; tokenExpired?: boolean }> {
     const token = decrypt(encryptedToken)
-
+    console.log(recipientId, message)
     const body: any = {
         recipient: { id: recipientId },
         message: { text: message }
