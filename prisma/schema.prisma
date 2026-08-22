@@ -67,6 +67,7 @@ model Bot {
   usageLogs     UsageLog[]
   product       Product[]
   order         Order[]
+  orderCount    Int             @default(0)
 }
 
 model Channel {
@@ -157,6 +158,7 @@ model Product {
   price     Decimal
   stock     Int      @default(0)
   sku       String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -178,6 +180,9 @@ model Order {
   bot           Bot         @relation(fields: [botId], references: [id], onDelete: Cascade)
   conversationId String?
   conversation  Conversation? @relation(fields: [conversationId], references: [id])
+  orderNumber   Int
+
+  @@unique([botId])
 }
 
 enum Plan {

@@ -90,24 +90,113 @@ export async function callLLM(
             { sku, productName, variant, quantity, pricePerItem, customerName, customerPhone, address },
             { experimental_context }
         ) => {
+
             const ctx = experimental_context as { botId: string; conversationId: string; customerId: string }
             const totalPrice = pricePerItem * quantity
+            
+            const order = await prisma.$transaction(async (tx) => {
+                const bot = await tx.bot.update({
+                    where: { id: ctx.botId },
+                    data: { orderCount: { increment: 1 } }
+                })
 
-            const order = await prisma.order.create({
-                data: {
+                return tx.order.create({
+                    data: {
+                        botId: ctx.botId,
+                        orderNumber: bot.orderCount,
+                        conversationId: ctx.conversationId,
+                        customerId: ctx.customerId,
+                        items: [{ sku, name: productName, variant, qty: quantity, price: pricePerItem }],
+                        totalPrice,
+                        customerName,
+                        customerPhone,
+                        address,
+                        status: 'PENDING_REVIEW',
+                    }
+                })
+            })
+            return { orderId: order.id, totalPrice, status: 'PENDING_REVIEW' }
+        }
+    })
+
+    const getMyOrders = tool({
+        description: `
+            Look up orders the current customer has placed in this conversation.
+            Use this whenever the customer wants to check, edit, or ask about an existing order
+            and you don't already have its order number from earlier in this conversation.
+        `,
+        inputSchema: z.object({}),
+        execute: async (_, { experimental_context }) => {
+            const ctx = experimental_context as { botId: string; conversationId: string }
+            const orders = await prisma.order.findMany({
+                where: { botId: ctx.botId, conversationId: ctx.conversationId },
+                orderBy: { createdAt: 'desc' },
+                take: 5,
+                select: { orderNumber: true, status: true, items: true, totalPrice: true, createdAt: true }
+            })
+            return orders.length > 0 ? orders : { message: 'No orders found for this conversation.' }
+        }
+    })
+
+    const editOrder = tool({
+        description: `
+            Edit an existing pending order for this conversation (items, quantity, address, or phone).
+
+            IMPORTANT:
+            - Only orders with status PENDING_REVIEW can be edited.
+            - If the order is already CONFIRMED, do not edit it. Tell the customer to call the shop directly to request changes, and give them the contact number if you know it.
+            - You must have the orderNumber from getMyOrders or from earlier in this conversation before calling this tool. Never guess an order number.
+            - Resolve any new/changed product via searchProduct first, same as creating an order.
+        `,
+        inputSchema: z.object({
+            orderNumber: z.number().int(),
+            sku: z.string().optional(),
+            productName: z.string().optional(),
+            variant: z.string().optional(),
+            quantity: z.number().int().positive().optional(),
+            pricePerItem: z.number().optional(),
+            customerName: z.string().optional(),
+            customerPhone: z.string().optional(),
+            address: z.string().optional(),
+        }),
+        execute: async (input, { experimental_context }) => {
+            const ctx = experimental_context as { botId: string; conversationId: string }
+
+            const order = await prisma.order.findFirst({
+                where: {
                     botId: ctx.botId,
                     conversationId: ctx.conversationId,
-                    customerId: ctx.customerId,
-                    items: [{ sku, name: productName, variant, qty: quantity, price: pricePerItem }],
-                    totalPrice,
-                    customerName,
-                    customerPhone,
-                    address,
-                    status: 'PENDING_REVIEW',
+                    orderNumber: input.orderNumber,
                 }
             })
 
-            return { orderId: order.id, totalPrice, status: 'PENDING_REVIEW' }
+            if (!order) return { error: 'ORDER_NOT_FOUND' }
+            if (order.status !== 'PENDING_REVIEW') {
+                return { error: 'ORDER_ALREADY_CONFIRMED', message: 'This order is already confirmed and can no longer be edited by chat. Ask the customer to contact the shop directly.' }
+            }
+
+            const currentItem = (order.items as any[])[0] ?? {}
+            const updatedItem = {
+                sku: input.sku ?? currentItem.sku,
+                name: input.productName ?? currentItem.name,
+                variant: input.variant ?? currentItem.variant,
+                qty: input.quantity ?? currentItem.qty,
+                price: input.pricePerItem ?? currentItem.price,
+            }
+            const totalPrice = updatedItem.price * updatedItem.qty
+
+            const updated = await prisma.order.update({
+                where: { id: order.id },
+                data: {
+                    items: [updatedItem],
+                    totalPrice,
+                    customerName: input.customerName ?? order.customerName,
+                    customerPhone: input.customerPhone ?? order.customerPhone,
+                    address: input.address ?? order.address,
+                }
+            })
+
+            return { orderNumber: updated.orderNumber, totalPrice: updated.totalPrice, status: updated.status }
         }
     })
 
@@ -120,7 +209,7 @@ export async function callLLM(
         ],
         tools: {
             searchProduct,
-            ...(canTakeOrders && { createOrder }),
+            ...(canTakeOrders && { createOrder, getMyOrders, editOrder }),
         },
         experimental_context: { botId, conversationId, customerId },
         stopWhen: stepCountIs(3),
