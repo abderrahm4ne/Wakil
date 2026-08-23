@@ -16,18 +16,23 @@ export default function SettingsPage() {
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
     useEffect(() => {
-        fetch('/api/user/settings')
-            .then((res) => res.json())
-            .then((res) => {
+        const load = async () => {
+            try {
+                const response = await fetch('/api/user/settings')
+                const res = await response.json()
                 if (res.success) {
                     setName(res.data.name)
                     setEmail(res.data.email)
                     setPhoneNumber(res.data.phoneNumber ?? '')
-                    setIsGoogle(res.data.password === null)
+                    setIsGoogle(res.data.hasPassword == false)
                     setPendingEmail(res.data.pendingEmail ?? null)
+                    console.log(res.data.hasPassword)
                 }
-            })
-        console.log('fetching')
+            } catch (err) {
+                console.log('Error occured', err)
+            }
+        }
+        load()
     }, [])
 
     const initials = name

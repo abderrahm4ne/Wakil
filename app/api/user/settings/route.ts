@@ -83,7 +83,7 @@ export async function PATCH(req: NextRequest) {
                 verifyTokenExpires: new Date(Date.now() + 1000 * 60 * 60 * 24),
             }
         })
-        // send email verification
+        // todo:  send email verification
         pendingEmailSet = true
     }
 
