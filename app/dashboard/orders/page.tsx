@@ -14,6 +14,7 @@ type Order = {
     customerPhone: string | null
     address: string | null
     createdAt: string
+    orderNumber: number
 }
 
 const STATUS_TABS = ['ALL', 'PENDING_REVIEW', 'CONFIRMED', 'CANCELLED'] as const
@@ -93,6 +94,7 @@ export default function OrdersPage() {
                     <table className="w-full text-sm">
                         <thead className="border-b border-border text-muted-foreground text-left">
                             <tr>
+                                <th className="p-3 font-medium">Order Num</th>
                                 <th className="p-3 font-medium">Customer</th>
                                 <th className="p-3 font-medium">Items</th>
                                 <th className="p-3 font-medium">Total</th>
@@ -104,6 +106,9 @@ export default function OrdersPage() {
                         <tbody>
                             {filtered.map((o) => (
                                 <tr key={o.id} className="border-b border-border last:border-0">
+                                    <td className="p-3">
+                                        <div className="font-medium text-foreground">{o.orderNumber }</div>
+                                    </td>
                                     <td className="p-3">
                                         <div className="font-medium text-foreground">{o.customerName ?? '—'}</div>
                                         <div className="text-xs text-muted-foreground">{o.customerPhone ?? ''}</div>

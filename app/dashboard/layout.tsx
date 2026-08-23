@@ -25,7 +25,7 @@ export default async function DashboardLayout({
 
   return (
     <PlanProvider plan={plan}>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background ">
           <DashboardSidebar />
           <div className="flex flex-col">
               <DashboardNavbar />

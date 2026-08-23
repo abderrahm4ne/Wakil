@@ -15,6 +15,7 @@ datasource db {
 model User {
   id                 String        @id @default(uuid())
   name               String
+  phoneNumber        String?       @unique
   email              String        @unique
   password           String?
   emailVerified      DateTime?
@@ -24,10 +25,12 @@ model User {
   resetTokenExpires  DateTime?
   verificationAttempts  Int       @default(0)
   lastVerificationSent  DateTime?
-  createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
   bot                Bot?
   subscription       Subscription?
+  pendingEmail       String?
+
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
 }
 
 model Subscription {
@@ -182,7 +185,7 @@ model Order {
   conversation  Conversation? @relation(fields: [conversationId], references: [id])
   orderNumber   Int
 
-  @@unique([botId])
+  @@unique([botId, orderNumber])
 }
 
 enum Plan {
