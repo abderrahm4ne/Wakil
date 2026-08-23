@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { Resend } from 'resend'
 import crypto from 'crypto'
+import { sendPasswordResetEmail, sendVerificationEmail } from '@/lib/email'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(req: NextRequest) {
     try {
@@ -16,7 +15,7 @@ export async function POST(req: NextRequest) {
         }
         const user = await prisma.user.findUnique({ where: { email } })
 
-        if (!user) {
+        if (!user || user.password === null) {
             return NextResponse.json({ success: true })
         }
 
@@ -36,7 +35,7 @@ export async function POST(req: NextRequest) {
         if (
             user.lastVerificationSent && 
             user.lastVerificationSent > oneHourAgo && 
-            user.verificationAttempts > 2
+            user.verificationAttempts > 3
         ) {
             return NextResponse.json(
                 { success: false, error: 'RATE_LIMITED' },
@@ -58,18 +57,9 @@ export async function POST(req: NextRequest) {
             }
         })
 
-        await resend.emails.send({
-            from: 'Wakil <onboarding@resend.dev>',
-            to: email,
-            subject: 'Verify your email',
-            html: ` <div style="font-family: sans-serif; line-height: 1.5; color: #333; height: 500px; width: 700px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <h2 style="color: #0070f3;">Verify Your Email</h2>
-                    <p>Click the button below to verify your email address.</p>
-                    <a href="${process.env.NEXT_PUBLIC_BASE_URL}/verify?token=${token}" style="display: inline-block; padding: 10px 20px; background-color: #0070f3; color: #fff; text-decoration: none; border-radius: 5px; margin-top: 20px;">Verify Email</a>
-                </div>`
-        })
+    sendVerificationEmail(email, token, 'register')
 
-        return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true })
 
     } catch (err) {
         console.error(err)

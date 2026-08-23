@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma"
-import { Resend } from "resend";
 import crypto from 'crypto'
+import { sendPasswordResetEmail } from "@/lib/email";
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(req: NextRequest) {
     try {
@@ -19,10 +18,9 @@ export async function POST(req: NextRequest) {
         // Check existing user
         const user = await prisma.user.findUnique({ where: { email }})
 
-        if (!user) {
+        if (!user || user.password === null) {
             return NextResponse.json(
-                { success: false, error: "USER_NOT_FOUND" },
-                { status: 404 }
+                { success: true }
             )
         }
 
@@ -40,14 +38,7 @@ export async function POST(req: NextRequest) {
         })
 
         // Send reset email
-        await resend.emails.send({
-            from: 'Wakil <onboarding@resend.dev>',
-            to: email,
-            subject: 'Verify your email',
-            html: `<div style="font-family: sans-serif; line-height: 1.5; color: #333; height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <a href="${process.env.NEXTAUTH_URL}/api/auth/reset-password?token=${token}" style="background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Verify Email</a>
-            </div>`
-        })
+        sendPasswordResetEmail(user.email, token)
 
         return NextResponse.json({ success: true })
     }   catch (err){

@@ -3,6 +3,9 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 import crypto from 'crypto'
+import { sendVerificationEmail } from '@/lib/email'
+
+
 
 const schema = z.object({
     name: z.string().min(1).optional(),
@@ -83,8 +86,7 @@ export async function PATCH(req: NextRequest) {
                 verifyTokenExpires: new Date(Date.now() + 1000 * 60 * 60 * 24),
             }
         })
-        // todo:  send email verification
-        pendingEmailSet = true
+        sendVerificationEmail(email, verifyToken, 'change')
     }
 
     const updated = await prisma.user.update({

@@ -15,6 +15,10 @@ export async function validateLogin(email: string, password: string) {
       return { error: "EMAIL_NOT_VERIFIED" }
    }
 
+   if (user.password === null) {
+      return { error: "USER_NOT_FOUND" }
+   }
+
    if (!user.password) {
       return { error: "USER_NOT_FOUND" }
    }

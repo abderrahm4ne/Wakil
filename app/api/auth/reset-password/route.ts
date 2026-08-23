@@ -13,6 +13,13 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    if (password.length < 8) {
+      return NextResponse.json(
+        { success: false, error: 'PASSWORD_TOO_SHORT' },
+        { status: 400 }
+      )
+    }
+
     // Find user with valid token
     const user = await prisma.user.findFirst({
       where: {
@@ -43,7 +50,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true })
   } catch (err) {
-    console.error("Error in Register", err)
+    // console.error("Error in Register", err)
     return NextResponse.json(
       { success: false, error: 'SERVER_ERROR' },
       { status: 500 }

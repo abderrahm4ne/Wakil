@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
-import { Resend } from 'resend'
 import crypto from 'crypto'
+import { sendVerificationEmail } from '@/lib/email'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 const VALID_PLANS = ['FREETRIAL','STARTER', 'PRO', 'BUSINESS']
 
 export async function POST(req: NextRequest) {
@@ -62,21 +61,10 @@ export async function POST(req: NextRequest) {
         ])
 
         // Send verification email
-        await resend.emails.send({
-          from: 'Wakil <onboarding@resend.dev>',
-          to: email,
-          subject: 'Verify your email',
-          html: `<div style="font-family: sans-serif; line-height: 1.5; color: #333; height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-          <a href="${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${token}" style="background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Verify Email</a>
-          </div>`
-        })
-
-        return NextResponse.json(
-          { success: true },
-          { status: 201 })
+        sendVerificationEmail(email, token, 'register')
 
       } catch (err) {
-      console.error("Error in Register", err)
+      // console.error("Error in Register", err)
       return NextResponse.json(
         { success: false, error: 'SERVER_ERROR' },
         { status: 500 }

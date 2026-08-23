@@ -121,7 +121,7 @@ export function LoginForm() {
 
           <div className="flex justify-end">
             <a
-              href="#"
+              href="/forget-password"
               className="text-sm text-muted-foreground hover:text-muted-foreground transition-colors"
             >
               {t('login.forgotPassword')}

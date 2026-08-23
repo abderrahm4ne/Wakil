@@ -23,6 +23,29 @@ export async function GET(
           return NextResponse.redirect(new URL('/login?error=INVALID_OR_EXPIRED_TOKEN', req.url))
         }
 
+        if (user.pendingEmail) {
+            const existingUser = await prisma.user.findUnique({ where: { email: user.pendingEmail } })
+            if (existingUser) {
+                await prisma.user.update({
+                    where: { id: user.id },
+                    data: { pendingEmail: null, verifyToken: null, verifyTokenExpires: null }
+                })
+                return NextResponse.redirect(new URL('/dashboard/settings?error=EMAIL_TAKEN', req.url))
+            }
+
+            await prisma.user.update({
+              where: { id: user.id },
+              data: {
+                email: user.pendingEmail,
+                pendingEmail: null,
+                verifyToken: null,
+                verifyTokenExpires: null
+              }
+            })
+
+            return NextResponse.redirect(new URL('/dashboard/settings?emailChanged=true', req.url))
+        }
+
         // Mark email as verified + invalidate token
         await prisma.user.update({
           where: { id: user.id },
