@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { useTranslation } from "react-i18next"
+import { subscriptions } from "@/types/subscription"
 
 interface ConfirmSubmitProps {
     formData: {
@@ -22,10 +23,10 @@ export function ConfirmSubmit({ formData, plan }: ConfirmSubmitProps) {
     const router = useRouter()
 
     const planNames: Record<string, string> = {
-        FreeTrial: t('pricing.plans.free.name', { ns: 'landing' }) + " — 0DZD",
-        Starter: t('pricing.plans.starter.name', { ns: 'landing' }) + " — 1,500 DZD/mo",
-        Pro: t('pricing.plans.pro.name', { ns: 'landing' }) + " — 4,000 DZD/mo",
-        Business: t('pricing.plans.business.name', { ns: 'landing' }) + " — 9,000 DZD/mo",
+        FreeTrial: t('pricing.plans.free.name', { ns: 'landing' }) + " — " + subscriptions[0].price + " DZD",
+        Starter: t('pricing.plans.starter.name', { ns: 'landing' }) + " — " + subscriptions[1].price + " DZD/mo",
+        Pro: t('pricing.plans.pro.name', { ns: 'landing' }) + " — " + subscriptions[2].price + " DZD/mo",
+        Business: t('pricing.plans.business.name', { ns: 'landing' }) + " — " + subscriptions[3].price + " DZD/mo",
     }
 
     const handleSubmit = async () => {
@@ -59,28 +60,12 @@ export function ConfirmSubmit({ formData, plan }: ConfirmSubmitProps) {
             })
 
             const data = await res.json()
-            console.log(data)
+            // console.log(data)
             if (!data.success) {
                 setError(data.error || t('register.errors.somethingWrong'))
                 return
             }
-            if (prismaPlan === "FREE_TRIAL") {
-                alert(t('register.alerts.success'))
-                router.push("/login?registered=true")
-                return
-            }
-            const checkoutRes = await fetch("/api/stripe/checkout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ plan: prismaPlan }),
-            })
-            const checkoutData = await checkoutRes.json()
-            if (!checkoutData.url) {
-                setError(t('register.errors.error in payment'))
-                return
-            }
-            window.location.href = checkoutData.url
-            alert(t('register.alerts.success'))
+
             router.push("/login?registered=true")
         } catch (err){
             console.log(err)

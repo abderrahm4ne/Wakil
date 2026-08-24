@@ -38,7 +38,7 @@ model Subscription {
   plan      Plan
   provider  PaymentProvider?
   providerCustomerId String?
-  providerSubscriptionId String?
+  providerSubscriptionId String?  @unique
   startDate DateTime  @default(now())
   endDate   DateTime?
   currentPeriodEnd DateTime?

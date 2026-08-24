@@ -3,12 +3,13 @@ import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 // @ts-ignore: No types available in this environment for @prisma/client
 import { Plan } from '@prisma/client'
+import { subscriptions } from '@/types/subscription'
 
 const LIMITS: Record<Plan, number | null> = {
-    FREE_TRIAL: 500,
-    STARTER: 2000,
-    PRO: 10000,
-    BUSINESS: null
+    FREE_TRIAL: subscriptions[0].limit,
+    STARTER: subscriptions[1].limit,
+    PRO: subscriptions[2].limit,
+    BUSINESS: subscriptions[3].limit
 }
 
 export async function GET() {

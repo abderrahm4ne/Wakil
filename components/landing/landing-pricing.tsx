@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useRef } from 'react';
+import { subscriptions } from '@/types/subscription';
 
 export default function LandingPricing() {
   const { t } = useTranslation('landing');
@@ -15,7 +16,7 @@ export default function LandingPricing() {
   const plans = [
     {
       name: t('pricing.plans.free.name'),
-      price: '0',
+      price: subscriptions[0].price,
       period: t('pricing.plans.free.period'),
       description: t('pricing.plans.free.description'),
       features: t('pricing.plans.free.features', { returnObjects: true }) as string[],
@@ -25,7 +26,7 @@ export default function LandingPricing() {
     },
     {
       name: t('pricing.plans.starter.name'),
-      price: '1,500',
+      price: subscriptions[1].price,
       period: t('pricing.plans.starter.period'),
       description: t('pricing.plans.starter.description'),
       features: t('pricing.plans.starter.features', { returnObjects: true }) as string[],
@@ -35,7 +36,7 @@ export default function LandingPricing() {
     },
     {
       name: t('pricing.plans.pro.name'),
-      price: '4,000',
+      price: subscriptions[2].price,
       period: t('pricing.plans.pro.period'),
       description: t('pricing.plans.pro.description'),
       features: t('pricing.plans.pro.features', { returnObjects: true }) as string[],
@@ -45,7 +46,7 @@ export default function LandingPricing() {
     },
     {
       name: t('pricing.plans.business.name'),
-      price: '9,000',
+      price: subscriptions[3].price,
       period: t('pricing.plans.business.period'),
       description: t('pricing.plans.business.description'),
       features: t('pricing.plans.business.features', { returnObjects: true }) as string[],
