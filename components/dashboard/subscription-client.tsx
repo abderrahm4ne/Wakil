@@ -21,6 +21,7 @@ export function SubscriptionClient({
 }: Props) {
     const [showPlanSelection, setShowPlanSelection] = useState(false)
     const [isUpgrading, setIsUpgrading] = useState(false)
+    const [isRenewing, setIsRenewing] = useState(false)
     const router = useRouter()
 
     const formattedRenewal = renewalDate
@@ -41,13 +42,20 @@ export function SubscriptionClient({
     const planDisplayName =
         currentPlan.charAt(0) + currentPlan.slice(1).toLowerCase().replace("_", " ")
 
-    const handleUpgrade = async (planId: string) => {
+    async function poolForSync(maxAttempts = 5){
+        for (let i = 0; i < maxAttempts; i++){
+            const res = await fetch('/api/subscription/status')
+            const { endDate } = await res.json()
+            if (!endDate) return true
+        }
+    }
+
+    const handleUpgrade = async () => {
         setIsUpgrading(true)
         try {
             const res = await fetch("/api/subscription/upgrade", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ plan: planId.toUpperCase() }),
             })
             const result = await res.json()
             if (result.success) {
@@ -60,6 +68,25 @@ export function SubscriptionClient({
             alert("An error occurred")
         } finally {
             setIsUpgrading(false)
+        }
+    }
+
+    const handleRenew = async () => {
+        setIsRenewing(true)
+        try {
+            const res = await fetch("/api/subscription/renew", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+            })
+            const result = await res.json()
+            if (result.success) {
+                const confirmed = await poolForSync()
+                setIsRenewing(confirmed ? true : false)
+            } else {
+                alert(result.error || "Failed to Renew plan")
+            }
+        } catch {
+            alert("An error occurred")
         }
     }
 
@@ -85,6 +112,8 @@ export function SubscriptionClient({
         }
     }
 
+
+
     if (!showPlanSelection) {
         return (
             <div className="space-y-6">
@@ -94,8 +123,10 @@ export function SubscriptionClient({
                     renewalDate={formattedRenewal}
                     endDate={formattedEndDate}
                     onUpgrade={() => setShowPlanSelection(true)}
+                    onRenew={handleRenew}
                     onCancel={handleCancel}
                     isLoading={isUpgrading}
+                    isActive={isActive}
                 />
                 <div className="flex justify-center mt-8">
                     <button

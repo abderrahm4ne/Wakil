@@ -1,6 +1,13 @@
 import { prisma } from '@/lib/prisma'
 
-export async function activateSubscription(userId: string, plan: 'STARTER' | 'PRO' | 'BUSINESS', providerSubscriptionId: string, providerCustomerId: string, endDate: Date, startDate: Date) {
+export async function activateSubscription(
+    userId: string, 
+    plan: 'STARTER' | 'PRO' | 'BUSINESS', 
+    providerSubscriptionId: string,
+    providerCustomerId: string, 
+    endDate: Date, 
+    startDate: Date
+) {
     // console.log("subscription activatio nreached !!!!! ")
 
     return prisma.subscription.update({

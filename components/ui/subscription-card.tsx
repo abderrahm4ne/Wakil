@@ -10,8 +10,10 @@ interface SubscriptionCardProps {
     renewalDate: string;
     endDate: string;
     onUpgrade: () => void;
+    onRenew: () => void;
     onCancel: () => void;
     isLoading?: boolean;
+    isActive?:boolean;
 }
 
 export function SubscriptionCard({
@@ -20,8 +22,10 @@ export function SubscriptionCard({
     renewalDate,
     endDate,
     onUpgrade,
+    onRenew,
     onCancel,
     isLoading,
+    isActive
 }: SubscriptionCardProps) {
 
     const getStatusBadge = () => {
@@ -78,12 +82,12 @@ export function SubscriptionCard({
                     Upgrade Plan
                 </Button>
                 <Button
-                    onClick={onCancel}
+                    onClick={isActive ? onCancel : onRenew}
                     disabled={isLoading}
                     variant="outline"
                     className="flex-1 border-red-500 text-red-500 hover:text-red-500 hover:bg-red-500/10 hover:cursor-pointer"
                 >
-                    Cancel Plan
+                    {isActive ? 'Cancel Plan' : 'Renew Plan'}
                 </Button>
             </div>
         </div>

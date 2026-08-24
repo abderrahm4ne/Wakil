@@ -29,21 +29,25 @@ export async function POST(req: Request) {
 
         if (userId && plan && providerSubscriptionId) {
             const subscription = await stripe.subscriptions.retrieve(providerSubscriptionId)
-            await activateSubscription(userId, 
+            const item = subscription.items.data[0]
+            await activateSubscription(
+            userId, 
             plan as any, 
             providerSubscriptionId, 
             providerCustomerId,
-            new Date(subscription.current_period_end * 1000)),
-            new Date(subscription.current_period_start * 1000))
+            new Date(item.current_period_end * 1000),
+            new Date(item.current_period_start * 1000)
+            )
         }
 
     }
 
     if (event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.deleted') {
         const subscription = event.data.object
+        const item = subscription.items.data[0]
         await syncSubscriptionPeriod(subscription.id, {
-            currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-            currentPeriodStart: new Date(subscription.current_period_start * 1000),
+            currentPeriodEnd: new Date(item.current_period_end * 1000),
+            currentPeriodStart: new Date(item.current_period_start * 1000),
             cancelAtPeriodEnd: subscription.cancel_at_period_end,
             status: subscription.status, // active, past_due, canceled, unpaid...
         })

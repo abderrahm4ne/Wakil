@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
-import { stripe } from '@/lib/stripe';
+import { stripe } from '@/lib/stripe'
 
 export async function POST(req: NextRequest) {
-    try{
-        const session = await auth();
+    try {
+        const session = await auth()
         if (!session) return NextResponse.json(
             { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
         )
@@ -20,15 +20,20 @@ export async function POST(req: NextRequest) {
             )
         }
 
+        if (!subscription.endDate) {
+            return NextResponse.json(
+                { success: false, error: 'NOT_SCHEDULED_FOR_CANCELLATION' }, { status: 400 }
+            )
+        }
+
         await stripe.subscriptions.update(subscription.providerSubscriptionId, {
-            cancel_at_period_end: true
+            cancel_at_period_end: false
         })
 
         return NextResponse.json({ success: true })
-
     }
     catch (err) {
-        console.error('error in upgrade subscription', err);
+        console.error('error renewing subscription', err)
         return NextResponse.json(
             { success: false, error: 'SERVER_ERROR' }, { status: 500 }
         )
