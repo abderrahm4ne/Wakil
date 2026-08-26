@@ -5,6 +5,7 @@ import { BillingStatusCard } from '@/components/dashboard/billing-status-card'
 import { BillingPlanComparison } from '@/components/dashboard/billing-plan-comparision'
 import { BillingWarningBanner } from '@/components/dashboard/billing-warning-banner'
 import { stripe } from '@/lib/stripe'
+import { CreditCard, ReceiptText, ShieldCheck } from 'lucide-react'
 
 async function handleCheckout() {
     'use server'
@@ -65,13 +66,35 @@ export default async function BillingPage() {
     }
 
     return (
-      <div className="space-y-8">
-          <div>
-              <h1 className="text-3xl font-bold text-foreground">Billing & Subscription</h1>
-              <p className="mt-2 text-sm text-muted-foreground">
-                  Manage your subscription plan and billing information
-              </p>
-          </div>
+      <div className="space-y-6">
+          <section className="rounded-lg border border-slate-800 bg-slate-950 p-6 md:p-8">
+              <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                  <div>
+                      <p className="mb-2 text-sm font-medium uppercase tracking-[0.2em] text-[#00D4AA]">Billing desk</p>
+                      <h1 className="text-4xl font-bold text-foreground">Billing & Subscription</h1>
+                      <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+                          Keep payments, renewal status, and plan limits visible before your bot hits a billing pause.
+                      </p>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3 text-sm">
+                      <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-3">
+                          <CreditCard className="mb-2 h-4 w-4 text-[#00D4AA]" />
+                          <p className="text-slate-500">Plan</p>
+                          <p className="font-semibold text-white">{subscriptionData.plan.replace('_', ' ')}</p>
+                      </div>
+                      <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-3">
+                          <ShieldCheck className="mb-2 h-4 w-4 text-[#00D4AA]" />
+                          <p className="text-slate-500">Status</p>
+                          <p className="font-semibold text-white">{subscriptionData.isActive ? 'Active' : 'Inactive'}</p>
+                      </div>
+                      <div className="rounded-lg border border-slate-800 bg-slate-900/70 p-3">
+                          <ReceiptText className="mb-2 h-4 w-4 text-[#00D4AA]" />
+                          <p className="text-slate-500">Billing</p>
+                          <p className="font-semibold text-white">{subscriptionData.hasSubscribedBefore ? 'Saved' : 'New'}</p>
+                      </div>
+                  </div>
+              </div>
+          </section>
 
           {!subscriptionData.isActive && subscriptionData.plan !== 'FREE_TRIAL' && (
               <BillingWarningBanner />

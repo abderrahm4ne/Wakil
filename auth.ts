@@ -111,6 +111,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                     }
                 })
                 token.plan = sub?.plan || 'FREE_TRIAL'
+                token.isActive = sub?.isActive ?? false
             }
             if (trigger === "update") {
                 const sub = await prisma.subscription.findFirst({
@@ -124,6 +125,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             if (session.user) {
                 session.user.id = token.id as string
                 session.user.plan = token.plan as string
+                session.user.isActive = token.isActive as string
             }
             return session
         }

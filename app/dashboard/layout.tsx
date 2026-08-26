@@ -21,7 +21,7 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  const plan = session.user.plan || "FREE_TRIAL";
+  const plan = session.user.plan
 
   return (
     <PlanProvider plan={plan}>

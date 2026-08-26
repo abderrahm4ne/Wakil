@@ -7,6 +7,8 @@ import { getDashboardData } from '@/lib/data/dashboard'
 
 export default async function DashboardPage() {
     const session = await auth()
+    const { analytics, bot, subscription } = await getDashboardData()
+
     console.log(session)
     if(!session) redirect("/login")
     const hasPlan = await planChecking(session?.user.id)
@@ -14,8 +16,6 @@ export default async function DashboardPage() {
         redirect('/onboarding/plan-selection')
     }
 
-    const { analytics, bot, subscription } = await getDashboardData()
-    // console.log(subscription)
     const planDisplayed =
          subscription?.plan
         ? subscription.plan.charAt(0).toUpperCase() +
@@ -50,86 +50,18 @@ export default async function DashboardPage() {
         }
     ]
 
+    const isDay = new Date().getHours() > 12 ? true : false
+
     return (
-        <div className="space-y-8 p-6 font-display">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-            <div>
-            <h1 className="text-3xl font-bold text-foreground">Overview</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-                Welcome back! Here&apos;s what&apos;s happening with your bot today.
-            </p>
-            </div>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat) => (
-                <Card key={stat.label} className="p-6">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm font-medium text-muted-foreground">
-                                {stat.label}
-                            </p>
-                            <p className="mt-2 text-2xl font-bold text-foreground">{stat.value}</p>
-                        </div>
-                        <stat.icon className="h-8 w-8 text-primary/50" />
-                    </div>
-                </Card>
-            ))}
-        </div>
-
-        {/* Activity && Bot Info */}
-        <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
-            <Card className="p-6">
-                <h2 className="text-lg font-semibold text-foreground">Top Triggers</h2>
-                <div className="mt-6 space-y-4">
-                {analytics && analytics.topTriggers && analytics.topTriggers.length > 0 ? (
-                    analytics.topTriggers.map((trigger: any, index: number) => (
-                        <div
-                        key={index}
-                        className="flex items-center justify-between border-b border-border pb-4 last:border-0"
-                        >
-                        <div>
-                            <p className="font-medium text-foreground">{trigger.trigger}</p>
-                            <p className="text-sm text-muted-foreground">
-                            Triggered {trigger.count} times
-                            </p>
-                        </div>
-                        </div>
-                    ))
-                ) : (
-                    <p className="text-sm text-muted-foreground italic">No triggers recorded yet.</p>
-                )}
+        <div className='font-display'>
+            <section className='flex flex-col space-y-2'>
+                <h1 className='md:text-3xl text-xl text-foreground tracking-tight font-bold'>{isDay ? 'Good Morning' : 'Good Afternoon'}, {session.user.name}</h1>
+                <div className='flex flex-row space-x-3'>
+                    <h2 className='font-semibold text-muted-foreground text-xl pl-4'>{planDisplayed} Plan </h2>
+                    <div />
+                    <h2>bot : {session.user.plan</h2>
                 </div>
-            </Card>
-
-            <Card className="p-6">
-                <h2 className="text-lg font-semibold text-foreground">Bot Status</h2>
-                <div className="mt-6 space-y-4">
-                    {bot ? (
-                        <div className="space-y-2">
-                            <div className="flex justify-between">
-                                <span className="text-sm text-muted-foreground">Name:</span>
-                                <span className="text-sm font-medium">{bot.name}</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-sm text-muted-foreground">Type:</span>
-                                <span className="text-sm font-medium">{bot.type}</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-sm text-muted-foreground">Status:</span>
-                                <span className={`text-sm font-medium ${bot.isActive ? 'text-green-500' : 'text-red-500'}`}>
-                                    {bot.isActive ? 'Active' : 'Inactive'}
-                                </span>
-                            </div>
-                        </div>
-                    ) : (
-                        <p className="text-sm text-muted-foreground italic">No bot configured.</p>
-                    )}
-                </div>
-            </Card>
-        </div>
+            </section>
         </div>
     )
 }

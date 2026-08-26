@@ -13,7 +13,7 @@ export function PlanProvider({
   plan 
 }: { 
   children: React.ReactNode
-  plan: string 
+  plan: string
 }) {
   return (
     <PlanContext.Provider value={{ plan }}>

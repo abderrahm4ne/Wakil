@@ -7,9 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useRef } from 'react';
 import { subscriptions } from '@/types/subscription';
+import { Skeleton } from '../ui/skeleton';
 
 export default function LandingPricing() {
-  const { t } = useTranslation('landing');
+  const { t, ready } = useTranslation('landing');
   const sectionRef = useRef(null)
   useScrollReveal(sectionRef)
 
@@ -55,6 +56,10 @@ export default function LandingPricing() {
       highlighted: false
     }
   ];
+
+  if(!ready){
+      return <Skeleton />
+  }
 
   return (
     <section ref={sectionRef} id="pricing" className="bg-black py-20 px-4 sm:px-6 lg:px-8">

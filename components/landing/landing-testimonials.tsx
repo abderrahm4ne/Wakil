@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next';
 
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useRef } from 'react';
+import { Skeleton } from '../ui/skeleton';  
 
 export default function LandingTestimonials() {
-  const { t } = useTranslation('landing');
+  const { t, ready } = useTranslation('landing');
   const sectionRef = useRef(null)
   useScrollReveal(sectionRef)
 
@@ -16,6 +17,10 @@ export default function LandingTestimonials() {
     role: string;
     content: string;
   }>;
+
+  if(!ready){
+      return <Skeleton />
+  }
 
   return (
     <section ref={sectionRef} className="bg-black py-20 px-4 sm:px-6 lg:px-8">
