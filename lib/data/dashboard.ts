@@ -16,7 +16,7 @@ export async function getDashboardData() {
     if (!bot) return { analytics: null, bot: null, subscription}
 
     const now = new Date()
-    const [usage, totalConversations, topTriggers] = await Promise.all([
+    const [usage, totalConversations, topTriggers, pendingReview, orders] = await Promise.all([
         prisma.usageLog.findUnique({
             where: {
                 botId_month_year: {
@@ -32,6 +32,13 @@ export async function getDashboardData() {
             include: { _count: { select: { messages: true } } },
             orderBy: { messages: { _count: 'desc' } },
             take: 5
+        }),
+        prisma.order.count({
+            where: {botId: bot.id, status: 'PENDING_REVIEW'}
+        }),
+        prisma.order.findMany({
+            where: {botId: bot.id},
+            take: 8
         })
     ])
 
@@ -45,6 +52,8 @@ export async function getDashboardData() {
                 count: r._count.messages
             }))
         },
-        subscription
+        subscription,
+        pendingReview,
+        orders
     }
 }
