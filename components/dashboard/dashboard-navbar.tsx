@@ -11,9 +11,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useSession } from 'next-auth/react'
 import { logout } from '@/app/action/logout'
-import { LogOut, Settings, User } from 'lucide-react'
+import { LogOut, Settings, User, PanelLeft } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
+import { useSidebarStore } from '@/stores/sidebar-store'
+import { cn } from '@/lib/utils'
 
 export function DashboardNavbar() {
   const { data: session } = useSession()
@@ -48,13 +50,19 @@ export function DashboardNavbar() {
     }
     return gradients[Math.abs(hash) % gradients.length]
   }
-
   const userGradient = user?.email ? getGradient(user.email) : 'from-gray-500 to-slate-500'
+  const { isOpen, toggle } = useSidebarStore()
 
   return (
-    <header className="sticky top-0 z-30 ms-64 flex h-16 items-center justify-between border-b border-border bg-background/95 px-6 backdrop-blur">
+    <header className={cn(
+      "sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/95 px-6 backdrop-blur transition-[margin] duration-200",
+      isOpen ? "ms-64" : "ms-0"
+    )}>
       {/* Left side */}
       <div className="flex items-center gap-4">
+        <button onClick={toggle} className="p-2 hover:bg-accent rounded-lg">
+          <PanelLeft size={20} />
+        </button>
         <h1 className="text-lg font-semibold text-foreground">{t('navbar.title')}</h1>
       </div>
 

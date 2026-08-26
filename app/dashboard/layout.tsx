@@ -29,7 +29,7 @@ export default async function DashboardLayout({
           <DashboardSidebar />
           <div className="flex flex-col">
               <DashboardNavbar />
-              <main className="ms-64 flex-1 p-8">{children}</main>
+              <main className="flex-1 p-8">{children}</main>
           </div>
       </div>
     </PlanProvider>

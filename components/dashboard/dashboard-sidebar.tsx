@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
+import { useSidebarStore } from '@/stores/sidebar-store'
 
 const navItems = [
   {
@@ -61,9 +62,13 @@ const navItems = [
 export function DashboardSidebar() {
     const pathname = usePathname()
     const { t } = useTranslation('dashboard')
+    const { isOpen, close } = useSidebarStore()
 
     return (
-        <div className="fixed start-0 top-0 z-40 h-screen w-64 border-e border-sidebar-border bg-sidebar text-sidebar-foreground">
+        <div className={cn(
+          "fixed start-0 top-0 z-40 h-screen w-64 border-e border-sidebar-border bg-sidebar text-sidebar-foreground transition-transform duration-200",
+          !isOpen && "-translate-x-full rtl:translate-x-full"
+        )}>
             {/* Logo Section */}
             <div className="px-6 py-6">
               <WakilLogo />
@@ -78,6 +83,9 @@ export function DashboardSidebar() {
                         <Link
                           key={item.href}
                           href={item.href}
+                          onClick={() => {
+                            setTimeout(() => close(), 500)
+                          }}
                           className={cn(
                             'flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-sans transition-colors',
                             isActive

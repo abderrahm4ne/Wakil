@@ -59,7 +59,7 @@ export default async function DashboardPage() {
                 <div className='flex flex-row space-x-3'>
                     <h2 className='font-semibold text-muted-foreground text-xl pl-4'>{planDisplayed} Plan </h2>
                     <div />
-                    <h2>bot : {session.user.plan</h2>
+                    <h2>bot : {session.user.plan}</h2>
                 </div>
             </section>
         </div>
