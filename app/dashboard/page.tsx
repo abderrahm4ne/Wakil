@@ -92,7 +92,8 @@ export default async function DashboardPage() {
 
             {/* Recent orders */}
             <section className='flex flex-row mt-15 w-full'>
-                <div className='flex flex-col bg-linear-to-br from-secondary/10 to-green-600/5 border border-border rounded-xl w-full max-w-sm px-5 py-4'>
+
+                <div className='flex flex-col bg-linear-to-br from-secondary/10 to-green-600/5 border border-border rounded-xl px-5 py-4 w-[50%]'>
                     <div className='flex items-center justify-between mb-4'>
                         <h2 className='font-semibold'>Recent orders</h2>
                         <a href='/orders' className='flex items-center gap-1 text-xs text-secondary hover:underline'>
@@ -119,13 +120,14 @@ export default async function DashboardPage() {
                         </div>
                     )}
                 </div>
-                <div className='flex flex-col bg-card border border-border rounded-xl w-full max-w-sm px-5 py-4'>
+
+                <div className='flex flex-col bg-card border border-border rounded-xl w-[50%] px-5 py-4'>
                     <h2 className='font-semibold mb-4'>Channels</h2>
  
                     {channelsCount === 0 ? (
                         <div className='flex flex-col items-center justify-center py-6 gap-2 text-center'>
                             <p className='text-sm text-muted-foreground'>No channel connected yet</p>
-                            <a href='/settings/channels' className='text-xs text-secondary hover:underline'>Connect Instagram or Facebook</a>
+                            <a href='/dashboard/channels' className='text-xs text-secondary hover:underline'>Connect Instagram or Facebook</a>
                         </div>
                     ) : (
                         <div className='flex flex-col divide-y divide-border'>
