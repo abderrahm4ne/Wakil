@@ -16,6 +16,7 @@ import { redirect } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { useSidebarStore } from '@/stores/sidebar-store'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 
 export function DashboardNavbar() {
   const { data: session } = useSession()
@@ -31,6 +32,10 @@ export function DashboardNavbar() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleRedirectToSettingsPage = () => {
+    redirect ('/dashboard/settings')
   }
 
   const user = session?.user
@@ -56,7 +61,7 @@ export function DashboardNavbar() {
   return (
     <header className={cn(
       "sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/95 px-6 backdrop-blur transition-[margin] duration-200",
-      isOpen ? "ms-64" : "ms-0"
+      isOpen ? "ms-64" : "ms-20"
     )}>
       {/* Left side */}
       <div className="flex items-center gap-4">
@@ -77,23 +82,34 @@ export function DashboardNavbar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-70">
-            <div className="flex items-center gap-2 px-2 py-3 ">
+
+            <DropdownMenuItem 
+            className='hover:cursor-pointer flex items-center gap-2 px-2 py-3 ' 
+            >
               <div className={`h-9 w-9 rounded-full bg-linear-to-br ${userGradient} flex items-center justify-center text-white font-medium shadow-sm`}>
-                {user?.name?.substring(0, 2).toUpperCase() || 'WK'}
+                  {user?.name?.substring(0, 2).toUpperCase() || 'WK'}
               </div>
               <div className="flex flex-col gap-1 ">
-                <p className="text-sm font-medium leading-none text-wrap">{user?.name || t('navbar.userFallback')}</p>
-                <p className="text-xs leading-none text-muted-foreground text-wrap">
-                  {user?.email || 'user@wakil.ai'}
-                </p>
+                  <p className="text-sm font-medium leading-none text-wrap">{user?.name || t('navbar.userFallback')}</p>
+                  <p className="text-xs leading-none text-muted-foreground text-wrap">
+                    {user?.email || 'user@wakil.ai'}
+                  </p>
               </div>
-            </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className='hover:cursor-pointer' onClick={() => {redirect("/dashboard/settings")}}>
-              <Settings className="me-2 h-4 w-4" />
-              <span>{t('navbar.settings')}</span>
             </DropdownMenuItem>
+
             <DropdownMenuSeparator />
+
+            <DropdownMenuItem 
+            className='hover:cursor-pointer' 
+            >
+              <Link href="/dashboard/settings" className='flex items-center space-x-3'>
+                <Settings className="me-2 h-4 w-4" />
+                <span>{t('navbar.settings')}</span>
+              </Link>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
             <DropdownMenuItem
               onClick={handleLogout}
               disabled={isLoading}
@@ -102,6 +118,8 @@ export function DashboardNavbar() {
               <LogOut className="me-2 h-4 w-4" />
               <span>{isLoading ? t('navbar.loggingOut') : t('navbar.logout')}</span>
             </DropdownMenuItem>
+
+
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

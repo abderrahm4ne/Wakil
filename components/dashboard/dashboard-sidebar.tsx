@@ -66,16 +66,16 @@ export function DashboardSidebar() {
 
     return (
         <div className={cn(
-          "fixed start-0 top-0 z-40 h-screen w-64 border-e border-sidebar-border bg-sidebar text-sidebar-foreground transition-transform duration-200",
-          !isOpen && "-translate-x-full rtl:translate-x-full"
+          "fixed inset-s-0 top-0 z-40 h-screen w-64 border-e border-sidebar-border bg-sidebar text-sidebar-foreground transition-transform duration-200 pt-4 px-4 flex flex-col space-y-10",
+          isOpen ? "w-64" : "w-20"
         )}>
             {/* Logo Section */}
-            <div className="px-6 py-6">
-              <WakilLogo />
+            <div className="">
+              <WakilLogo isOpen={isOpen}/>
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 space-y-2 px-4 py-6 ">
+            <nav className="flex-1 space-y-2 ">
                 {navItems.map((item) => {
                     const Icon = item.icon
                     const isActive = pathname === item.href
@@ -93,8 +93,8 @@ export function DashboardSidebar() {
                               : 'text-sidebar-foreground hover:bg-sidebar-accent/50'
                           )}
                         >
-                          <Icon className="h-5 w-5" />
-                          <span>{t(`nav.${item.key}`)}</span>
+                          <Icon size={23} />
+                          {isOpen && (<span>{t(`nav.${item.key}`)}</span>)}
                         </Link>
                     )
                 })}

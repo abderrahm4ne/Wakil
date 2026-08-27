@@ -90,8 +90,8 @@ export default async function DashboardPage() {
                 ))}
             </section>
 
-            {/* Recent orders */}
-            <section className='flex flex-row mt-15 w-full'>
+            {/* Recent orders && Channels */}
+            <section className='flex flex-row mt-15 justify-center space-x-10'>
 
                 <div className='flex flex-col bg-linear-to-br from-secondary/10 to-green-600/5 border border-border rounded-xl px-5 py-4 w-[50%]'>
                     <div className='flex items-center justify-between mb-4'>
@@ -151,6 +151,30 @@ export default async function DashboardPage() {
                         </div>
                     )}
                 </div>
+            </section>
+
+            {/* Shop and merchant informations */}
+            <section className='flex flex-row mt-15 justify-center space-x-10'>
+
+                <div className='flex flex-col bg-linear-to-br from-red-600/10 to-green-600/5 border border-border rounded-xl px-5 py-4 w-[50%]'>
+                    <div className='flex items-center justify-between mb-4'>
+                        <h2 className='font-semibold'>Shop informations</h2>
+                        <a href='/orders' className='flex items-center gap-1 text-xs text-secondary hover:underline'>
+                            Bot configuration <ArrowUpRight size={12} />
+                        </a>
+                    </div>
+
+                    {(!bot || bot.isActive === false) ? (
+                        <p className='text-muted-foreground text-sm py-6 text-center'>Bot is <span className='text-red-600'>OFF</span></p>
+                    ) : (
+                        <div className='flex flex-col divide-y divide-border text-xl'>
+                            <h2>Store name: {bot.storeCity}</h2>
+                            <h2>Store location: {bot.storeCity}</h2>
+                            <h2>Store contact: {bot.storeContact}</h2>
+                        </div>
+                    )}
+                </div>
+
             </section>
         </div>
     )
