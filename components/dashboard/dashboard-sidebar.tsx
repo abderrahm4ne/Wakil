@@ -65,10 +65,15 @@ export function DashboardSidebar() {
     const { isOpen, close } = useSidebarStore()
 
     return (
-        <div className={cn(
-          "fixed inset-s-0 top-0 z-40 h-screen w-64 border-e border-sidebar-border bg-sidebar text-sidebar-foreground transition-transform duration-200 pt-4 px-4 flex flex-col space-y-10",
-          isOpen ? "w-64" : "w-20"
-        )}>
+        <div
+          className={cn(
+            "fixed inset-s-0 top-0 z-40 h-screen w-64 border-e border-sidebar-border bg-sidebar text-sidebar-foreground transition-width duration-300 pt-4 flex flex-col space-y-10",
+            isOpen
+              ? "w-64 px-4"
+              : "w-20 px-2"
+          )}
+          style={{boxShadow: '-2px 2px 10px black'}}
+        >
             {/* Logo Section */}
             <div className="">
               <WakilLogo isOpen={isOpen}/>
@@ -87,14 +92,29 @@ export function DashboardSidebar() {
                             setTimeout(() => close(), 500)
                           }}
                           className={cn(
-                            'flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-sans transition-colors',
+                            'flex items-center rounded-lg py-3 text-sm font-sans transition-colors',
                             isActive
                               ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                              : 'text-sidebar-foreground hover:bg-sidebar-accent/50'
+                              : 'text-sidebar-foreground hover:bg-sidebar-accent/50',
+                            isOpen 
+                              ? 'gap-3 px-4'
+                              : 'justify-center px-0'
                           )}
                         >
-                          <Icon size={23} />
-                          {isOpen && (<span>{t(`nav.${item.key}`)}</span>)}
+                          <Icon size={20} />
+                          {isOpen && 
+                          (
+                            <span
+                              className={cn(
+                                "overflow-hidden whitespace-nowrap transition-all duration-200",
+                                isOpen
+                                  ? "w-auto opacity-100 translate-x-0"
+                                  : "w-0 opacity-0 -translate-x-2"
+                              )}
+                            >
+                              {t(`nav.${item.key}`)}
+                            </span>
+                          )}
                         </Link>
                     )
                 })}

@@ -1,7 +1,101 @@
 {
-  "nav": { "overview": "Vue d’ensemble", "bot": "Mon bot", "channels": "Canaux", "conversations": "Conversations", "analytics": "Analyses", "subscription": "Abonnement", "billing": "Facturation", "orders": "Orders" },
-  "navbar": { "title": "Tableau de bord", "settings": "Paramètres", "logout": "Se déconnecter", "loggingOut": "Déconnexion...", "userFallback": "Utilisateur Wakil" },
-  "analytics": { "title": "Analyses", "subtitle": "Suivez les performances et l’utilisation des messages de votre bot", "unauthenticated": "Non authentifié. Connectez-vous à nouveau.", "noBot": "Aucun bot trouvé.", "loadError": "Impossible de charger les analyses. Réessayez plus tard.", "totalConversations": "Conversations totales", "totalMessages": "Messages totaux", "mostTriggered": "Règle la plus déclenchée", "last7Days": "Messages des 7 derniers jours", "thisMonth": "Messages ce mois", "noData": "Aucune donnée disponible", "noDataDescription": "Les données apparaîtront lorsque votre bot traitera des messages.", "perDay": "Messages par jour (30 derniers jours)", "unlimited": "Illimité", "used": "{{percent}} % utilisé", "approaching": "Limite bientôt atteinte" },
-  "bot": { "notConfigured": "Bot non configuré", "notConfiguredDescription": "Vous n’avez pas encore configuré votre bot. Renseignez les informations de votre boutique pour commencer.", "configure": "Configurer dans les paramètres", "active": "Actif", "inactive": "Inactif", "created": "Créé le {{date}}", "settings": "Paramètres du bot", "store": "Informations de la boutique", "languages": "Langues", "contact": "Contact", "mode": "Mode actuel", "aiDescription": "Votre bot utilise une IA avancée pour des conversations naturelles.", "rulesDescription": "Votre bot utilise actuellement des règles fixes pour répondre." },
-  "conversations": { "title": "Conversations", "subtitle": "Conversations clients sur tous les canaux.", "search": "Rechercher par nom ou message...", "loading": "Chargement...", "noConversations": "Aucune conversation pour le moment.", "noMatches": "Aucun résultat.", "noMessages": "Aucun message", "select": "Sélectionnez une conversation pour afficher les messages", "name": "Client {{id}}...", "addName": "Ajouter un nom pour ce client", "loadingMessages": "Chargement des messages...", "now": "maintenant", "minutesAgo": "il y a {{count}} min", "hoursAgo": "il y a {{count}} h", "daysAgo": "il y a {{count}} j" }
+  "nav": {
+    "overview": "Vue d’ensemble",
+    "bot": "Mon Bot",
+    "channels": "Canaux",
+    "conversations": "Conversations",
+    "analytics": "Analytiques",
+    "subscription": "Abonnement",
+    "billing": "Facturation",
+    "orders": "Commandes"
+  },
+
+  "navbar": {
+    "title": "Tableau de bord",
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "loggingOut": "Déconnexion...",
+    "userFallback": "Utilisateur Wakil"
+  },
+
+  "overview": {
+    "goodmorning": "Bonjour",
+    "goodafternoon": "Bon après-midi",
+    "plan": "Forfait",
+    "Bot": "Bot",
+    "active": "actif",
+    "paused": "en pause",
+    "messagesThisMonth": "Messages ce mois-ci",
+    "openConversation": "Ouvrir la conversation",
+    "orderPendingReview": "Commande en attente de vérification",
+    "connectedChannels": "Canaux connectés",
+    "recentOrders": "Commandes récentes",
+    "viewAll": "Voir tout",
+    "noRecentOrdersYet": "Aucune commande récente",
+    "noChannelConnectedYet": "Aucun canal connecté",
+    "connecteInstagramOrFacebook": "Connecter Instagram ou Facebook",
+    "connected": "Connecté",
+    "inActive": "Inactif",
+    "connectAnotherChannel": "Connecter un autre canal",
+    "storeInformations": "Informations du magasin",
+    "botConfiguration": "Configuration du bot",
+    "botIs": "Le bot est",
+    "OFF": "DÉSACTIVÉ",
+    "storeName": "Nom du magasin",
+    "storeLocation": "Emplacement du magasin",
+    "storeContact": "Contact du magasin"
+  },
+
+  "analytics": {
+    "title": "Analytiques",
+    "subtitle": "Surveillez les performances de votre bot et l’utilisation des messages",
+    "unauthenticated": "Non authentifié. Veuillez vous reconnecter.",
+    "noBot": "Aucun bot trouvé.",
+    "loadError": "Impossible de charger les analytiques. Veuillez réessayer plus tard.",
+    "totalConversations": "Nombre total de conversations",
+    "totalMessages": "Nombre total de messages",
+    "mostTriggered": "Règle la plus déclenchée",
+    "last7Days": "Messages des 7 derniers jours",
+    "thisMonth": "Messages ce mois-ci",
+    "noData": "Aucune donnée disponible",
+    "noDataDescription": "Les données apparaîtront une fois que votre bot commencera à traiter des messages.",
+    "perDay": "Messages par jour (30 derniers jours)",
+    "unlimited": "Illimité",
+    "used": "{{percent}}% utilisé",
+    "approaching": "Limite bientôt atteinte"
+  },
+
+  "bot": {
+    "notConfigured": "Bot non configuré",
+    "notConfiguredDescription": "Vous n’avez pas encore configuré votre bot. Configurez les informations de votre magasin pour commencer.",
+    "configure": "Accéder aux paramètres pour configurer",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "created": "Créé le {{date}}",
+    "settings": "Paramètres du bot",
+    "store": "Informations du magasin",
+    "languages": "Langues",
+    "contact": "Contact",
+    "mode": "Mode actuel",
+    "aiDescription": "Votre bot utilise une IA avancée pour offrir des conversations naturelles.",
+    "rulesDescription": "Votre bot suit actuellement des règles prédéfinies pour répondre aux messages."
+  },
+
+  "conversations": {
+    "title": "Conversations",
+    "subtitle": "Conversations avec les clients sur tous les canaux.",
+    "search": "Rechercher par nom ou message...",
+    "loading": "Chargement...",
+    "noConversations": "Aucune conversation pour le moment.",
+    "noMatches": "Aucun résultat trouvé.",
+    "noMessages": "Aucun message pour le moment",
+    "select": "Sélectionnez une conversation pour voir les messages",
+    "name": "Client {{id}}...",
+    "addName": "Ajouter un nom à ce client",
+    "loadingMessages": "Chargement des messages...",
+    "now": "maintenant",
+    "minutesAgo": "il y a {{count}} min",
+    "hoursAgo": "il y a {{count}} h",
+    "daysAgo": "il y a {{count}} j"
+  }
 }

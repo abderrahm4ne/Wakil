@@ -11,17 +11,33 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useSession } from 'next-auth/react'
 import { logout } from '@/app/action/logout'
-import { LogOut, Settings, User, PanelLeft } from 'lucide-react'
-import { redirect } from 'next/navigation'
+import { LogOut, Settings, Globe, PanelLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useSidebarStore } from '@/stores/sidebar-store'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 export function DashboardNavbar() {
+  const router = useRouter()
   const { data: session } = useSession()
+  if(!session){
+    router.push('/login?NOT_LOGGED_IN')
+  }
   const [isLoading, setIsLoading] = useState(false)
-  const { t } = useTranslation('dashboard')
+  const { t, i18n } = useTranslation('dashboard')
+  
+
+  const toggleLanguage = () => {
+    const langs = ['fr', 'en', 'ar'];
+    const currentIndex = langs.indexOf(i18n.language);
+    const nextLang = langs[(currentIndex + 1) % langs.length];
+    i18n.changeLanguage(nextLang);
+    
+    document.cookie = `locale=${nextLang}; path=/; max-age=31536000; SameSite=Lax`
+    
+    router.refresh()
+  };
 
   const handleLogout = async () => {
     setIsLoading(true)
@@ -32,10 +48,6 @@ export function DashboardNavbar() {
     } finally {
       setIsLoading(false)
     }
-  }
-
-  const handleRedirectToSettingsPage = () => {
-    redirect ('/dashboard/settings')
   }
 
   const user = session?.user
@@ -72,7 +84,14 @@ export function DashboardNavbar() {
       </div>
 
       {/* Right side  */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 ">
+        <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors px-3 py-1 rounded-md border border-neutral-800 hover:cursor-pointer"
+            >
+              <Globe className="w-4 h-4" />
+              <span className="text-sm font-medium uppercase">{i18n.language}</span>
+        </button>
         <DropdownMenu>
           <DropdownMenuTrigger className='hover:cursor-pointer hover:scale-[1.02] focus:scale-[0.99] ' asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0">
@@ -99,10 +118,8 @@ export function DashboardNavbar() {
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem 
-            className='hover:cursor-pointer' 
-            >
-              <Link href="/dashboard/settings" className='flex items-center space-x-3'>
+            <DropdownMenuItem asChild >
+              <Link href="/dashboard/settings" className='flex items-center space-x-3 hover:cursor-pointer w-full'>
                 <Settings className="me-2 h-4 w-4" />
                 <span>{t('navbar.settings')}</span>
               </Link>

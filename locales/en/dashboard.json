@@ -1,7 +1,83 @@
 {
-  "nav": { "overview": "Overview", "bot": "My Bot", "channels": "Channels", "conversations": "Conversations", "analytics": "Analytics", "subscription": "Subscription", "billing": "Billing", "orders": "Orders" },
-  "navbar": { "title": "Dashboard", "settings": "Settings", "logout": "Logout", "loggingOut": "Logging out...", "userFallback": "Wakil User" },
-  "analytics": { "title": "Analytics", "subtitle": "Monitor your bot's performance and message usage", "unauthenticated": "Not authenticated. Please sign in again.", "noBot": "No bot found.", "loadError": "Unable to load analytics. Please try again later.", "totalConversations": "Total Conversations", "totalMessages": "Total Messages", "mostTriggered": "Most Triggered Rule", "last7Days": "Messages Last 7 Days", "thisMonth": "Messages This Month", "noData": "No data available", "noDataDescription": "Data will appear once your bot starts processing messages.", "perDay": "Messages per day (last 30 days)", "unlimited": "Unlimited", "used": "{{percent}}% used", "approaching": "Approaching limit" },
-  "bot": { "notConfigured": "Bot Not Configured", "notConfiguredDescription": "You haven't configured your bot yet. Please set up your store information to get started.", "configure": "Go to Settings to Configure", "active": "Active", "inactive": "Inactive", "created": "Created on {{date}}", "settings": "Bot Settings", "store": "Store Information", "languages": "Languages", "contact": "Contact", "mode": "Current Mode", "aiDescription": "Your bot is powered by advanced AI for natural conversations.", "rulesDescription": "Your bot is currently following fixed rules for responses." },
-  "conversations": { "title": "Conversations", "subtitle": "Customer conversations across all channels.", "search": "Search by name or message...", "loading": "Loading...", "noConversations": "No conversations yet.", "noMatches": "No matches found.", "noMessages": "No messages yet", "select": "Select a conversation to view messages", "name": "Customer {{id}}...", "addName": "Add a name for this customer", "loadingMessages": "Loading messages...", "now": "now", "minutesAgo": "{{count}}m ago", "hoursAgo": "{{count}}h ago", "daysAgo": "{{count}}d ago" }
+  "nav": { 
+    "overview": "Overview", "bot": "My Bot", "channels": "Channels", "conversations": "Conversations", "analytics": "Analytics", "subscription": "Subscription", "billing": "Billing", "orders": "Orders" 
+  },
+  "navbar": { 
+    "title": "Dashboard", "settings": "Settings", "logout": "Logout", "loggingOut": "Logging out...", "userFallback": "Wakil User" 
+  },
+  "overview": {
+    "goodmorning": "Good Morning",
+    "goodafternoon": "Good Afternoon",
+    "plan": "Plan",
+    "Bot": "Bot",
+    "active": "active",
+    "paused": "paused",
+    "messagesThisMonth": "Messages This Month",
+    "openConversation": "Open Conversation",
+    "orderPendingReview": "Order pending review",
+    "connectedChannels": "Connected Channels",
+    "recentOrders": "Recent orders",
+    "viewAll": "View All",
+    "noRecentOrdersYet": "No recent orders yet",
+    "noChannelConnectedYet": "No channel connected yet",
+    "connecteInstagramOrFacebook": "Connect Instagram or Facebook",
+    "connected": "Connected",
+    "inActive": "Inactive",
+    "connectAnotherChannel": "Connect another channel",
+    "storeInformations": "Store informations",
+    "botConfiguration": "Bot configuration",
+    "botIs": "Bot is",
+    "OFF": "OFF",
+    "storeName": "Store name",
+    "storeLocation": "Store location",
+    "storeContact": "Store contact"
+  },
+  "analytics": { 
+    "title": "Analytics", 
+    "subtitle": "Monitor your bot's performance and message usage", 
+   "unauthenticated": "Not authenticated. Please sign in again.", 
+   "noBot": "No bot found.", 
+   "loadError": "Unable to load analytics. Please try again later.", "totalConversations": "Total Conversations", 
+   "totalMessages": "Total Messages", 
+   "mostTriggered": "Most Triggered Rule", 
+   "last7Days": "Messages Last 7 Days", 
+   "thisMonth": "Messages This Month", 
+   "noData": "No data available", 
+   "noDataDescription": "Data will appear once your bot starts processing messages.", 
+   "perDay": "Messages per day (last 30 days)", 
+   "unlimited": "Unlimited", 
+   "used": "{{percent}}% used", 
+   "approaching": "Approaching limit" 
+  },
+  "bot": { 
+    "notConfigured": "Bot Not Configured", 
+    "notConfiguredDescription": "You haven't configured your bot yet. Please set up your store information to get started.", 
+    "configure": "Go to Settings to Configure", 
+    "active": "Active", "inactive": "Inactive", 
+    "created": "Created on {{date}}", 
+    "settings": "Bot Settings", 
+    "store": "Store Information", 
+    "languages": "Languages", 
+    "contact": "Contact", 
+    "mode": "Current Mode", 
+    "aiDescription": "Your bot is powered by advanced AI for natural conversations.", 
+    "rulesDescription": "Your bot is currently following fixed rules for responses." 
+  },
+  "conversations": { 
+    "title": "Conversations", 
+    "subtitle": "Customer conversations across all channels.", 
+    "search": "Search by name or message...", 
+    "loading": "Loading...", "noConversations": 
+    "No conversations yet.", 
+    "noMatches": "No matches found.", 
+    "noMessages": "No messages yet", 
+    "select": "Select a conversation to view messages", 
+    "name": "Customer {{id}}...", 
+    "addName": "Add a name for this customer", 
+    "loadingMessages": "Loading messages...", 
+    "now": "now", 
+    "minutesAgo": "{{count}}m ago", 
+    "hoursAgo": "{{count}}h ago", 
+    "daysAgo": "{{count}}d ago" 
+  }
 }

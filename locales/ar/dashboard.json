@@ -1,7 +1,101 @@
 {
-  "nav": { "overview": "نظرة عامة", "bot": "البوت الخاص بي", "channels": "القنوات", "conversations": "المحادثات", "analytics": "التحليلات", "subscription": "الاشتراك", "billing": "الفوترة", "Orders": "الطلبات" },
-  "navbar": { "title": "لوحة التحكم", "settings": "الإعدادات", "logout": "تسجيل الخروج", "loggingOut": "جارٍ تسجيل الخروج...", "userFallback": "مستخدم وكيل" },
-  "analytics": { "title": "التحليلات", "subtitle": "راقب أداء بوتك واستخدام الرسائل", "unauthenticated": "أنت غير مسجل الدخول. يرجى تسجيل الدخول مجددًا.", "noBot": "لم يتم العثور على بوت.", "loadError": "تعذر تحميل التحليلات. حاول مرة أخرى لاحقًا.", "totalConversations": "إجمالي المحادثات", "totalMessages": "إجمالي الرسائل", "mostTriggered": "القاعدة الأكثر تشغيلًا", "last7Days": "رسائل آخر 7 أيام", "thisMonth": "رسائل هذا الشهر", "noData": "لا توجد بيانات", "noDataDescription": "ستظهر البيانات عندما يبدأ بوتك بمعالجة الرسائل.", "perDay": "الرسائل يوميًا (آخر 30 يومًا)", "unlimited": "غير محدود", "used": "تم استخدام {{percent}}٪", "approaching": "اقتربت من الحد" },
-  "bot": { "notConfigured": "البوت غير مُعد", "notConfiguredDescription": "لم تقم بإعداد بوتك بعد. أضف معلومات متجرك للبدء.", "configure": "الانتقال للإعدادات", "active": "نشط", "inactive": "غير نشط", "created": "أُنشئ في {{date}}", "settings": "إعدادات البوت", "store": "معلومات المتجر", "languages": "اللغات", "contact": "التواصل", "mode": "الوضع الحالي", "aiDescription": "يعمل بوتك بالذكاء الاصطناعي لإجراء محادثات طبيعية.", "rulesDescription": "يستخدم بوتك حاليًا قواعد ثابتة للردود." },
-  "conversations": { "title": "المحادثات", "subtitle": "محادثات العملاء عبر كل القنوات.", "search": "ابحث بالاسم أو الرسالة...", "loading": "جارٍ التحميل...", "noConversations": "لا توجد محادثات بعد.", "noMatches": "لا توجد نتائج.", "noMessages": "لا توجد رسائل", "select": "اختر محادثة لعرض الرسائل", "name": "العميل {{id}}...", "addName": "أضف اسمًا لهذا العميل", "loadingMessages": "جارٍ تحميل الرسائل...", "now": "الآن", "minutesAgo": "منذ {{count}} د", "hoursAgo": "منذ {{count}} س", "daysAgo": "منذ {{count}} ي" }
+  "nav": {
+    "overview": "نظرة عامة",
+    "bot": "البوت الخاص بي",
+    "channels": "القنوات",
+    "conversations": "المحادثات",
+    "analytics": "التحليلات",
+    "subscription": "الاشتراك",
+    "billing": "الفوترة",
+    "orders": "الطلبات"
+  },
+
+  "navbar": {
+    "title": "لوحة التحكم",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج",
+    "loggingOut": "جارٍ تسجيل الخروج...",
+    "userFallback": "مستخدم Wakil"
+  },
+
+  "overview": {
+    "goodmorning": "صباح الخير",
+    "goodafternoon": "مساء الخير",
+    "plan": "الخطة",
+    "Bot": "البوت",
+    "active": "نشط",
+    "paused": "متوقف مؤقتًا",
+    "messagesThisMonth": "الرسائل هذا الشهر",
+    "openConversation": "فتح المحادثة",
+    "orderPendingReview": "طلب في انتظار المراجعة",
+    "connectedChannels": "القنوات المتصلة",
+    "recentOrders": "الطلبات الأخيرة",
+    "viewAll": "عرض الكل",
+    "noRecentOrdersYet": "لا توجد طلبات حديثة بعد",
+    "noChannelConnectedYet": "لا توجد قناة متصلة بعد",
+    "connecteInstagramOrFacebook": "ربط Instagram أو Facebook",
+    "connected": "متصل",
+    "inActive": "غير نشط",
+    "connectAnotherChannel": "ربط قناة أخرى",
+    "storeInformations": "معلومات المتجر",
+    "botConfiguration": "إعدادات البوت",
+    "botIs": "البوت",
+    "OFF": "متوقف",
+    "storeName": "اسم المتجر",
+    "storeLocation": "موقع المتجر",
+    "storeContact": "جهة اتصال المتجر"
+  },
+
+  "analytics": {
+    "title": "التحليلات",
+    "subtitle": "راقب أداء البوت واستخدام الرسائل",
+    "unauthenticated": "غير مصادق عليه. يرجى تسجيل الدخول مرة أخرى.",
+    "noBot": "لم يتم العثور على بوت.",
+    "loadError": "تعذر تحميل التحليلات. يرجى المحاولة مرة أخرى لاحقًا.",
+    "totalConversations": "إجمالي المحادثات",
+    "totalMessages": "إجمالي الرسائل",
+    "mostTriggered": "القواعد الأكثر تشغيلًا",
+    "last7Days": "الرسائل خلال آخر 7 أيام",
+    "thisMonth": "الرسائل هذا الشهر",
+    "noData": "لا توجد بيانات متاحة",
+    "noDataDescription": "ستظهر البيانات بمجرد أن يبدأ البوت في معالجة الرسائل.",
+    "perDay": "الرسائل يوميًا (آخر 30 يومًا)",
+    "unlimited": "غير محدود",
+    "used": "تم استخدام {{percent}}%",
+    "approaching": "الاقتراب من الحد المسموح"
+  },
+
+  "bot": {
+    "notConfigured": "البوت غير مُعدّ",
+    "notConfiguredDescription": "لم تقم بإعداد البوت بعد. يرجى إعداد معلومات متجرك للبدء.",
+    "configure": "الانتقال إلى الإعدادات لإعداد البوت",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "created": "تم إنشاؤه في {{date}}",
+    "settings": "إعدادات البوت",
+    "store": "معلومات المتجر",
+    "languages": "اللغات",
+    "contact": "جهة الاتصال",
+    "mode": "الوضع الحالي",
+    "aiDescription": "يعمل البوت الخاص بك بواسطة ذكاء اصطناعي متقدم لإجراء محادثات طبيعية.",
+    "rulesDescription": "يتبع البوت حاليًا قواعد ثابتة للرد على الرسائل."
+  },
+
+  "conversations": {
+    "title": "المحادثات",
+    "subtitle": "محادثات العملاء عبر جميع القنوات.",
+    "search": "البحث بالاسم أو الرسالة...",
+    "loading": "جارٍ التحميل...",
+    "noConversations": "لا توجد محادثات بعد.",
+    "noMatches": "لم يتم العثور على نتائج.",
+    "noMessages": "لا توجد رسائل بعد",
+    "select": "اختر محادثة لعرض الرسائل",
+    "name": "العميل {{id}}...",
+    "addName": "إضافة اسم لهذا العميل",
+    "loadingMessages": "جارٍ تحميل الرسائل...",
+    "now": "الآن",
+    "minutesAgo": "منذ {{count}} د",
+    "hoursAgo": "منذ {{count}} س",
+    "daysAgo": "منذ {{count}} ي"
+  }
 }

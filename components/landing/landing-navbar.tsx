@@ -10,8 +10,10 @@ export default function LandingNavbar() {
   const toggleLanguage = () => {
     const langs = ['fr', 'en', 'ar'];
     const currentIndex = langs.indexOf(i18n.language);
-    const nextIndex = (currentIndex + 1) % langs.length;
-    i18n.changeLanguage(langs[nextIndex]);
+    const nextLang = langs[(currentIndex + 1) % langs.length];
+    i18n.changeLanguage(nextLang);
+    
+    document.cookie = `locale=${nextLang}; path=/; max-age=31536000; SameSite=Lax`
   };
 
   return (

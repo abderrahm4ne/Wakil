@@ -5,8 +5,14 @@ import { redirect } from 'next/navigation'
 import { getDashboardData } from '@/lib/data/dashboard'
 import { subscriptions } from '@/types/subscription'
 import { Progress } from '@/components/ui/progress'
+import i18n from '@/lib/i18n-server'
+import { cookies } from 'next/headers'
 
 export default async function DashboardPage() {
+    const cookieStore = await cookies()
+    const locale = cookieStore.get('locale')?.value ?? 'fr'
+    const t = i18n.getFixedT(locale, 'dashboard')
+
     const session = await auth()
     if (!session) redirect("/login")
 
@@ -33,24 +39,24 @@ export default async function DashboardPage() {
     const botOn = session.user.isActive
 
     const stats = [
-        { id: 0, label: 'Messages this month', value: messagesUsed, icon: MessageSquare },
-        { id: 1, label: 'Open conversations', value: analytics?.totalConversations ?? 0, icon: Radio },
-        { id: 2, label: 'Orders pending review', value: pendingReview ?? 0, icon: SendHorizontal, alert: (pendingReview ?? 0) > 0 },
-        { id: 3, label: 'Connected channels', value: `${channelsCount}/2`, icon: Zap },
+        { id: 0, label: t('overview.messagesThisMonth'), value: messagesUsed, icon: MessageSquare },
+        { id: 1, label: t('overview.openConversation'), value: analytics?.totalConversations ?? 0, icon: Radio },
+        { id: 2, label: t('overview.orderPendingReview'), value: pendingReview ?? 0, icon: SendHorizontal, alert: (pendingReview ?? 0) > 0 },
+        { id: 3, label: t('overview.connectedChannels'), value: `${channelsCount}/2`, icon: Zap },
     ]
 
     return (
         <div className='font-display flex flex-col relative'>
 
             {/* Welcoming */}
-            <section className='flex flex-col space-y-3 relative'>
-                <h1 className='sm:text-4xl text-3xl text-foreground tracking-tight font-bold'>
-                    {isDay ? 'Good Morning' : 'Good Afternoon'}, {session.user.name}
+            <section className='flex flex-col space-y-3 relative '>
+                <h1 className='sm:text-4xl text-[1.6rem] text-foreground tracking-tight font-bold'>
+                    {isDay ? t('overview.goodmorning') : t('overview.goodafternoon')}, {session.user.name}
                 </h1>
-                <div className='flex flex-row items-center space-x-3 ml-10'>
-                    <span className='font-semibold text-muted-foreground text-xl px-3'>{planDisplayed} Plan</span>
+                <div className='flex flex-row items-center space-x-5'>
+                    <span className='font-semibold  text-muted-foreground text-xl '>{planDisplayed} {t('overview.plan')}</span>
                     <div className='w-0.5 h-6 bg-muted-foreground' />
-                    <span className='flex items-center gap-2 font-semibold text-xl px-3'>
+                    <span className='flex items-center gap-2 font-semibold text-xl '>
                         <span className={`relative flex h-2 w-2`}>
                             {botOn && (
                                 <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75' />
@@ -58,14 +64,14 @@ export default async function DashboardPage() {
                             <span className={`relative inline-flex rounded-full h-2 w-2 ${botOn ? 'bg-green-500' : 'bg-muted-foreground'}`} />
                         </span>
                         <span className={botOn ? 'text-foreground' : 'text-muted-foreground'}>
-                            Bot {botOn ? 'active' : 'paused'}
+                            {t('Bot')} {botOn ? t('overview.active') : t('overview.paused')}
                         </span>
                     </span>
                 </div>
             </section>
 
             {/* Stats grid */}
-            <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4  mt-15'>
+            <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-15'>
                 {stats.map(stat => (
                     <div
                         key={stat.id}
@@ -83,7 +89,7 @@ export default async function DashboardPage() {
                                 <p className='text-xs text-muted-foreground'>{Math.round(percentage)}% of {maxMessages}</p>
                             </div>
                         )}
-                        {stat.label === 'Messages this month' && isUnlimited && (
+                        {stat.id === 0 && isUnlimited && (
                             <span className='relative text-xs text-secondary font-medium'>Unlimited</span>
                         )}
                     </div>
@@ -91,18 +97,18 @@ export default async function DashboardPage() {
             </section>
 
             {/* Recent orders && Channels */}
-            <section className='flex flex-row mt-15 justify-center space-x-10'>
+            <section  className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-15 justify-center space-x-10'>
 
-                <div className='flex flex-col bg-linear-to-br from-secondary/10 to-green-600/5 border border-border rounded-xl px-5 py-4 w-[50%]'>
+                <div className='flex flex-col bg-linear-to-br from-secondary/10 to-green-600/5 border border-border rounded-xl px-5 py-4  w-full'>
                     <div className='flex items-center justify-between mb-4'>
-                        <h2 className='font-semibold'>Recent orders</h2>
+                        <h2 className='font-semibold'>{t('overview.recentOrders')}</h2>
                         <a href='/orders' className='flex items-center gap-1 text-xs text-secondary hover:underline'>
-                            View all <ArrowUpRight size={12} />
+                            {t('overview.viewAll')} <ArrowUpRight size={12} />
                         </a>
                     </div>
 
                     {(!orders || orders.length === 0) ? (
-                        <p className='text-muted-foreground text-sm py-6 text-center'>No recent orders yet</p>
+                        <p className='text-muted-foreground text-sm py-6 text-center'>{t('overview.noRecentOrdersYet')}</p>
                     ) : (
                         <div className='flex flex-col divide-y divide-border'>
                             {orders.map(order => (
@@ -121,13 +127,13 @@ export default async function DashboardPage() {
                     )}
                 </div>
 
-                <div className='flex flex-col bg-card border border-border rounded-xl w-[50%] px-5 py-4'>
+                <div className='flex flex-col bg-card border border-border rounded-xl px-5 py-4 w-full'>
                     <h2 className='font-semibold mb-4'>Channels</h2>
  
                     {channelsCount === 0 ? (
                         <div className='flex flex-col items-center justify-center py-6 gap-2 text-center'>
-                            <p className='text-sm text-muted-foreground'>No channel connected yet</p>
-                            <a href='/dashboard/channels' className='text-xs text-secondary hover:underline'>Connect Instagram or Facebook</a>
+                            <p className='text-sm text-muted-foreground'>{t('noChannelConnectedYet')}</p>
+                            <a href='/dashboard/channels' className='text-xs text-secondary hover:underline'>{t('overview.connecteInstagramOrFacebook')}</a>
                         </div>
                     ) : (
                         <div className='flex flex-col divide-y divide-border'>
@@ -139,13 +145,13 @@ export default async function DashboardPage() {
                                     </span>
                                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium
                                         ${channel.isActive ? 'bg-green-500/15 text-green-600' : 'bg-muted-foreground/15 text-muted-foreground'}`}>
-                                        {channel.isActive ? 'Connected' : 'Inactive'}
+                                        {channel.isActive ? t('overview.connected') : t('overview.inActive')}
                                     </span>
                                 </div>
                             ))}
                             {channelsCount < 2 && (
                                 <a href='/settings/channels' className='flex items-center gap-1 text-xs text-secondary hover:underline pt-3'>
-                                    <span>+ Connect another channel</span>
+                                    <span>{t('overview.connectAnotherChannel')}</span>
                                 </a>
                             )}
                         </div>
@@ -154,28 +160,25 @@ export default async function DashboardPage() {
             </section>
 
             {/* Shop and merchant informations */}
-            <section className='flex flex-row mt-15 justify-center space-x-10'>
-
-                <div className='flex flex-col bg-linear-to-br from-red-600/10 to-green-600/5 border border-border rounded-xl px-5 py-4 w-[50%]'>
+            <div className='flex flex-col bg-linear-to-br from-red-600/10 to-green-600/5 border border-border rounded-xl px-5 py-4 w-full mt-15'>
                     <div className='flex items-center justify-between mb-4'>
-                        <h2 className='font-semibold'>Shop informations</h2>
+                        <h2 className='font-semibold'>{t('overview.storeInformations')}</h2>
                         <a href='/orders' className='flex items-center gap-1 text-xs text-secondary hover:underline'>
-                            Bot configuration <ArrowUpRight size={12} />
+                            {t('overview.botConfiguration')} <ArrowUpRight size={15} />
                         </a>
                     </div>
 
                     {(!bot || bot.isActive === false) ? (
-                        <p className='text-muted-foreground text-sm py-6 text-center'>Bot is <span className='text-red-600'>OFF</span></p>
+                        <p className='text-muted-foreground text-sm py-6 text-center'>{t('overview.botIs')}<span className='text-red-600'>OFF</span></p>
                     ) : (
                         <div className='flex flex-col divide-y divide-border text-xl'>
-                            <h2>Store name: {bot.storeCity}</h2>
-                            <h2>Store location: {bot.storeCity}</h2>
-                            <h2>Store contact: {bot.storeContact}</h2>
+                            <h2>{t('overview.storeName')} : {bot.storeName}</h2>
+                            <h2>{t('overview.storeLocation')} : {bot.storeCity}</h2>
+                            <h2>{t('overview.storeContact')} : {bot.storeContact}</h2>
                         </div>
                     )}
-                </div>
+            </div>
 
-            </section>
         </div>
     )
 }
