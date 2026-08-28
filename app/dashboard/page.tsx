@@ -46,17 +46,17 @@ export default async function DashboardPage() {
     ]
 
     return (
-        <div className='font-display flex flex-col relative'>
+        <div className={`${locale === 'ar' ? 'font-arabic' : 'font-display'} flex flex-col relative`}>
 
             {/* Welcoming */}
             <section className='flex flex-col space-y-3 relative '>
-                <h1 className='sm:text-4xl text-[1.6rem] text-foreground tracking-tight font-bold'>
+                <h1 className='sm:text-4xl text-[1.6rem] text-foreground tracking-tight font-semibold'>
                     {isDay ? t('overview.goodmorning') : t('overview.goodafternoon')}, {session.user.name}
                 </h1>
-                <div className='flex flex-row items-center space-x-5'>
-                    <span className='font-semibold  text-muted-foreground text-xl '>{planDisplayed} {t('overview.plan')}</span>
+                <div className=' flex-row items-center space-x-5 font-medium hidden sm:flex'>
+                    <span className='text-muted-foreground text-xl '>{planDisplayed} {t('overview.plan')}</span>
                     <div className='w-0.5 h-6 bg-muted-foreground' />
-                    <span className='flex items-center gap-2 font-semibold text-xl '>
+                    <span className='flex items-center gap-2 text-xl '>
                         <span className={`relative flex h-2 w-2`}>
                             {botOn && (
                                 <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75' />
@@ -81,12 +81,12 @@ export default async function DashboardPage() {
                         <div className={`absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl transition-opacity opacity-0 group-hover:opacity-100
                             ${stat.alert ? 'bg-orange-500/20' : 'bg-secondary/20'}`} />
                         <stat.icon className={`relative ${stat.alert ? 'text-orange-500' : 'text-secondary'}`} size={26} />
-                        <h2 className='relative text-md text-muted-foreground font-medium'>{stat.label}</h2>
-                        <h2 className='relative text-2xl font-bold'>{stat.value}</h2>
+                        <h2 className='relative text-xl text-muted-foreground font-normal'>{stat.label}</h2>
+                        <h2 className='relative text-2xl font-semibold'>{stat.value}</h2>
                         {stat.label === 'Messages this month' && !isUnlimited && (
                             <div className='relative space-y-1'>
                                 <Progress value={percentage} className="h-1.5" />
-                                <p className='text-xs text-muted-foreground'>{Math.round(percentage)}% of {maxMessages}</p>
+                                <p className='text-xs text-muted-foreground font-italic'>{Math.round(percentage)}% of {maxMessages}</p>
                             </div>
                         )}
                         {stat.id === 0 && isUnlimited && (
@@ -97,18 +97,18 @@ export default async function DashboardPage() {
             </section>
 
             {/* Recent orders && Channels */}
-            <section  className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-15 justify-center space-x-10'>
+            <section  className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-15 justify-center space-x-10 '>
 
                 <div className='flex flex-col bg-linear-to-br from-secondary/10 to-green-600/5 border border-border rounded-xl px-5 py-4  w-full'>
                     <div className='flex items-center justify-between mb-4'>
-                        <h2 className='font-semibold'>{t('overview.recentOrders')}</h2>
-                        <a href='/orders' className='flex items-center gap-1 text-xs text-secondary hover:underline'>
+                        <h2 className='text-lg font-normal'>{t('overview.recentOrders')}</h2>
+                        <a href='/dashboard/orders' className='flex items-center gap-1 text-md text-secondary font-normal tracking-wider hover:underline'>
                             {t('overview.viewAll')} <ArrowUpRight size={12} />
                         </a>
                     </div>
 
                     {(!orders || orders.length === 0) ? (
-                        <p className='text-muted-foreground text-sm py-6 text-center'>{t('overview.noRecentOrdersYet')}</p>
+                        <p className='text-muted-foreground text-sm py-6 text-center font-semibold'>{t('overview.noRecentOrdersYet')}</p>
                     ) : (
                         <div className='flex flex-col divide-y divide-border'>
                             {orders.map(order => (
@@ -128,12 +128,12 @@ export default async function DashboardPage() {
                 </div>
 
                 <div className='flex flex-col bg-card border border-border rounded-xl px-5 py-4 w-full'>
-                    <h2 className='font-semibold mb-4'>Channels</h2>
+                    <h2 className='font-normal text-lg mb-4'>{t('overview.Channels')}</h2>
  
                     {channelsCount === 0 ? (
                         <div className='flex flex-col items-center justify-center py-6 gap-2 text-center'>
-                            <p className='text-sm text-muted-foreground'>{t('noChannelConnectedYet')}</p>
-                            <a href='/dashboard/channels' className='text-xs text-secondary hover:underline'>{t('overview.connecteInstagramOrFacebook')}</a>
+                            <p className='text-sm text-muted-foreground font-semibold'>{t('overview.noChannelConnectedYet')}</p>
+                            <a href='/dashboard/channels' className='text-xs text-secondary tracking-wide hover:underline font-normal'>{t('overview.connecteInstagramOrFacebook')}</a>
                         </div>
                     ) : (
                         <div className='flex flex-col divide-y divide-border'>
@@ -150,7 +150,7 @@ export default async function DashboardPage() {
                                 </div>
                             ))}
                             {channelsCount < 2 && (
-                                <a href='/settings/channels' className='flex items-center gap-1 text-xs text-secondary hover:underline pt-3'>
+                                <a href='/settings/channels' className='flex items-center gap-1 text-xs text-secondary hover:underline pt-3 font-normal'>
                                     <span>{t('overview.connectAnotherChannel')}</span>
                                 </a>
                             )}
@@ -161,17 +161,17 @@ export default async function DashboardPage() {
 
             {/* Shop and merchant informations */}
             <div className='flex flex-col bg-linear-to-br from-red-600/10 to-green-600/5 border border-border rounded-xl px-5 py-4 w-full mt-15'>
-                    <div className='flex items-center justify-between mb-4'>
-                        <h2 className='font-semibold'>{t('overview.storeInformations')}</h2>
+                    <div className='flex items-center justify-between mb-4 font-normal'>
+                        <h2 className=''>{t('overview.storeInformations')}</h2>
                         <a href='/orders' className='flex items-center gap-1 text-xs text-secondary hover:underline'>
                             {t('overview.botConfiguration')} <ArrowUpRight size={15} />
                         </a>
                     </div>
 
                     {(!bot || bot.isActive === false) ? (
-                        <p className='text-muted-foreground text-sm py-6 text-center'>{t('overview.botIs')}<span className='text-red-600'>OFF</span></p>
+                        <p className='text-muted-foreground text-sm py-6 text-center font-normal'>{t('overview.botIs')}<span className='text-red-600 px-2'>OFF</span></p>
                     ) : (
-                        <div className='flex flex-col divide-y divide-border text-xl'>
+                        <div className='flex flex-col divide-y divide-border text-xl font-medium'>
                             <h2>{t('overview.storeName')} : {bot.storeName}</h2>
                             <h2>{t('overview.storeLocation')} : {bot.storeCity}</h2>
                             <h2>{t('overview.storeContact')} : {bot.storeContact}</h2>

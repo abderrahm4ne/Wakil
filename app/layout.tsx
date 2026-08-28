@@ -22,6 +22,19 @@ const jakarta = localFont({
   variable: "--font-jakarta",
 });
 
+const rubik = localFont({
+  src: [
+    { path: "../public/fonts/Rubik-200.ttf", weight: "200" },
+    { path: "../public/fonts/Rubik-300.ttf", weight: "300" },
+    { path: "../public/fonts/Rubik-400.ttf", weight: "400" },
+    { path: "../public/fonts/Rubik-500.ttf", weight: "500" },
+    { path: "../public/fonts/Rubik-600.ttf", weight: "600" },
+    { path: "../public/fonts/Rubik-700.ttf", weight: "700" },
+    { path: "../public/fonts/Rubik-800.ttf", weight: "800" },
+  ],
+  variable: "--font-rubik",
+});
+
 
 export const metadata: Metadata = {
   title: "Wakil",
@@ -40,7 +53,7 @@ export default function RootLayout({
     <html
       lang="fr"
       suppressHydrationWarning
-      className={`${inter.variable} ${jakarta.variable} h-full antialiased`}
+      className={`${inter.variable} ${jakarta.variable} ${rubik.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <SessionProvider>
