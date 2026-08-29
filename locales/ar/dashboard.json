@@ -98,5 +98,33 @@
     "minutesAgo": "منذ {{count}} د",
     "hoursAgo": "منذ {{count}} س",
     "daysAgo": "منذ {{count}} ي"
+  },
+  "subscription": {
+    "title": "الاشتراك",
+    "subtitle": "إدارة خطتك واستخدامك وفواتيرك.",
+    "selectNewPlan": "اختر خطة جديدة",
+    "backToCurrent": "العودة إلى الخطة الحالية",
+    "processingUpgrade": "جارٍ معالجة ترقية خطتك...",
+    "upgradeFailed": "فشل ترقية خطتك.",
+    "genericError": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "portalFailed": "تعذر فتح بوابة الفوترة.",
+    "confirmCancel": "هل أنت متأكد أنك تريد إلغاء اشتراكك؟",
+    "cancelFailed": "فشل إلغاء اشتراكك.",
+    "renewFailed": "فشل تجديد اشتراكك.",
+    "inactive": "غير نشط",
+    "cancelsOn": "ينتهي في {{date}}",
+    "cancelScheduled": "تم جدولة الإلغاء",
+    "renewsOn": "يتجدد في {{date}}",
+    "active": "نشط",
+    "undoCancel": "التراجع عن الإلغاء",
+    "cancelPlan": "إلغاء الخطة",
+    "manageBilling": "إدارة الفوترة",
+    "messages": "الرسائل",
+    "unlimited": "غير محدود",
+    "productLimit": "المنتجات",
+    "channels": "القنوات",
+    "allPlans": "جميع الخطط",
+    "viewAllPlans": "عرض جميع الخطط",
+    "current": "الحالية"
   }
 }

@@ -9,7 +9,6 @@
     "billing": "Facturation",
     "orders": "Commandes"
   },
-
   "navbar": {
     "title": "Tableau de bord",
     "settings": "Paramètres",
@@ -17,7 +16,6 @@
     "loggingOut": "Déconnexion...",
     "userFallback": "Utilisateur Wakil"
   },
-
   "overview": {
     "goodmorning": "Bonjour",
     "goodafternoon": "Bon après-midi",
@@ -46,7 +44,6 @@
     "storeLocation": "Emplacement du magasin",
     "storeContact": "Contact du magasin"
   },
-
   "analytics": {
     "title": "Analytiques",
     "subtitle": "Surveillez les performances de votre bot et l’utilisation des messages",
@@ -65,7 +62,6 @@
     "used": "{{percent}}% utilisé",
     "approaching": "Limite bientôt atteinte"
   },
-
   "bot": {
     "notConfigured": "Bot non configuré",
     "notConfiguredDescription": "Vous n’avez pas encore configuré votre bot. Configurez les informations de votre magasin pour commencer.",
@@ -81,7 +77,6 @@
     "aiDescription": "Votre bot utilise une IA avancée pour offrir des conversations naturelles.",
     "rulesDescription": "Votre bot suit actuellement des règles prédéfinies pour répondre aux messages."
   },
-
   "conversations": {
     "title": "Conversations",
     "subtitle": "Conversations avec les clients sur tous les canaux.",
@@ -98,5 +93,33 @@
     "minutesAgo": "il y a {{count}} min",
     "hoursAgo": "il y a {{count}} h",
     "daysAgo": "il y a {{count}} j"
+  },
+  "subscription": {
+    "title": "Abonnement", 
+    "subtitle": "Gérez votre forfait, votre utilisation et votre facturation.",
+    "selectNewPlan": "Sélectionner un nouveau forfait",
+    "backToCurrent": "Retour au forfait actuel",
+    "processingUpgrade": "Traitement de votre changement de forfait...",
+    "upgradeFailed": "Échec de la mise à niveau de votre forfait.",
+    "genericError": "Une erreur s'est produite. Veuillez réessayer.",
+    "portalFailed": "Impossible d'ouvrir le portail de facturation.",
+    "confirmCancel": "Êtes-vous sûr de vouloir annuler votre abonnement ?",
+    "cancelFailed": "Échec de l'annulation de votre abonnement.",
+    "renewFailed": "Échec du renouvellement de votre abonnement.",
+    "inactive": "Inactif",
+    "cancelsOn": "Prend fin le {{date}}",
+    "cancelScheduled": "Annulation programmée",
+    "renewsOn": "Renouvellement le {{date}}",
+    "active": "Actif",
+    "undoCancel": "Annuler la demande de résiliation",
+    "cancelPlan": "Annuler le forfait",
+    "manageBilling": "Gérer la facturation",
+    "messages": "Messages",
+    "unlimited": "Illimité",
+    "productLimit": "Produits",
+    "channels": "Canaux",
+    "allPlans": "Tous les forfaits",
+    "viewAllPlans": "Voir tous les forfaits",
+    "current": "Actuel"
   }
 }

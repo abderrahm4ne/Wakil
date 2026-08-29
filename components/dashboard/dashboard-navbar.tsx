@@ -21,23 +21,25 @@ import { useRouter } from 'next/navigation'
 export function DashboardNavbar() {
   const router = useRouter()
   const { data: session } = useSession()
-  if(!session){
-    router.push('/login?NOT_LOGGED_IN')
-  }
+
   const [isLoading, setIsLoading] = useState(false)
   const { t, i18n } = useTranslation('dashboard')
   
 
   const toggleLanguage = () => {
-    const langs = ['fr', 'en', 'ar'];
-    const currentIndex = langs.indexOf(i18n.language);
-    const nextLang = langs[(currentIndex + 1) % langs.length];
-    i18n.changeLanguage(nextLang);
-    
+    const langs = ["fr", "en", "ar"] as const
+
+    const currentLang = i18n.language.split("-")[0]
+    const currentIndex = langs.indexOf(currentLang as typeof langs[number])
+
+    const nextLang = langs[(currentIndex + 1) % langs.length]
+
+    i18n.changeLanguage(nextLang)
+
     document.cookie = `locale=${nextLang}; path=/; max-age=31536000; SameSite=Lax`
-    
+
     router.refresh()
-  };
+  }
 
   const handleLogout = async () => {
     setIsLoading(true)

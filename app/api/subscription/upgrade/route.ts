@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { stripe } from '@/lib/stripe'
 import { Plan } from '@/generated/prisma/enums'
 
 const PLAN_ORDER: Record<Plan, number> = {
@@ -10,53 +11,92 @@ const PLAN_ORDER: Record<Plan, number> = {
   BUSINESS: 3
 }
 
+const PLAN_PRICE_IDS: Record<Plan, string> = {
+  FREE_TRIAL: '',
+  STARTER: process.env.STRIPE_STARTER_PRICE_ID!,
+  PRO: process.env.STRIPE_PRO_PRICE_ID!,
+  BUSINESS: process.env.STRIPE_BUSINESS_PRICE_ID!,
+}
+
 export async function POST(req: NextRequest) {
-    try{
-        const session = await auth();
+    try {
+        const session = await auth()
         if (!session) return NextResponse.json(
             { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
         )
 
-        const { plan } = await req.json();
+        const { plan, billingMode } = await req.json()
+        
         if (!plan || !Object.keys(PLAN_ORDER).includes(plan)) {
             return NextResponse.json(
                 { success: false, error: 'INVALID_PLAN' }, { status: 400 }
             )
         }
 
-        const current = await prisma.subscription.findUnique({
+        if (!billingMode || !['MONTHLY', 'ONE_TIME'].includes(billingMode)) {
+            return NextResponse.json(
+                { success: false, error: 'INVALID_BILLING_MODE' }, { status: 400 }
+            )
+        }
+
+        const subscription = await prisma.subscription.findUnique({
             where: { userId: session.user.id }
         })
 
-        const expired = current && current.endDate && current.endDate < new Date();
-        if (!expired) {
+        if (!subscription?.isActive) {
             return NextResponse.json(
-                { sucess: false, error: 'SUBSCRIPTION_NOT_EXPIRED' }, { status: 400 }
+                { success: false, error: 'NO_ACTIVE_SUBSCRIPTION' }, { status: 400 }
             )
         }
 
-        if (current && PLAN_ORDER[plan as Plan] <= PLAN_ORDER[current.plan as Plan]) {
+        if (subscription.plan === plan && subscription.billingMode === billingMode) {
             return NextResponse.json(
-                { success: false, error: 'CANNOT_DOWNGRADE_HERE' }, { status: 400 }
+                { success: false, error: 'ALREADY_ON_THIS_PLAN' }, { status: 400 }
             )
         }
-        const start = new Date();
-        const end = new Date(start);
-        end.setMonth(start.getMonth() + 1)
-        const subscription = await prisma.subscription.update({
-            where: { userId: session.user.id },
-            data: {
-                plan: plan as Plan,
-                isActive: false,
-                startDate: start,
-                currentPeriodEnd: end,
+
+        if (subscription.billingMode === 'ONE_TIME') {
+            return NextResponse.json(
+                { success: false, error: 'ONE_TIME_CANNOT_BE_MODIFIED' }, { status: 400 }
+            )
+        }
+
+        if (!subscription.providerSubscriptionId || !subscription.providerCustomerId) {
+            return NextResponse.json(
+                { success: false, error: 'INVALID_STRIPE_SUBSCRIPTION' }, { status: 400 }
+            )
+        }
+
+        const priceId = PLAN_PRICE_IDS[plan as Plan]
+        if (!priceId) {
+            return NextResponse.json(
+                { success: false, error: 'PLAN_NOT_AVAILABLE' }, { status: 400 }
+            )
+        }
+
+        const checkoutSession = await stripe.checkout.sessions.create({
+            customer: subscription.providerCustomerId,
+            mode: billingMode === 'ONE_TIME' ? 'payment' : 'subscription',
+            payment_method_types: ['card'],
+            line_items: [
+                {
+                    price: priceId,
+                    quantity: 1,
+                }
+            ],
+            success_url: `${process.env.NEXTAUTH_URL}/dashboard/subscription?upgrade=success`,
+            cancel_url: `${process.env.NEXTAUTH_URL}/dashboard/subscription?upgrade=canceled`,
+            metadata: {
+                userId: session.user.id,
+                plan: plan,
+                billingMode: billingMode,
+                upgradeFrom: subscription.plan,
             }
         })
 
-        return NextResponse.json({ success: true, data: subscription })
-    }
-    catch (err) {
-        console.error('error in upgrade subscription', err);
+        return NextResponse.json({ success: true, url: checkoutSession.url })
+    } catch (err) {
+        console.error('error in upgrade subscription', err)
         return NextResponse.json(
             { success: false, error: 'SERVER_ERROR' }, { status: 500 }
         )

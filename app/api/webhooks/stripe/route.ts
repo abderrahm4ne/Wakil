@@ -1,7 +1,8 @@
 import { stripe } from '@/lib/stripe'
-import { activateSubscription, syncSubscriptionPeriod } from '@/lib/subscription'
+import { activateSubscription, syncSubscriptionPeriod, OneTimePayement } from '@/lib/subscription'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
+import Stripe from 'stripe'
 
 export async function POST(req: Request) {
     const body = await req.text()
@@ -13,6 +14,23 @@ export async function POST(req: Request) {
     } catch (err) {
         console.error('Webhook signature verification failed', err)
         return NextResponse.json({ error: 'INVALID_SIGNATURE' }, { status: 400 })
+    }
+    if (event.type === 'payment_intent.succeeded') {
+        const paymentIntent = event.data.object as any
+        const metadata = paymentIntent.metadata ?? {}
+
+        if (metadata.billingMode === 'ONE_TIME') {
+            const userId = metadata.userId
+            const plan = metadata.plan
+            const customerId = paymentIntent.customer as string | null
+            const now = new Date()
+            const expiresAt = new Date(now)
+            expiresAt.setDate(expiresAt.getDate() + 30)
+
+            if (userId && plan && customerId) {
+                await OneTimePayement(userId, plan as any, customerId, expiresAt, now)
+            }
+        }
     }
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object
@@ -45,11 +63,31 @@ export async function POST(req: Request) {
     if (event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.deleted') {
         const subscription = event.data.object
         const item = subscription.items.data[0]
+        const priceId = item.price.id
+        const planMap: Record<string, string> = {
+            [process.env.STRIPE_STARTER_PRICE_ID!]: 'STARTER',
+            [process.env.STRIPE_PRO_PRICE_ID!]: 'PRO',
+            [process.env.STRIPE_BUSINESS_PRICE_ID!]: 'BUSINESS',
+        }
+        const plan = planMap[priceId]
         await syncSubscriptionPeriod(subscription.id, {
             currentPeriodEnd: new Date(item.current_period_end * 1000),
             currentPeriodStart: new Date(item.current_period_start * 1000),
             cancelAtPeriodEnd: subscription.cancel_at_period_end,
-            status: subscription.status, // active, past_due, canceled, unpaid...
+            status: subscription.status,
+            plan: plan || undefined
+        })
+    }
+
+    if (event.type === 'invoice.payment_failed') {
+    const invoice = event.data.object as any
+    const subscriptionId = invoice.subscription as string
+
+        await syncSubscriptionPeriod(subscriptionId as string, {
+            currentPeriodEnd: new Date(invoice.period_end * 1000),
+            currentPeriodStart: new Date(invoice.period_start * 1000),
+            cancelAtPeriodEnd: false,
+            status: 'past_due',
         })
     }
 

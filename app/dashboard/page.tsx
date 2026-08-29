@@ -6,12 +6,12 @@ import { getDashboardData } from '@/lib/data/dashboard'
 import { subscriptions } from '@/types/subscription'
 import { Progress } from '@/components/ui/progress'
 import i18n from '@/lib/i18n-server'
-import { cookies } from 'next/headers'
+import getLang from '@/lib/locale'
+
 
 export default async function DashboardPage() {
-    const cookieStore = await cookies()
-    const locale = cookieStore.get('locale')?.value ?? 'fr'
-    const t = i18n.getFixedT(locale, 'dashboard')
+    const lang = await getLang()
+    const t = i18n.getFixedT(lang, 'dashboard')
 
     const session = await auth()
     if (!session) redirect("/login")
@@ -46,7 +46,7 @@ export default async function DashboardPage() {
     ]
 
     return (
-        <div className={`${locale === 'ar' ? 'font-arabic' : 'font-display'} flex flex-col relative`}>
+        <div className={`${lang === 'ar' ? 'font-arabic' : 'font-display'} flex flex-col relative`}>
 
             {/* Welcoming */}
             <section className='flex flex-col space-y-3 relative '>

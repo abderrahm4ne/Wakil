@@ -32,7 +32,7 @@ i18n
       },
     },
     lng: 'fr',
-    fallbackLng: 'fr',
+    fallbackLng: 'en',
     interpolation: {
       escapeValue: false,
     },

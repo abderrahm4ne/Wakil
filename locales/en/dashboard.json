@@ -79,5 +79,33 @@
     "minutesAgo": "{{count}}m ago", 
     "hoursAgo": "{{count}}h ago", 
     "daysAgo": "{{count}}d ago" 
+  },
+  "subscription": {
+    "title": "Subscription", 
+    "subtitle": "Manage your plan, usage, and billing.",
+    "selectNewPlan": "Select a New Plan",
+    "backToCurrent": "Back to Current Plan",
+    "processingUpgrade": "Processing your upgrade...",
+    "upgradeFailed": "Failed to upgrade your plan.",
+    "genericError": "Something went wrong. Please try again.",
+    "portalFailed": "Unable to open the billing portal.",
+    "confirmCancel": "Are you sure you want to cancel your subscription?",
+    "cancelFailed": "Failed to cancel your subscription.",
+    "renewFailed": "Failed to renew your subscription.",
+    "inactive": "Inactive",
+    "cancelsOn": "Cancels on {{date}}",
+    "cancelScheduled": "Cancellation scheduled",
+    "renewsOn": "Renews on {{date}}",
+    "active": "Active",
+    "undoCancel": "Undo Cancellation",
+    "cancelPlan": "Cancel Plan",
+    "manageBilling": "Manage Billing",
+    "messages": "Messages",
+    "unlimited": "Unlimited",
+    "productLimit": "Products",
+    "channels": "Channels",
+    "allPlans": "All Plans",
+    "viewAllPlans": "View All Plans",
+    "current": "Current"
   }
 }
