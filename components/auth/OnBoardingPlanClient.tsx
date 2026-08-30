@@ -7,10 +7,7 @@ import { PlanSelection } from "@/components/auth/PlanSelection"
 import WakilLogo from "@/components/common/WakilLogo"
 import { useTranslation } from "react-i18next"
 
-const BILLING_MODES = [
-    { id: 'MONTHLY', label: 'Subscribe monthly (auto-renews)', description: 'Renew every month' },
-    { id: 'ONE_TIME', label: 'Pay once (30 days)', description: 'Single payment, no renewal' }
-]
+
 
 export default function OnBoardingPlanClient() {
     const [selectedPlan, setSelectedPlan] = useState("STARTER")
@@ -18,6 +15,11 @@ export default function OnBoardingPlanClient() {
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
     const { t } = useTranslation('auth')
+
+    const BILLING_MODES = [
+        { id: 'MONTHLY', label: t('onboarding.monthly'), description: t('onboarding.renewDescription') },
+        { id: 'ONE_TIME', label: t('onboarding.oneTime'), description: t('onboarding.oneTimeDescription') }
+    ]
 
     const handleConfirm = async () => {
         setIsLoading(true)
@@ -95,7 +97,7 @@ export default function OnBoardingPlanClient() {
                     type="button"
                     onClick={handleConfirm}
                     disabled={isLoading}
-                    className="w-full max-w-xs py-2.5 px-4 rounded-lg bg-secondary text-secondary-foreground font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="w-full max-w-xs py-2.5 px-4 rounded-lg bg-secondary text-secondary-foreground font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2 hover:cursor-pointer"
                 >
                     {isLoading ? (
                         <>

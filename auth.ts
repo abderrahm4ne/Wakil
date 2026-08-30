@@ -125,13 +125,22 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                 })
                 token.plan = sub?.plan || 'FREE_TRIAL'
             }
+
+            if (token.id && (!token.lastValidate || Date.now() - (token.lastValidated as number) > 5 * 60 * 1000)) {
+                const exists = await prisma.user.findUnique({
+                    where : { id: token.id as string },
+                    select: { id: true }
+                })
+                if (!exists) return null
+                token.lastValidated = Date.now()
+            }
             return token
         },
         async session({ session, token }) {
             if (session.user) {
                 session.user.id = token.id as string
                 session.user.plan = token.plan as string
-                session.user.isActive = token.isActive as string
+                session.user.isActive = token.isActive as boolean
             }
             return session
         }

@@ -11,11 +11,20 @@ const PLAN_ORDER: Record<Plan, number> = {
   BUSINESS: 3
 }
 
-const PLAN_PRICE_IDS: Record<Plan, string> = {
-  FREE_TRIAL: '',
-  STARTER: process.env.STRIPE_STARTER_PRICE_ID!,
-  PRO: process.env.STRIPE_PRO_PRICE_ID!,
-  BUSINESS: process.env.STRIPE_BUSINESS_PRICE_ID!,
+const PLAN_PRICE_IDS: Record<Plan, { monthly: string; oneTime: string }> = {
+  FREE_TRIAL: { monthly: '', oneTime: '' },
+  STARTER: {
+    monthly: process.env.STRIPE_STARTER_PRICE_ID!,
+    oneTime: process.env.STRIPE_STARTER_ONETIME_PRICE_ID!,
+  },
+  PRO: {
+    monthly: process.env.STRIPE_PRO_PRICE_ID!,
+    oneTime: process.env.STRIPE_PRO_ONETIME_PRICE_ID!,
+  },
+  BUSINESS: {
+    monthly: process.env.STRIPE_BUSINESS_PRICE_ID!,
+    oneTime: process.env.STRIPE_BUSINESS_ONETIME_PRICE_ID!,
+  },
 }
 
 export async function POST(req: NextRequest) {
@@ -76,11 +85,12 @@ export async function POST(req: NextRequest) {
             subscription.providerCustomerId = customer.id
         }
 
-        const priceId = PLAN_PRICE_IDS[plan as Plan]
+        const priceId = billingMode === 'ONE_TIME'
+            ? PLAN_PRICE_IDS[plan as Plan].oneTime
+            : PLAN_PRICE_IDS[plan as Plan].monthly
+
         if (!priceId) {
-            return NextResponse.json(
-                { success: false, error: 'PLAN_NOT_AVAILABLE' }, { status: 400 }
-            )
+            return NextResponse.json({ success: false, error: 'PLAN_NOT_AVAILABLE' }, { status: 400 })
         }
 
         const checkoutSession = await stripe.checkout.sessions.create({
@@ -93,8 +103,8 @@ export async function POST(req: NextRequest) {
                     quantity: 1,
                 }
             ],
-            success_url: `${process.env.NEXTAUTH_URL}/dashboard/subscription?success=true`,
-            cancel_url: `${process.env.NEXTAUTH_URL}/onboarding/plan-selection?canceled=true`,
+            success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/subscription?success=true`,
+            cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/onboarding/plan-selection?canceled=true`,
             metadata: {
                 userId: session.user.id,
                 plan: plan,
