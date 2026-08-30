@@ -247,7 +247,7 @@ export function SubscriptionClient({
                             )}
 
                                 {/* one time sub */}
-                            {!isMonthly && isActive && (
+                            {!isMonthly && !isActive && (
                                 <span className="px-4 py-2 text-sm font-medium text-muted-foreground">
                                     {t('subscription.oneTimeExpires', { date: renewalDate })}
                                 </span>

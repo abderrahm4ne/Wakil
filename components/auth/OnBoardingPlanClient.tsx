@@ -1,28 +1,53 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { Loader2 } from "lucide-react"
 import { PlanSelection } from "@/components/auth/PlanSelection"
 import WakilLogo from "@/components/common/WakilLogo"
-import { createSubscriptionForCurrentUser } from "@/lib/actions/planSelection"
-import { useSession } from "next-auth/react"
+import { useTranslation } from "react-i18next"
 
+const BILLING_MODES = [
+    { id: 'MONTHLY', label: 'Subscribe monthly (auto-renews)', description: 'Renew every month' },
+    { id: 'ONE_TIME', label: 'Pay once (30 days)', description: 'Single payment, no renewal' }
+]
 
 export default function OnBoardingPlanClient() {
-    const [selectedPlan, setSelectedPlan] = useState("Starter")
-    const [isPending, startTransition] = useTransition()
+    const [selectedPlan, setSelectedPlan] = useState("STARTER")
+    const [selectedBillingMode, setSelectedBillingMode] = useState("MONTHLY")
+    const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
-    const { update } = useSession()
+    const { t } = useTranslation('auth')
 
-
-    const handleConfirm = () => {
-        startTransition(async () => {
-            const res = await createSubscriptionForCurrentUser(selectedPlan)
-            if (res.success) {
-                await update()
-                router.push("/dashboard")
+    const handleConfirm = async () => {
+        setIsLoading(true)
+        try {
+            let rPlan
+            if (selectedPlan === 'FreeTrial'){
+                rPlan = 'FREE_TRIAL'
+            } 
+            else {
+                rPlan = selectedPlan.toUpperCase()
             }
-        })
+            const res = await fetch("/api/subscription/upgrade", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    plan: rPlan, 
+                    billingMode: selectedBillingMode 
+                })
+            })
+            const result = await res.json()
+            if (result.url) {
+                window.location.href = result.url
+            } else {
+                alert(result.error || t('onboarding.checkoutFailed'))
+            }
+        } catch {
+            alert(t('onboarding.genericError'))
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -31,19 +56,55 @@ export default function OnBoardingPlanClient() {
                 <WakilLogo />
 
                 <div className="text-center space-y-1">
-                    <h1 className="text-2xl font-bold text-foreground">Choose your plan</h1>
-                    <p className="text-muted-foreground">You can change this anytime from billing.</p>
+                    <h1 className="text-2xl font-bold text-foreground">{t('onboarding.choosePlan')}</h1>
+                    <p className="text-muted-foreground">{t('onboarding.changeAnytime')}</p>
                 </div>
 
-                <PlanSelection selected={selectedPlan} onSelect={setSelectedPlan} />
+                {/* Plan Selection */}
+                <div className="w-full">
+                    <label className="block text-sm font-medium text-foreground mb-3">
+                        {t('onboarding.selectPlan')}
+                    </label>
+                    <PlanSelection selected={selectedPlan} onSelect={setSelectedPlan} />
+                </div>
+
+                {/* Billing Mode Selection */}
+                <div className="w-full">
+                    <label className="block text-sm font-medium text-foreground mb-3">
+                        {t('onboarding.billingMode')}
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {BILLING_MODES.map(mode => (
+                            <button
+                                key={mode.id}
+                                onClick={() => setSelectedBillingMode(mode.id)}
+                                className={`p-4 rounded-lg border-2 transition-all text-left hover:cursor-pointer
+                                    ${selectedBillingMode === mode.id
+                                        ? 'border-secondary bg-secondary/5'
+                                        : 'border-border hover:border-secondary/50'
+                                    }`}
+                            >
+                                <p className="font-medium text-foreground">{mode.label}</p>
+                                <p className="text-xs text-muted-foreground mt-1">{mode.description}</p>
+                            </button>
+                        ))}
+                    </div>
+                </div>
 
                 <button
                     type="button"
                     onClick={handleConfirm}
-                    disabled={isPending}
-                    className="w-full max-w-xs py-2.5 px-4 rounded-lg bg-secondary text-white font-medium hover:bg-secondary/90 transition-colors disabled:opacity-50"
+                    disabled={isLoading}
+                    className="w-full max-w-xs py-2.5 px-4 rounded-lg bg-secondary text-secondary-foreground font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                    {isPending ? "Setting up..." : "Continue"}
+                    {isLoading ? (
+                        <>
+                            <Loader2 size={16} className="animate-spin" />
+                            {t('onboarding.processingCheckout')}
+                        </>
+                    ) : (
+                        t('onboarding.continueToCheckout')
+                    )}
                 </button>
             </div>
         </div>

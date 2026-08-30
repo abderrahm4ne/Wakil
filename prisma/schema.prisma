@@ -39,9 +39,9 @@ model Subscription {
   provider  PaymentProvider?
   providerCustomerId String?
   providerSubscriptionId String?  @unique
-  startDate DateTime  @default(now())
+  startDate DateTime?  @default(now())
   endDate   DateTime?
-  currentPeriodEnd DateTime
+  currentPeriodEnd DateTime?
   isActive  Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

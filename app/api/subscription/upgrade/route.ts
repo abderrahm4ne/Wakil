@@ -43,28 +43,37 @@ export async function POST(req: NextRequest) {
             where: { userId: session.user.id }
         })
 
-        if (!subscription?.isActive) {
+        if (!subscription) {
             return NextResponse.json(
-                { success: false, error: 'NO_ACTIVE_SUBSCRIPTION' }, { status: 400 }
+                { success: false, error: 'NO_SUBSCRIPTION' }, { status: 400 }
             )
         }
 
-        if (subscription.plan === plan && subscription.billingMode === billingMode) {
+        if (subscription.isActive && subscription.billingMode === 'ONE_TIME') {
+            return NextResponse.json(
+                { success: false, error: 'CANNOT_UPGRADE_ONE_TIME' }, { status: 400 }
+            )
+        }
+
+        if (subscription.isActive && subscription.plan === plan && subscription.billingMode === billingMode) {
             return NextResponse.json(
                 { success: false, error: 'ALREADY_ON_THIS_PLAN' }, { status: 400 }
             )
         }
 
-        if (subscription.billingMode === 'ONE_TIME') {
-            return NextResponse.json(
-                { success: false, error: 'ONE_TIME_CANNOT_BE_MODIFIED' }, { status: 400 }
-            )
-        }
 
-        if (!subscription.providerSubscriptionId || !subscription.providerCustomerId) {
-            return NextResponse.json(
-                { success: false, error: 'INVALID_STRIPE_SUBSCRIPTION' }, { status: 400 }
-            )
+        if (!subscription.providerCustomerId) {
+            const customer = await stripe.customers.create({
+                email: session.user.email ?? undefined,
+                metadata: { userId: session.user.id }
+            })
+
+            await prisma.subscription.update({
+                where: { userId: session.user.id },
+                data: { providerCustomerId: customer.id }
+            })
+
+            subscription.providerCustomerId = customer.id
         }
 
         const priceId = PLAN_PRICE_IDS[plan as Plan]
@@ -84,8 +93,8 @@ export async function POST(req: NextRequest) {
                     quantity: 1,
                 }
             ],
-            success_url: `${process.env.NEXTAUTH_URL}/dashboard/subscription?upgrade=success`,
-            cancel_url: `${process.env.NEXTAUTH_URL}/dashboard/subscription?upgrade=canceled`,
+            success_url: `${process.env.NEXTAUTH_URL}/dashboard/subscription?success=true`,
+            cancel_url: `${process.env.NEXTAUTH_URL}/onboarding/plan-selection?canceled=true`,
             metadata: {
                 userId: session.user.id,
                 plan: plan,

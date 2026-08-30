@@ -53,7 +53,8 @@ export async function POST(req: NextRequest) {
               subscription: {
                 create: { 
                   plan: plan,
-                  isActive: false
+                  isActive: false,
+                  provider: 'STRIPE'
                 }
               }
             }

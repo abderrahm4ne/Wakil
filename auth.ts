@@ -80,12 +80,18 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
                 if (!existingUser) {
                     // console.log("Creating new user :", user.email)
-                    const newUser = await prisma.user.create({
+                    await prisma.user.create({
                         data: {
                             name: user.name ?? "",
                             email: user.email ?? "",
                             password: null,
                             emailVerified: new Date(),
+                            subscription: {
+                                create: {
+                                    plan: 'FREE_TRIAL',
+                                    isActive: false,
+                                }
+                            }
                         }
                     })
                     // console.log("New user created:", newUser.email)
