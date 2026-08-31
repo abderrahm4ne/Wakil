@@ -110,7 +110,16 @@ export async function POST(req: NextRequest) {
                 plan: plan,
                 billingMode: billingMode,
                 upgradeFrom: subscription.plan,
-            }
+            },
+            ...(billingMode === 'ONE_TIME' && {
+                payment_intent_data: {
+                    metadata: {
+                        userId: session.user.id,
+                        plan: plan,
+                        billingMode: billingMode,
+                    }
+                }
+            })
         })
 
         return NextResponse.json({ success: true, url: checkoutSession.url })

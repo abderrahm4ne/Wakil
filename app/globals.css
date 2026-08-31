@@ -85,7 +85,7 @@ input:-webkit-autofill:active {
   --secondary-foreground: #FFFFFF;
   --muted: #2A2D3A;
   --muted-foreground: #8B8FA8;
-  --accent: #2A2D3A;
+  --accent: #2a2d3a;
   --accent-foreground: #FFFFFF;
   --destructive: oklch(0.577 0.245 27.325);
   --border: #2A2D3A;

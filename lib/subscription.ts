@@ -7,6 +7,7 @@ export async function OneTimePayement(
     endDate: Date, 
     startDate: Date
 ) {
+    // console.log("inside sub creating sub.ts")
     
     return prisma.subscription.update({
         where: { userId },

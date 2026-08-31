@@ -29,9 +29,8 @@ export async function POST(req: NextRequest) {
             )
         }
 
-        const hasPaymentMethod = 
-            (customer as Stripe.Customer).invoice_settings?.default_payment_method || 
-            (customer as Stripe.Customer).default_source
+        const stripeSubscription = await stripe.subscriptions.retrieve(subscription.providerSubscriptionId)
+        const hasPaymentMethod = !!stripeSubscription.default_payment_method
 
         if (!hasPaymentMethod) {
             return NextResponse.json(

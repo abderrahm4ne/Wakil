@@ -125,6 +125,8 @@
     "channels": "القنوات",
     "allPlans": "جميع الخطط",
     "viewAllPlans": "عرض جميع الخطط",
-    "current": "الحالية"
+    "current": "الحالية",
+    "upgradePlan": "طور خطتك",
+    "endNow": "انهاء الاشتراك"
   }
 }

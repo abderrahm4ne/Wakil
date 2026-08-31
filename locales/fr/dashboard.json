@@ -120,6 +120,8 @@
     "channels": "Canaux",
     "allPlans": "Tous les forfaits",
     "viewAllPlans": "Voir tous les forfaits",
-    "current": "Actuel"
+    "current": "Actuel",
+    "upgradePlan": "Amelorier votre plan",
+    "endNow": "Finis maintenant"
   }
 }

@@ -170,6 +170,22 @@ export function SubscriptionClient({
         }
     }
 
+    const handleCancelNow = async () => {
+        if (!confirm(t('subscription.confirmCancelNow'))) return
+        setIsCanceling(true)
+        try {
+            const res = await fetch("/api/subscription/cancel", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ immediate: true })
+            })
+            const result = await res.json()
+            if (!result.success) { alert(result.error || t('subscription.cancelFailed')); return }
+            router.refresh()
+        } catch { alert(t('subscription.genericError')) }
+        finally { setIsCanceling(false) }
+    }
+
     if (showPlanSelection) {
         return (
             <div className="space-y-6">
@@ -230,7 +246,14 @@ export function SubscriptionClient({
                             {/* Renew, Cancel, billing buttons */}
                             <div className="flex items-center gap-2 flex-wrap">
 
-                                {/* monthly renewal button */}
+                            <button onClick={handleManageBilling} disabled={isPortalLoading}
+                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border hover:cursor-pointer hover:border-secondary/50 text-sm font-medium disabled:opacity-50">
+                                {isPortalLoading ? <Loader2 size={16} className="animate-spin" /> : <CreditCard size={16} />}
+                                {t('subscription.manageBilling')}
+                            </button>
+
+
+                            {/* monthly renewal button */}
                             {isMonthly && localCancelScheduled && isActive && (
                                 <button onClick={handleRenew} disabled={isRenewing}
                                     className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground hover:cursor-pointer hover:opacity-90 text-sm font-medium disabled:opacity-50">
@@ -238,7 +261,24 @@ export function SubscriptionClient({
                                 </button>
                             )}
 
-                                {/* cancelation button */}
+                            {/* one time sub */}
+                            {!isMonthly && !isActive && (
+                                <span className="px-4 py-2 text-sm font-medium text-muted-foreground">
+                                    {t('subscription.oneTimeExpires', { date: renewalDate })}
+                                </span>
+                            )}
+                            
+
+                            {/* upgrade button */}
+                            {isActive && (
+                                <button onClick={() => setShowPlanSelection(true)}
+                                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 text-secondary-foreground hover:cursor-pointer hover:bg-secondary/60 text-sm font-medium">
+                                    <ArrowUpRight size={16} />
+                                    {t('subscription.upgradePlan')}
+                                </button>
+                            )}
+
+                            {/* cancelation button */}
                             {isMonthly && isActive && !localCancelScheduled && (
                                 <button onClick={handleCancel} disabled={isCanceling}
                                     className="px-4 py-2 rounded-lg border border-border hover:border-red-500/50 hover:text-destructive hover:cursor-pointer text-sm font-medium disabled:opacity-50">
@@ -246,17 +286,13 @@ export function SubscriptionClient({
                                 </button>
                             )}
 
-                                {/* one time sub */}
-                            {!isMonthly && !isActive && (
-                                <span className="px-4 py-2 text-sm font-medium text-muted-foreground">
-                                    {t('subscription.oneTimeExpires', { date: renewalDate })}
-                                </span>
+                            {/* end now — distinct from scheduled cancel */}
+                            {isMonthly && isActive && !localCancelScheduled && (
+                                <button onClick={handleCancelNow} disabled={isCanceling}
+                                    className="px-4 py-2 rounded-lg border border-border hover:border-red-500/50 hover:text-destructive hover:cursor-pointer text-sm font-medium disabled:opacity-50">
+                                    {isCanceling ? <Loader2 size={16} className="animate-spin" /> : t('subscription.endNow')}
+                                </button>
                             )}
-                            <button onClick={handleManageBilling} disabled={isPortalLoading}
-                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border hover:cursor-pointer hover:border-secondary/50 text-sm font-medium disabled:opacity-50">
-                                {isPortalLoading ? <Loader2 size={16} className="animate-spin" /> : <CreditCard size={16} />}
-                                {t('subscription.manageBilling')}
-                            </button>
                         </div>
                     
                 </div>
