@@ -108,6 +108,28 @@
     "viewAllPlans": "View All Plans",
     "current": "Current",
     "upgradePlan": "Upgrade plan",
-    "endNow": "End now"
+    "endNow": "End now",
+    "errors": {
+      "unauthorized": "Please log in to continue.",
+      "invalidPlan": "This plan doesn't exist.",
+      "invalidBillingMode": "Invalid billing option selected.",
+      "noSubscription": "No subscription found on your account.",
+      "cannotUpgradeOneTime": "One-time plans can't be upgraded. Contact support to switch plans.",
+      "alreadyOnPlan": "You're already on this plan.",
+      "planNotAvailable": "This plan isn't available right now.",
+      "noActiveSubscription": "You don't have an active subscription.",
+      "customerDeleted": "Your billing account no longer exists. Please contact support.",
+      "noPaymentMethod": "Add a payment method to continue.",
+      "noCustomer": "No billing account found.",
+      "notScheduled": "Your subscription isn't scheduled for cancellation.",
+      "portalFailed": "Couldnt react billing page",
+      "generic": "Something went wrong. Please try again."
+    },
+    "success": {
+      "subscriptionUpgraded": "Subscription upgraded successfully",
+      "subscriptionCancel": "Subscription canceled successfully, you still can use your bot till the end date",
+      "subscriptionRenewed": "Subscription renewed successfully",
+      "subscriptionEnded": "Subscription ended successfully"
+    }
   }
 }

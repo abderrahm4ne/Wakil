@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
+import { Toaster } from 'sonner'
 
 const inter = localFont({
   src: [
@@ -59,6 +60,7 @@ export default function RootLayout({
         <SessionProvider>
           <I18nProvider>
             {children}
+            <Toaster position="top-center" richColors/>
           </I18nProvider>
         </SessionProvider>
       </body>

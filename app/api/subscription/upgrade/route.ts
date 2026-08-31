@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
         )
 
         const { plan, billingMode } = await req.json()
+            //console.log(plan)
         
         if (!plan || !Object.keys(PLAN_ORDER).includes(plan)) {
             return NextResponse.json(

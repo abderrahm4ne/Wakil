@@ -122,6 +122,27 @@
     "viewAllPlans": "Voir tous les forfaits",
     "current": "Actuel",
     "upgradePlan": "Amelorier votre plan",
-    "endNow": "Finis maintenant"
+    "endNow": "Finis maintenant",
+    "errors": {
+      "unauthorized": "Veuillez vous connecter pour continuer.",
+      "invalidPlan": "Ce forfait n'existe pas.",
+      "invalidBillingMode": "Option de facturation invalide.",
+      "noSubscription": "Aucun abonnement trouvé sur votre compte.",
+      "cannotUpgradeOneTime": "Les forfaits à paiement unique ne peuvent pas être mis à niveau. Contactez le support pour changer de forfait.",
+      "alreadyOnPlan": "Vous êtes déjà sur ce forfait.",
+      "planNotAvailable": "Ce forfait n'est pas disponible pour le moment.",
+      "noActiveSubscription": "Vous n'avez pas d'abonnement actif.",
+      "customerDeleted": "Votre compte de facturation n'existe plus. Veuillez contacter le support.",
+      "noPaymentMethod": "Ajoutez un moyen de paiement pour continuer.",
+      "noCustomer": "Aucun compte de facturation trouvé.",
+      "notScheduled": "Votre abonnement n'est pas programmé pour être annulé.",
+      "generic": "Une erreur s'est produite. Veuillez réessayer."
+    },
+    "success": {
+      "subscriptionUpgraded": "Abonnement mis à niveau avec succès",
+      "subscriptionCancel": "Abonnement annulé avec succès, vous pouvez encore utiliser votre bot jusqu'à la date de fin",
+      "subscriptionRenewed": "Abonnement renouvelé avec succès",
+      "subscriptionEnded": "Abonnement terminé avec succès"
+    }
   }
 }

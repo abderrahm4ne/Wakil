@@ -127,6 +127,27 @@
     "viewAllPlans": "عرض جميع الخطط",
     "current": "الحالية",
     "upgradePlan": "طور خطتك",
-    "endNow": "انهاء الاشتراك"
+    "endNow": "انهاء الاشتراك",
+    "errors": {
+      "unauthorized": "الرجاء تسجيل الدخول للمتابعة.",
+      "invalidPlan": "هذه الخطة غير موجودة.",
+      "invalidBillingMode": "طريقة الدفع غير صالحة.",
+      "noSubscription": "لا يوجد اشتراك في حسابك.",
+      "cannotUpgradeOneTime": "لا يمكن ترقية الخطط ذات الدفعة الواحدة. تواصل مع الدعم لتغيير الخطة.",
+      "alreadyOnPlan": "أنت مشترك بالفعل في هذه الخطة.",
+      "planNotAvailable": "هذه الخطة غير متوفرة حاليًا.",
+      "noActiveSubscription": "ليس لديك اشتراك نشط.",
+      "customerDeleted": "حساب الفوترة الخاص بك لم يعد موجودًا. يرجى التواصل مع الدعم.",
+      "noPaymentMethod": "أضف وسيلة دفع للمتابعة.",
+      "noCustomer": "لم يتم العثور على حساب فوترة.",
+      "notScheduled": "اشتراكك غير مجدول للإلغاء.",
+      "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+    },
+    "success": {
+      "subscriptionUpgraded": "تمت ترقية الاشتراك بنجاح",
+      "subscriptionCancel": "تم إلغاء الاشتراك بنجاح، لا يزال بإمكانك استخدام البوت حتى تاريخ الانتهاء",
+      "subscriptionRenewed": "تم تجديد الاشتراك بنجاح",
+      "subscriptionEnded": "تم إنهاء الاشتراك بنجاح"
+    }
   }
 }

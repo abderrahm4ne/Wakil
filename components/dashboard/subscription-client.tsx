@@ -6,6 +6,9 @@ import { Loader2, CreditCard, ArrowUpRight, Sparkles } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { PlanSelection } from "@/components/auth/PlanSelection"
 import { useTranslation } from "react-i18next"
+import { toast } from "sonner"
+import { resolveErrorMessage } from "@/lib/errorMessages"
+import { resolve } from "path"
 
 interface Props {
     currentPlan: string
@@ -56,10 +59,6 @@ function UsageRing({ value, label, sublabel }: { value: number; label: string; s
     )
 }
 
-const TIER_ORDER = ["FREE_TRIAL", "STARTER", "PRO", "BUSINESS"]
-const TIER_HEIGHT: Record<string, string> = {
-    FREE_TRIAL: "h-40", STARTER: "h-48", PRO: "h-56", BUSINESS: "h-64",
-}
 const TIER_GRADIENT: Record<string, string> = {
     FREE_TRIAL: "from-muted/90s to-muted/50",
     STARTER: "from-blue-400/20 to-blue-500/5",
@@ -104,16 +103,18 @@ export function SubscriptionClient({
             const res = await fetch("/api/subscription/upgrade", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ plan: selectedPlan, billingMode: selectedBillingMode })
+                body: JSON.stringify({ plan: selectedPlan.toUpperCase(), billingMode: selectedBillingMode })
             })
             const result = await res.json()
             if (result.url) {
                 window.location.href = result.url
+                toast.success(t('subscription.success.subscriptionUpgraded'))
             } else {
-                alert(result.error || t('subscription.upgradeFailed'))
+
+               toast.error(resolveErrorMessage(result.error, t))
             }
-        } catch {
-            alert(t('subscription.genericError'))
+        } catch (error: unknown) {
+            toast.error(t('subscription.genericError'))
         } finally {
             setIsUpgrading(false)
         }
@@ -128,9 +129,15 @@ export function SubscriptionClient({
         try {
             const res = await fetch("/api/subscription/portal", { method: "POST" })
             const result = await res.json()
-            if (result.url) window.location.href = result.url
-            else { alert(result.error || t('subscription.portalFailed')); setIsPortalLoading(false) }
-        } catch { alert(t('subscription.genericError')); setIsPortalLoading(false) }
+            if (result.url) { setTimeout(() => setIsPortalLoading(false), 1000) ; window.location.href = result.url}
+            else { 
+                toast.error(resolveErrorMessage(result.error, t)) 
+                setIsPortalLoading(false) 
+            }
+        } catch { 
+            toast.error(t('subscription.genericError')); 
+            setIsPortalLoading(false) 
+        }
     }
 
     const handleCancel = async () => {
@@ -139,12 +146,19 @@ export function SubscriptionClient({
         try {
             const res = await fetch("/api/subscription/cancel", { method: "POST" })
             const result = await res.json()
-            if (!result.success) { alert(result.error || t('subscription.cancelFailed')); return }
+            if (!result.success) { 
+                toast.error(resolveErrorMessage(result.error, t)); return
+            }
             await pollStatus(true)
             setLocalCancelScheduled(true)
+            toast.success(t('subscription.success.subscriptionCancel'))
             router.refresh()
-        } catch { alert(t('subscription.genericError')) }
-        finally { setIsCanceling(false) }
+        } catch { 
+            toast.error(t('subscription.genericError')); 
+        }
+        finally { 
+            setIsCanceling(false) 
+        }
     }
 
     const handleRenew = async () => {
@@ -154,9 +168,11 @@ export function SubscriptionClient({
             const result = await res.json()
             if (!result.success) {
                 if (result.error === 'NO_PAYMENT_METHOD') {
-                    window.location.href = '/api/subscription/portal'
+                    toast.error(resolveErrorMessage(result.error, t))
+                    setTimeout(() => (window.location.href = '/api/subscription/portal'), 1000)
+                    toast.success(t('subscription.sucess.subscriptionRenewed'))
                 } else {
-                    alert(result.error || t('subscription.renewFailed'))
+                    toast.error(resolveErrorMessage(result.error, t))
                 }
                 return
             }
@@ -164,7 +180,7 @@ export function SubscriptionClient({
             setLocalCancelScheduled(false)
             router.refresh()
         } catch {
-            alert(t('subscription.genericError'))
+            toast.error(t('subscription.genericError'))
         } finally {
             setIsRenewing(false)
         }
@@ -180,10 +196,16 @@ export function SubscriptionClient({
                 body: JSON.stringify({ immediate: true })
             })
             const result = await res.json()
-            if (!result.success) { alert(result.error || t('subscription.cancelFailed')); return }
+            toast.success(t('subscription.sucess.subscriptionEnded'))
+            if (!result.success) { 
+                toast.error(resolveErrorMessage(result.error, t)); 
+                return 
+            }
             router.refresh()
         } catch { alert(t('subscription.genericError')) }
-        finally { setIsCanceling(false) }
+        finally { 
+            setIsCanceling(false) 
+        }
     }
 
     if (showPlanSelection) {
