@@ -30,7 +30,6 @@ export default async function SubscriptionPage() {
     const planConfig = subscriptions.find(
         p => p.name.toUpperCase() === currentPlan || (currentPlan === 'FREE_TRIAL' && p.name === 'FREE_TRIAL')
     )
-
     return (
         <div className={`${lang === 'ar' ? 'font-arabic' : 'font-display'} flex flex-col relative space-y-8`}>
             <div>

@@ -123,6 +123,11 @@
     "current": "Actuel",
     "upgradePlan": "Amelorier votre plan",
     "endNow": "Finis maintenant",
+    "confirmCancelNow": "Êtes-vous sûr de vouloir mettre fin à votre abonnement immédiatement ? Vous perdrez l'accès à votre bot et à toutes ses fonctionnalités.",
+    "confirmUndoCancel": "Êtes-vous sûr de vouloir annuler l'annulation de votre abonnement ?",
+    "oneTimeExpires": "Ce forfait unique expire le {{date}}",
+    "newOneTimePlan": "Obtenez un nouveau forfait unique",
+    "createNewSubscription": "Créer un nouvel abonnement",
     "errors": {
       "unauthorized": "Veuillez vous connecter pour continuer.",
       "invalidPlan": "Ce forfait n'existe pas.",
@@ -142,7 +147,8 @@
       "subscriptionUpgraded": "Abonnement mis à niveau avec succès",
       "subscriptionCancel": "Abonnement annulé avec succès, vous pouvez encore utiliser votre bot jusqu'à la date de fin",
       "subscriptionRenewed": "Abonnement renouvelé avec succès",
-      "subscriptionEnded": "Abonnement terminé avec succès"
+      "subscriptionEnded": "Abonnement terminé avec succès",
+      "ONE_TIME_REVOKED": "Votre forfait à paiement unique a été révoqué. Vous ne pouvez plus utiliser votre bot."
     }
   }
 }

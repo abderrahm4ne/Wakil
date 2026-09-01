@@ -14,6 +14,17 @@ export async function POST(req: NextRequest) {
             where: { userId: session.user.id }
         })
 
+        if (subscription && subscription?.billingMode === 'ONE_TIME') {
+            await prisma.subscription.update({
+                where: { userId: session.user.id },
+                data: {
+                    isActive: false,
+                    endDate: new Date()
+                }
+            })
+            return NextResponse.json({ success: true, mode: 'ONE_TIME_REVOKED' })
+        }
+
         if (!subscription?.providerSubscriptionId) {
             return NextResponse.json({ success: false, error: 'NO_SUBSCRIPTION' }, { status: 400 })
         }

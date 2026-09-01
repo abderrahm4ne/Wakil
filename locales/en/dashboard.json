@@ -109,6 +109,11 @@
     "current": "Current",
     "upgradePlan": "Upgrade plan",
     "endNow": "End now",
+    "confirmCancelNow": "Are you sure you want to end your subscription immediately? You will lose access to your bot and all its features.",
+    "confirmUndoCancel": "Are you sure you want to undo the cancellation of your subscription?",
+    "oneTimeExpires": "This one-time plan expires on {{date}}",
+    "newOneTimePlan": "Get a new one-time plan",
+    "createNewSubscription": "Create a new subscription",
     "errors": {
       "unauthorized": "Please log in to continue.",
       "invalidPlan": "This plan doesn't exist.",
@@ -129,7 +134,8 @@
       "subscriptionUpgraded": "Subscription upgraded successfully",
       "subscriptionCancel": "Subscription canceled successfully, you still can use your bot till the end date",
       "subscriptionRenewed": "Subscription renewed successfully",
-      "subscriptionEnded": "Subscription ended successfully"
+      "subscriptionEnded": "Subscription ended successfully",
+      "ONE_TIME_REVOKED": "Your one-time plan has been revoked. You can no longer use your bot."
     }
   }
 }

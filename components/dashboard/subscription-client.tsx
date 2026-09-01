@@ -1,3 +1,4 @@
+// SubscriptionClient.tsx
 "use client"
 
 import { useState, useEffect } from "react"
@@ -8,7 +9,7 @@ import { PlanSelection } from "@/components/auth/PlanSelection"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 import { resolveErrorMessage } from "@/lib/errorMessages"
-import { resolve } from "path"
+import i18n from "@/lib/i18n"
 
 interface Props {
     currentPlan: string
@@ -76,14 +77,19 @@ export function SubscriptionClient({
     const [isCanceling, setIsCanceling] = useState(false)
     const [isRenewing, setIsRenewing] = useState(false)
     const [localCancelScheduled, setLocalCancelScheduled] = useState(cancelScheduled)
+    const [billingModeState, setBillingModeState] = useState(billingMode)
     const router = useRouter()
     const { t } = useTranslation('dashboard')
     const isMonthly = billingMode === 'MONTHLY'
 
-    const formattedDate = renewalDate
-        ? new Date(renewalDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
-        : null
+    const formatDateOnly = (value: string | null) => {
+        if (!value) return null
+        const date = new Date(value)
+        if (Number.isNaN(date.getTime())) return null
+        return date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })
+    }
 
+    const formattedDate = formatDateOnly(renewalDate)
     const planDisplayName = currentPlan.charAt(0) + currentPlan.slice(1).toLowerCase().replace("_", " ")
     const isUnlimited = messageLimit === null
     const usagePercent = isUnlimited ? 0 : Math.min((messagesUsed / messageLimit) * 100, 100)
@@ -97,23 +103,27 @@ export function SubscriptionClient({
         }
     }
 
-    const handleUpgrade = async (selectedPlan: string, selectedBillingMode: string) => {
+    const handleUpgrade = async (selectedPlan: string) => {
         setIsUpgrading(true)
         try {
             const res = await fetch("/api/subscription/upgrade", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ plan: selectedPlan.toUpperCase(), billingMode: selectedBillingMode })
+                body: JSON.stringify({ plan: selectedPlan.toUpperCase(), billingMode: billingModeState })
             })
             const result = await res.json()
             if (result.url) {
                 window.location.href = result.url
-                toast.success(t('subscription.success.subscriptionUpgraded'))
-            } else {
-
-               toast.error(resolveErrorMessage(result.error, t))
+                return
             }
-        } catch (error: unknown) {
+            if (result.redirect) {
+                toast.success(t('subscription.success.subscriptionUpgraded'))
+                router.refresh()
+                setShowPlanSelection(false)
+                return
+            }
+            toast.error(resolveErrorMessage(result.error, t))
+        } catch {
             toast.error(t('subscription.genericError'))
         } finally {
             setIsUpgrading(false)
@@ -121,7 +131,7 @@ export function SubscriptionClient({
     }
 
     const handlePlanSelect = (plan: string) => {
-        void handleUpgrade(plan, billingMode)
+        void handleUpgrade(plan)
     }
 
     const handleManageBilling = async () => {
@@ -129,14 +139,14 @@ export function SubscriptionClient({
         try {
             const res = await fetch("/api/subscription/portal", { method: "POST" })
             const result = await res.json()
-            if (result.url) { setTimeout(() => setIsPortalLoading(false), 1000) ; window.location.href = result.url}
-            else { 
-                toast.error(resolveErrorMessage(result.error, t)) 
-                setIsPortalLoading(false) 
+            if (result.url) { setTimeout(() => setIsPortalLoading(false), 1000); window.location.href = result.url }
+            else {
+                toast.error(resolveErrorMessage(result.error, t))
+                setIsPortalLoading(false)
             }
-        } catch { 
-            toast.error(t('subscription.genericError')); 
-            setIsPortalLoading(false) 
+        } catch {
+            toast.error(t('subscription.genericError'))
+            setIsPortalLoading(false)
         }
     }
 
@@ -146,22 +156,22 @@ export function SubscriptionClient({
         try {
             const res = await fetch("/api/subscription/cancel", { method: "POST" })
             const result = await res.json()
-            if (!result.success) { 
+            if (!result.success) {
                 toast.error(resolveErrorMessage(result.error, t)); return
             }
             await pollStatus(true)
             setLocalCancelScheduled(true)
             toast.success(t('subscription.success.subscriptionCancel'))
             router.refresh()
-        } catch { 
-            toast.error(t('subscription.genericError')); 
-        }
-        finally { 
-            setIsCanceling(false) 
+        } catch {
+            toast.error(t('subscription.genericError'))
+        } finally {
+            setIsCanceling(false)
         }
     }
 
     const handleRenew = async () => {
+        if (!confirm(t('subscription.confirmUndoCancel'))) return
         setIsRenewing(true)
         try {
             const res = await fetch("/api/subscription/renew", { method: "POST" })
@@ -170,7 +180,6 @@ export function SubscriptionClient({
                 if (result.error === 'NO_PAYMENT_METHOD') {
                     toast.error(resolveErrorMessage(result.error, t))
                     setTimeout(() => (window.location.href = '/api/subscription/portal'), 1000)
-                    toast.success(t('subscription.sucess.subscriptionRenewed'))
                 } else {
                     toast.error(resolveErrorMessage(result.error, t))
                 }
@@ -178,6 +187,7 @@ export function SubscriptionClient({
             }
             await pollStatus(false)
             setLocalCancelScheduled(false)
+            toast.success(t('subscription.sucess.subscriptionRenewed'))
             router.refresh()
         } catch {
             toast.error(t('subscription.genericError'))
@@ -196,15 +206,21 @@ export function SubscriptionClient({
                 body: JSON.stringify({ immediate: true })
             })
             const result = await res.json()
-            toast.success(t('subscription.sucess.subscriptionEnded'))
-            if (!result.success) { 
-                toast.error(resolveErrorMessage(result.error, t)); 
-                return 
+            if (result.mode === 'ONE_TIME_REVOKED') {
+                toast.success(t('subscription.sucess.ONE_TIME_REVOKED'))
+                router.refresh()
+                return
             }
+            if (!result.success) {
+                toast.error(resolveErrorMessage(result.error, t))
+                return
+            }
+            toast.success(t('subscription.sucess.subscriptionEnded'))
             router.refresh()
-        } catch { alert(t('subscription.genericError')) }
-        finally { 
-            setIsCanceling(false) 
+        } catch {
+            toast.error(t('subscription.genericError'))
+        } finally {
+            setIsCanceling(false)
         }
     }
 
@@ -232,109 +248,103 @@ export function SubscriptionClient({
     }
 
     return (
-        <>
-            {/* Subscription card */}
-
-            <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className={`relative overflow-hidden rounded-2xl p-8 bg-linear-to-tr ${TIER_GRADIENT[currentPlan] ?? TIER_GRADIENT.FREE_TRIAL} border border-border`}
-            >
-
-                {/* Subscription card Upper */}
-
-                <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6 ">
-
-                    <div className="space-y-2">
-
-                        {/* Current plan display */}
-                        <div className="flex items-center gap-2">
-                            {currentPlan === "BUSINESS" && <Sparkles size={18} className="text-secondary" />}
-                            <h2 className="text-3xl font-bold text-foreground">{planDisplayName}</h2>
-                        </div>
-
-                        {/* Renew dates */}
-                        <p className="text-sm font-normal">
-                            {!isActive
-                                ? <span className="text-orange-500 font-medium">{t('subscription.inactive')}</span>
-                                : localCancelScheduled
-                                    ? <span className="text-orange-500 font-medium">{formattedDate ? t('subscription.cancelsOn', { date: formattedDate }) : t('subscription.cancelScheduled')}</span>
-                                    : <span className="text-muted-foreground">{formattedDate ? t('subscription.renewsOn', { date: formattedDate }) : t('subscription.active')}</span>
-                            }
-                        </p>
+        <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className={`relative overflow-hidden rounded-2xl p-8 bg-linear-to-tr ${TIER_GRADIENT[currentPlan] ?? TIER_GRADIENT.FREE_TRIAL} border border-border`}
+        >
+            <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                        {currentPlan === "BUSINESS" && <Sparkles size={18} className="text-secondary" />}
+                        <h2 className="text-3xl font-bold text-foreground">{planDisplayName}</h2>
                     </div>
+                    <p className="text-sm font-normal">
+                        {!isActive
+                            ? <span className="text-orange-500 font-medium">{t('subscription.inactive')}</span>
+                            : localCancelScheduled
+                                ? <span className="text-orange-500 font-medium">{formattedDate ? t('subscription.cancelsOn', { date: formattedDate }) : t('subscription.cancelScheduled')}</span>
+                                : <span className="text-muted-foreground">{formattedDate ? t('subscription.renewsOn', { date: formattedDate }) : t('subscription.active')}</span>
+                        }
+                    </p>
+                </div>
 
-                            {/* Renew, Cancel, billing buttons */}
-                            <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap">
 
-                            <button onClick={handleManageBilling} disabled={isPortalLoading}
-                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border hover:cursor-pointer hover:border-secondary/50 text-sm font-medium disabled:opacity-50">
-                                {isPortalLoading ? <Loader2 size={16} className="animate-spin" /> : <CreditCard size={16} />}
-                                {t('subscription.manageBilling')}
+                    {/* billing page button */}
+                    <button onClick={handleManageBilling} disabled={isPortalLoading}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border hover:cursor-pointer hover:border-secondary/50 text-sm font-medium disabled:opacity-50">
+                        {isPortalLoading ? <Loader2 size={16} className="animate-spin" /> : <CreditCard size={16} />}
+                        {t('subscription.manageBilling')}
+                    </button>
+
+                    {/* undo cancelation */}
+                    {isMonthly && localCancelScheduled && isActive && (
+                        <button onClick={handleRenew} disabled={isRenewing}
+                            className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground hover:cursor-pointer hover:opacity-90 text-sm font-medium disabled:opacity-50">
+                            {isRenewing ? <Loader2 size={16} className="animate-spin" /> : t('subscription.undoCancel')}
+                        </button>
+                    )}
+
+                    {/* Active users */}
+                    {isActive && (
+                        <button onClick={() => setShowPlanSelection(true)} dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 text-secondary-foreground hover:cursor-pointer hover:bg-secondary/60 text-sm font-medium">
+                            <ArrowUpRight size={16} />
+                            <h3>{t('subscription.upgradePlan')}</h3>
+                        </button>
+                    )}
+
+                    {/* Cancel button */}
+                    {isMonthly && isActive && !localCancelScheduled && (
+                        <button onClick={handleCancel} disabled={isCanceling}
+                            className="px-4 py-2 rounded-lg border border-border hover:border-red-500/50 hover:text-destructive hover:cursor-pointer text-sm font-medium disabled:opacity-50">
+                            {isCanceling ? <Loader2 size={16} className="animate-spin" /> : t('subscription.cancelPlan')}
+                        </button>
+                    )}
+
+                    {/* end now button */}
+                    {isActive && (
+                        <button onClick={handleCancelNow} disabled={isCanceling}
+                            className="px-4 py-2 rounded-lg border border-border hover:border-red-500/50 hover:text-destructive hover:cursor-pointer text-sm font-medium disabled:opacity-50">
+                            {isCanceling ? <Loader2 size={16} className="animate-spin" /> : t('subscription.endNow')}
+                        </button>
+                    )}
+
+                    {!isActive && (
+                        <>
+                            <button onClick={() => { setBillingModeState('ONE_TIME'); setShowPlanSelection(true) }} disabled={isUpgrading}
+                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 text-secondary-foreground hover:cursor-pointer hover:bg-secondary/60 text-sm font-medium">
+                                {t('subscription.newOneTimePlan')}
                             </button>
-
-
-                            {/* monthly renewal button */}
-                            {isMonthly && localCancelScheduled && isActive && (
-                                <button onClick={handleRenew} disabled={isRenewing}
-                                    className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground hover:cursor-pointer hover:opacity-90 text-sm font-medium disabled:opacity-50">
-                                    {isRenewing ? <Loader2 size={16} className="animate-spin" /> : t('subscription.undoCancel')}
-                                </button>
-                            )}
-
-                            {/* one time sub */}
-                            {!isMonthly && !isActive && (
-                                <span className="px-4 py-2 text-sm font-medium text-muted-foreground">
-                                    {t('subscription.oneTimeExpires', { date: renewalDate })}
-                                </span>
-                            )}
-                            
-
-                            {/* upgrade button */}
-                            {isActive && (
-                                <button onClick={() => setShowPlanSelection(true)}
-                                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 text-secondary-foreground hover:cursor-pointer hover:bg-secondary/60 text-sm font-medium">
-                                    <ArrowUpRight size={16} />
-                                    {t('subscription.upgradePlan')}
-                                </button>
-                            )}
-
-                            {/* cancelation button */}
-                            {isMonthly && isActive && !localCancelScheduled && (
-                                <button onClick={handleCancel} disabled={isCanceling}
-                                    className="px-4 py-2 rounded-lg border border-border hover:border-red-500/50 hover:text-destructive hover:cursor-pointer text-sm font-medium disabled:opacity-50">
-                                    {isCanceling ? <Loader2 size={16} className="animate-spin" /> : t('subscription.cancelPlan')}
-                                </button>
-                            )}
-
-                            {/* end now — distinct from scheduled cancel */}
-                            {isMonthly && isActive && !localCancelScheduled && (
-                                <button onClick={handleCancelNow} disabled={isCanceling}
-                                    className="px-4 py-2 rounded-lg border border-border hover:border-red-500/50 hover:text-destructive hover:cursor-pointer text-sm font-medium disabled:opacity-50">
-                                    {isCanceling ? <Loader2 size={16} className="animate-spin" /> : t('subscription.endNow')}
-                                </button>
-                            )}
-                        </div>
-                    
+                            <button onClick={() => { setBillingModeState('MONTHLY'); setShowPlanSelection(true) }} disabled={isUpgrading}
+                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 text-secondary-foreground hover:cursor-pointer hover:bg-secondary/60 text-sm font-medium">
+                                {t('subscription.createNewSubscription')}
+                            </button>
+                        </>
+                    )}
                 </div>
+            </div>
 
-                {/* Usage rings */}
-                <div className="relative flex flex-wrap gap-8 mt-8 pt-8 border-t border-border/50">
-                    <UsageRing
-                        value={isUnlimited ? 0 : usagePercent}
-                        label={t('subscription.messages')}
-                        sublabel={isUnlimited ? t('subscription.unlimited') : `${messagesUsed} / ${messageLimit}`}
-                    />
-                    <UsageRing
-                        value={productLimit === null ? 0 : 0}
-                        label={t('subscription.productLimit')}
-                        sublabel={productLimit === null ? t('subscription.unlimited') : `${productLimit} max`}
-                    />
-                </div>
-            </motion.div>
+            {!isMonthly && isActive && renewalDate && (
+                <span className="py-2 text-sm font-medium text-muted-foreground">
+                    {t('subscription.oneTimeExpires', { date: formattedDate })}
+                </span>
+            )}
 
-
-        </>
+            <div className="relative flex flex-wrap gap-8 mt-8 pt-8 border-t border-border/60">
+                <UsageRing
+                    value={isUnlimited ? 0 : usagePercent}
+                    label={t('subscription.messages')}
+                    sublabel={isUnlimited ? t('subscription.unlimited') : `${messagesUsed} / ${messageLimit}`}
+                />
+                <UsageRing
+                    value={productLimit === null ? 0 : 0}
+                    label={t('subscription.productLimit')}
+                    sublabel={productLimit === null ? t('subscription.unlimited') : `${productLimit} max`}
+                />
+            </div>
+        </motion.div>
     )
 }
