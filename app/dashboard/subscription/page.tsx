@@ -21,6 +21,8 @@ export default async function SubscriptionPage() {
         include: { usageLogs: true, channels: true }
     })
 
+    const productCount = await prisma.product.count({ where: { botId: bot?.id } })
+
     const now = new Date()
     const currentUsage = bot?.usageLogs.find(
         log => log.month === now.getMonth() + 1 && log.year === now.getFullYear()
@@ -48,6 +50,7 @@ export default async function SubscriptionPage() {
                 messageLimit={planConfig?.limit ?? null}
                 productLimit={planConfig?.productLimit ?? null}
                 billingMode={subscription?.billingMode ?? 'MONTHLY'}
+                productCount={productCount}
             />
         </div>
     )

@@ -21,7 +21,6 @@ export async function POST(req: NextRequest) {
             )
         }
 
-        // payment method saved ?
         const customer = await stripe.customers.retrieve(subscription.providerCustomerId!)
         if (customer.deleted) {
             return NextResponse.json(
@@ -29,8 +28,10 @@ export async function POST(req: NextRequest) {
             )
         }
 
+        // payment method saved ?
         const stripeSubscription = await stripe.subscriptions.retrieve(subscription.providerSubscriptionId)
-        const hasPaymentMethod = !!stripeSubscription.default_payment_method
+        
+        const hasPaymentMethod = !!(customer as Stripe.Customer).invoice_settings.default_payment_method || !!(stripeSubscription.default_payment_method as Stripe.PaymentMethod | null)?.id
 
         if (!hasPaymentMethod) {
             return NextResponse.json(

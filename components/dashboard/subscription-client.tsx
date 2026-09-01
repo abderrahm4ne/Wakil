@@ -20,6 +20,7 @@ interface Props {
     messageLimit: number | null
     productLimit: number | null
     billingMode: string
+    productCount: number
 }
 
 function UsageRing({ value, label, sublabel }: { value: number; label: string; sublabel: string }) {
@@ -69,7 +70,7 @@ const TIER_GRADIENT: Record<string, string> = {
 
 export function SubscriptionClient({
     currentPlan, isActive, renewalDate, cancelScheduled,
-    messagesUsed, messageLimit, productLimit, billingMode
+    messagesUsed, messageLimit, productLimit, billingMode, productCount
 }: Props) {
     const [showPlanSelection, setShowPlanSelection] = useState(false)
     const [isUpgrading, setIsUpgrading] = useState(false)
@@ -187,7 +188,7 @@ export function SubscriptionClient({
             }
             await pollStatus(false)
             setLocalCancelScheduled(false)
-            toast.success(t('subscription.sucess.subscriptionRenewed'))
+            toast.success(t('subscription.success.subscriptionRenewed'))
             router.refresh()
         } catch {
             toast.error(t('subscription.genericError'))
@@ -207,7 +208,7 @@ export function SubscriptionClient({
             })
             const result = await res.json()
             if (result.mode === 'ONE_TIME_REVOKED') {
-                toast.success(t('subscription.sucess.ONE_TIME_REVOKED'))
+                toast.success(t('subscription.success.ONE_TIME_REVOKED'))
                 router.refresh()
                 return
             }
@@ -340,7 +341,7 @@ export function SubscriptionClient({
                     sublabel={isUnlimited ? t('subscription.unlimited') : `${messagesUsed} / ${messageLimit}`}
                 />
                 <UsageRing
-                    value={productLimit === null ? 0 : 0}
+                    value={productLimit === null ? 0 : productCount}
                     label={t('subscription.productLimit')}
                     sublabel={productLimit === null ? t('subscription.unlimited') : `${productLimit} max`}
                 />

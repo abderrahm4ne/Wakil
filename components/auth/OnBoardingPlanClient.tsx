@@ -6,6 +6,8 @@ import { Loader2 } from "lucide-react"
 import { PlanSelection } from "@/components/auth/PlanSelection"
 import WakilLogo from "@/components/common/WakilLogo"
 import { useTranslation } from "react-i18next"
+import { toast } from 'sonner'
+import { resolveErrorMessage } from "@/lib/errorMessages"
 
 
 
@@ -44,7 +46,7 @@ export default function OnBoardingPlanClient() {
             if (result.url) {
                 window.location.href = result.url
             } else {
-                alert(result.error || t('onboarding.checkoutFailed'))
+                toast.error(resolveErrorMessage(result.error, t))
             }
         } catch {
             alert(t('onboarding.genericError'))
