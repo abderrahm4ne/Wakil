@@ -62,15 +62,15 @@ function UsageRing({ value, label, sublabel }: { value: number; label: string; s
 
 const TIER_GRADIENT: Record<string, string> = {
     FREE_TRIAL: "from-muted/60 to-muted/20",
-    STARTER: "from-blue-500/25 to-blue-500/5",
-    PRO: "from-violet-500/25 to-violet-500/5",
+    STARTER: "from-blue-500/25 to-blue-500/45",
+    PRO: "from-black to-black/5",
     BUSINESS: "from-secondary/25 to-secondary/5",
 }
 
 const TIER_BUTTONS_GRADIENT: Record<string, string> = {
     FREE_TRIAL: "bg-gradient-to-r from-muted/80 to-muted/40 border border-border hover:from-muted hover:to-muted/60 hover:border-muted-foreground/40 transition-colors duration-300",
     STARTER: "bg-gradient-to-r from-blue-500/30 to-blue-500/10 border border-blue-400/30 hover:from-blue-500/40 hover:to-blue-500/20 hover:border-blue-400/60 transition-colors duration-300",
-    PRO: "bg-gradient-to-r from-violet-500/30 to-violet-500/10 border border-violet-400/30 hover:from-violet-500/40 hover:to-violet-500/20 hover:border-violet-400/60 transition-colors duration-300",
+    PRO: "bg-gradient-to-r from-muted/30 to-muted/60 border border-muted/30 hover:from-muted/40 hover:to-muted/20 hover:border-muted transition-colors duration-300",
     BUSINESS: "bg-gradient-to-r from-secondary/50 to-secondary/10 border border-secondary/40 hover:from-secondary/40 hover:to-secondary/20 hover:border-secondary/70 transition-colors duration-300",
 }
 
@@ -227,7 +227,7 @@ export function SubscriptionClient({
                 toast.error(resolveErrorMessage(result.error, t))
                 return
             }
-            toast.success(t('subscription.sucess.subscriptionEnded'))
+            toast.success(t('subscription.success.subscriptionEnded'))
             router.refresh()
         } catch {
             toast.error(t('subscription.genericError'))
@@ -311,9 +311,10 @@ export function SubscriptionClient({
                     {/* Cancel button */}
                     {isMonthly && isActive && !localCancelScheduled && (
                         <button onClick={handleCancel} disabled={isCanceling}
-                            className={`px-4 py-2 rounded-lg border border-border
+                            className={`px-4 py-2 rounded-lg border border-destructive/30
                             
                             bg-gradient-to-r from-destructive/50 to-destructive/80  hover:from-destructive/40 hover:to-destructive/20 hover:cursor-pointer 
+                            hover:border-destructive/40
                             
                             text-sm font-medium disabled:opacity-50 transition-colors duration-300`}>
                             {isCanceling ? <Loader2 size={16} className="animate-spin" /> : t('subscription.cancelPlan')}
@@ -323,9 +324,9 @@ export function SubscriptionClient({
                     {/* end now button */}
                     {isActive && (
                         <button onClick={handleCancelNow} disabled={isCanceling}
-                            className="px-4 py-2 rounded-lg border border-border
+                            className="px-4 py-2 rounded-lg border border-destructive/30
 
-                             bg-gradient-to-r from-destructive/50 to-destructive/80  hover:from-destructive/40 hover:to-destructive/20 hover:cursor-pointer 
+                             bg-gradient-to-r from-destructive/50 to-destructive/80  hover:from-destructive/40 hover:to-destructive/20 hover:cursor-pointer hover:border-destructive/40
 
                              text-sm font-medium disabled:opacity-50 transition-colors duration-300">
                             {isCanceling ? <Loader2 size={16} className="animate-spin" /> : t('subscription.endNow')}

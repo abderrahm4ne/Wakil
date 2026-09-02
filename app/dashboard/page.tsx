@@ -32,7 +32,7 @@ export default async function DashboardPage() {
     const isUnlimited = maxMessages === null
     const messagesUsed = analytics?.messagesThisMonth ?? 0
     const percentage = isUnlimited ? 0 : Math.min((messagesUsed / maxMessages) * 100, 100)
-    console.log(subscriptions)
+    // console.log(subscriptions)
 
 
     const channelsCount = bot?.channels?.length ?? 0
@@ -75,11 +75,10 @@ export default async function DashboardPage() {
                 {stats.map(stat => (
                     <div
                         key={stat.id}
-                        className={`group relative overflow-hidden bg-card border rounded-xl px-4 py-4 flex flex-col space-y-4 transition-colors
-                            ${stat.alert ? 'border-orange-500/30' : 'border-border hover:border-secondary/30'}`}
+                        className={`group relative overflow-hidden bg-linear-to-tr from-black to-black/5 border rounded-xl px-4 py-4 flex flex-col space-y-4 transition-colors`}
                     >
-                        <div className={`absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl transition-opacity opacity-0 group-hover:opacity-100
-                            ${stat.alert ? 'bg-orange-500/20' : 'bg-secondary/20'}`} />
+                        <div className={`absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl transition-opacity opacity-0 group-hover:opacity-100 bg-secondary/20
+                            `} />
                         <stat.icon className={`relative ${stat.alert ? 'text-orange-500' : 'text-secondary'}`} size={26} />
                         <h2 className='relative text-xl text-muted-foreground font-normal'>{stat.label}</h2>
                         <h2 className='relative text-2xl font-semibold'>{stat.value}</h2>
@@ -160,7 +159,7 @@ export default async function DashboardPage() {
             </section>
 
             {/* Shop and merchant informations */}
-            <div className='flex flex-col bg-linear-to-br from-red-600/10 to-green-600/5 border border-border rounded-xl px-5 py-4 w-full mt-15'>
+            <div className='flex flex-col bg-linear-to-b from-black via-90% to-black/70 border border-border rounded-xl px-5 py-4 w-full mt-15'>
                     <div className='flex items-center justify-between mb-4 font-normal'>
                         <h2 className=''>{t('overview.storeInformations')}</h2>
                         <a href='/orders' className='flex items-center gap-1 text-xs text-secondary hover:underline'>
