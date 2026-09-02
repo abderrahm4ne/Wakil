@@ -1,155 +1,142 @@
-'use client';
+import { auth } from '@/auth'
+import { redirect } from 'next/navigation'
+import { prisma } from '@/lib/prisma'
+import { getAnalyticsData } from '@/lib/data/analytics'
+import getLang from '@/lib/locale'
+import i18n from '@/lib/i18n-server'
+import { TrendingUp, Clock, ShoppingBag, PieChart } from 'lucide-react'
 
-import { useEffect, useState } from 'react';
-import {
-  MessageSquare,
-  Users,
-  MessageCircle,
-  TrendingUp,
-} from 'lucide-react';
-import { AnalyticsMetricCard } from '@/components/dashboard/analytics-metric-card';
-import { AnalyticsUsageCard } from '@/components/dashboard/analytics-usage-card';
-import { AnalyticsDailyChart } from '@/components/dashboard/analytics-daily-chart';
-import { useTranslation } from 'react-i18next';
-
-interface DailyMessage {
-  date: string;
-  count: number;
+const FUNNEL_COLORS: Record<string, string> = {
+  PENDING: 'bg-muted-foreground',
+  PENDING_REVIEW: 'bg-orange-500',
+  CONFIRMED: 'bg-green-500',
+  CANCELLED: 'bg-destructive'
 }
 
-interface AnalyticsData {
-  messagesThisMonth: number;
-  messageLimit: number | null;
-  totalConversations: number;
-  totalMessages: number;
-  topTriggers: { trigger: string; count: number }[];
-  dailyMessages: DailyMessage[];
+function formatMs(ms: number | null) {
+  if (ms === null) return '—'
+  const mins = Math.round(ms / 60000)
+  if (mins < 1) return '<1 min'
+  if (mins < 60) return `${mins} min`
+  return `${(mins / 60).toFixed(1)} hr`
 }
 
-export default function AnalyticsPage() {
-  const { t, i18n } = useTranslation('dashboard');
-  const [data, setData] = useState<AnalyticsData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  useEffect(() => {
-      const fetchAnalytics = async () => {
-          try {
-              setIsLoading(true);
-              const res = await fetch('/api/analytics');
-              const data = await res.json();
-              if (!data.success) {
-                  if (data.status === 401) {
-                      setError(t('analytics.unauthenticated'));
-                      return;
-                  }
-                  if (data.status === 404) {
-                      setError(t('analytics.noBot'));
-                      return;
-                  }
-                  setError(t('analytics.loadError'));
-                  return;
-              }
-
-              setData(data.data);
-          } catch (err) {
-              console.error('[Analytics Page] Error:', err);
-              setError(t('analytics.loadError'));
-          } finally {
-              setIsLoading(false);
-          }
-        };
-
-    fetchAnalytics();
-  }, [t]);
-
-  const dailyData = (data?.dailyMessages ?? []).map((d) => ({
-    date: new Date(d.date).toLocaleDateString(i18n.language, { day: '2-digit', month: '2-digit' }),
-    messages: d.count,
-  }));
-
-  const messagesLast7Days = dailyData.reduce((sum, d) => sum + d.messages, 0)
-  const mostTriggeredRule = data?.topTriggers?.[0]?.trigger ?? ''
-
-  if (error) {
-    return (
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold text-white">{t('analytics.title')}</h1>
-          <p className="mt-2 text-slate-400">{t('analytics.subtitle')}</p>
-        </div>
-        <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-6">
-          <p className="text-red-400">{error}</p>
-        </div>
+function ConversionRing({ value }: { value: number }) {
+  const radius = 36
+  const circumference = 2 * Math.PI * radius
+  const offset = circumference - (value / 100) * circumference
+  const color = value >= 30 ? '#00D4AA' : value >= 15 ? '#eab308' : '#8B8FA8'
+  return (
+    <div className="relative w-24 h-24 shrink-0">
+      <svg className="w-full h-full -rotate-90" viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r={radius} fill="none" stroke="currentColor" strokeWidth="7" className="text-muted/30" />
+        <circle cx="40" cy="40" r={radius} fill="none" stroke={color} strokeWidth="7" strokeLinecap="round"
+          strokeDasharray={circumference} strokeDashoffset={offset} />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-lg font-bold text-foreground">{Math.round(value)}%</span>
       </div>
-    );
-  }
+    </div>
+  )
+}
+
+export default async function AnalyticsPage() {
+  const lang = await getLang()
+  const t = i18n.getFixedT(lang, 'dashboard')
+  const session = await auth()
+  if (!session) redirect('/login')
+
+  const bot = await prisma.bot.findUnique({ where: { userId: session.user.id } })
+  if (!bot) {
+  return (
+    <div className={`${lang === 'ar' ? 'font-arabic' : 'font-display'} flex flex-col items-center justify-center py-20 text-center`}>
+      <p className="text-muted-foreground font-semibold">{t('analytics.noBotYet')}</p>
+      <a href="/dashboard/bot" className="text-sm text-secondary hover:underline mt-2">
+        {t('analytics.setUpYourBot')}
+      </a>
+    </div>
+  )
+}
+
+  const data = await getAnalyticsData(bot.id)
+  const funnelTotal = Object.values(data.funnel).reduce((a, b) => a + b, 0)
+  const maxHourCount = Math.max(...data.peakHours, 1)
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
+    <div className={`${lang === 'ar' ? 'font-arabic' : 'font-display'} flex flex-col relative space-y-8`}>
       <div>
-        <h1 className="text-3xl font-bold text-white">{t('analytics.title')}</h1>
-        <p className="mt-2 text-slate-400">
-          {t('analytics.subtitle')}
-        </p>
+        <h1 className="sm:text-4xl text-[1.6rem] text-foreground tracking-tight font-semibold">{t('analytics.title')}</h1>
+        <p className="text-muted-foreground font-medium">{t('analytics.subtitle')}</p>
       </div>
 
-      {/* Usage Card */}
-      <AnalyticsUsageCard
-        messagesUsed={data?.messagesThisMonth ?? 0}
-        messageLimit={data?.messageLimit ?? 500}
-        isLoading={isLoading}
-      />
-
-      {/* Metric Cards */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <AnalyticsMetricCard
-          label={t('analytics.totalConversations')}
-          value={isLoading ? '-' : data?.totalConversations ?? 0}
-          icon={Users}
-          isLoading={isLoading}
-        />
-        <AnalyticsMetricCard
-          label={t('analytics.totalMessages')}
-          value={isLoading ? '-' : data?.totalMessages ?? 0}
-          icon={MessageCircle}
-          isLoading={isLoading}
-        />
-        <AnalyticsMetricCard
-          label={t('analytics.mostTriggered')}
-          value={isLoading ? '-' : mostTriggeredRule}
-          icon={TrendingUp}
-          isLoading={isLoading}
-        />
-        <AnalyticsMetricCard
-          label={t('analytics.last7Days')}
-          value={isLoading ? '-' : messagesLast7Days ?? 0}
-          icon={MessageSquare}
-          isLoading={isLoading}
-        />
-        <AnalyticsMetricCard
-          label={t('analytics.thisMonth')}
-          value={isLoading ? '-' : data?.messagesThisMonth ?? 0}
-          icon={MessageSquare}
-          isLoading={isLoading}
-        />
-      </div>
-
-      {/* Charts */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <AnalyticsDailyChart data={dailyData} isLoading={isLoading} />
-      </div>
-
-      {/* Empty State (ADDITIONAL)*/}
-      {!isLoading && data && data.totalMessages === 0 && (
-        <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-12 text-center">
-          <MessageSquare className="mx-auto h-12 w-12 text-slate-500" />
-          <h3 className="mt-4 text-lg font-semibold text-white">{t('analytics.noData')}</h3>
-          <p className="mt-2 text-slate-400">
-            {t('analytics.noDataDescription')}
-          </p>
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="group relative overflow-hidden bg-linear-to-tr from-black to-black/5 border border-border rounded-2xl p-6 flex items-center gap-6">
+          <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
+          <ConversionRing value={data.conversionRate} />
+          <div className="relative">
+            <p className="text-sm text-muted-foreground">{t('analytics.conversionRate')}</p>
+            <p className="text-2xl font-semibold text-foreground">{data.convertedConversations}/{data.totalConversations}</p>
+            <p className="text-xs text-muted-foreground">{t('analytics.conversationsToOrders')}</p>
+          </div>
         </div>
-      )}
+
+        <div className="group relative overflow-hidden bg-linear-to-br from-secondary/10 to-green-600/5 border border-border rounded-2xl p-6 flex flex-col justify-center space-y-2">
+          <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
+          <ShoppingBag className="relative text-secondary" size={24} />
+          <p className="relative text-sm text-muted-foreground">{t('analytics.orderValueThisMonth')}</p>
+          <p className="relative text-3xl font-semibold text-foreground">{data.orderValueThisMonth.toLocaleString()} DZD</p>
+        </div>
+
+        <div className="group relative overflow-hidden bg-linear-to-tr from-black to-black/5 border border-border rounded-2xl p-6 flex flex-col justify-center space-y-2">
+          <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
+          <Clock className="relative text-secondary" size={24} />
+          <p className="relative text-sm text-muted-foreground">{t('analytics.avgResponseTime')}</p>
+          <p className="relative text-3xl font-semibold text-foreground">{formatMs(data.avgResponseMs)}</p>
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="bg-card border border-border rounded-2xl p-6">
+          <h2 className="text-lg font-normal mb-4 flex items-center gap-2">
+            <PieChart size={18} className="text-secondary" />
+            {t('analytics.orderFunnel')}
+          </h2>
+          {funnelTotal === 0 ? (
+            <p className="text-muted-foreground text-sm py-6 text-center font-semibold">{t('analytics.noOrdersYet')}</p>
+          ) : (
+            <div className="space-y-3">
+              {Object.entries(data.funnel).map(([status, count]) => (
+                <div key={status} className="space-y-1">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-foreground font-medium">{status.replace('_', ' ')}</span>
+                    <span className="text-muted-foreground">{count}</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-muted/30 overflow-hidden">
+                    <div className={`h-full rounded-full ${FUNNEL_COLORS[status]}`}
+                      style={{ width: `${funnelTotal ? (count / funnelTotal) * 100 : 0}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="bg-card border border-border rounded-2xl p-6">
+          <h2 className="text-lg font-normal mb-4 flex items-center gap-2">
+            <TrendingUp size={18} className="text-secondary" />
+            {t('analytics.peakHours')}
+          </h2>
+          <div className="flex items-end gap-1 h-32">
+            {data.peakHours.map((count, hour) => (
+              <div key={hour} className="flex-1 flex flex-col items-center gap-1 group/bar">
+                <div className="w-full rounded-t-sm bg-secondary/40 group-hover/bar:bg-secondary transition-colors"
+                  style={{ height: `${(count / maxHourCount) * 100}%`, minHeight: count > 0 ? '4px' : '0px' }} />
+                {hour % 4 === 0 && <span className="text-[10px] text-muted-foreground">{hour}h</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
-  );
+  )
 }
