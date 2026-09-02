@@ -1,4 +1,3 @@
-// SubscriptionClient.tsx
 "use client"
 
 import { useState, useEffect } from "react"
@@ -62,10 +61,17 @@ function UsageRing({ value, label, sublabel }: { value: number; label: string; s
 }
 
 const TIER_GRADIENT: Record<string, string> = {
-    FREE_TRIAL: "from-muted/90s to-muted/50",
-    STARTER: "from-blue-400/20 to-blue-500/5",
-    PRO: "from-black to-card/50",
-    BUSINESS: "from-secondary/10 via-secondary/20 to-transparent",
+    FREE_TRIAL: "from-muted/60 to-muted/20",
+    STARTER: "from-blue-500/25 to-blue-500/5",
+    PRO: "from-violet-500/25 to-violet-500/5",
+    BUSINESS: "from-secondary/25 to-secondary/5",
+}
+
+const TIER_BUTTONS_GRADIENT: Record<string, string> = {
+    FREE_TRIAL: "bg-gradient-to-r from-muted/80 to-muted/40 border border-border hover:from-muted hover:to-muted/60 hover:border-muted-foreground/40 transition-colors duration-300",
+    STARTER: "bg-gradient-to-r from-blue-500/30 to-blue-500/10 border border-blue-400/30 hover:from-blue-500/40 hover:to-blue-500/20 hover:border-blue-400/60 transition-colors duration-300",
+    PRO: "bg-gradient-to-r from-violet-500/30 to-violet-500/10 border border-violet-400/30 hover:from-violet-500/40 hover:to-violet-500/20 hover:border-violet-400/60 transition-colors duration-300",
+    BUSINESS: "bg-gradient-to-r from-secondary/50 to-secondary/10 border border-secondary/40 hover:from-secondary/40 hover:to-secondary/20 hover:border-secondary/70 transition-colors duration-300",
 }
 
 export function SubscriptionClient({
@@ -82,6 +88,8 @@ export function SubscriptionClient({
     const router = useRouter()
     const { t } = useTranslation('dashboard')
     const isMonthly = billingMode === 'MONTHLY'
+
+    console.log('subscription client', { currentPlan, isActive, renewalDate, cancelScheduled, messagesUsed, messageLimit, productLimit, billingMode })
 
     const formatDateOnly = (value: string | null) => {
         if (!value) return null
@@ -121,10 +129,12 @@ export function SubscriptionClient({
                 toast.success(t('subscription.success.subscriptionUpgraded'))
                 router.refresh()
                 setShowPlanSelection(false)
+                setBillingModeState(billingModeState)
                 return
             }
             toast.error(resolveErrorMessage(result.error, t))
         } catch {
+            setBillingModeState(billingMode)
             toast.error(t('subscription.genericError'))
         } finally {
             setIsUpgrading(false)
@@ -271,11 +281,11 @@ export function SubscriptionClient({
                     </p>
                 </div>
 
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap ">
 
                     {/* billing page button */}
                     <button onClick={handleManageBilling} disabled={isPortalLoading}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border hover:cursor-pointer hover:border-secondary/50 text-sm font-medium disabled:opacity-50">
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg  hover:cursor-pointer ${TIER_BUTTONS_GRADIENT[currentPlan] ?? TIER_BUTTONS_GRADIENT.FREE_TRIAL} text-sm font-medium disabled:opacity-50`}>
                         {isPortalLoading ? <Loader2 size={16} className="animate-spin" /> : <CreditCard size={16} />}
                         {t('subscription.manageBilling')}
                     </button>
@@ -283,15 +293,15 @@ export function SubscriptionClient({
                     {/* undo cancelation */}
                     {isMonthly && localCancelScheduled && isActive && (
                         <button onClick={handleRenew} disabled={isRenewing}
-                            className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground hover:cursor-pointer hover:opacity-90 text-sm font-medium disabled:opacity-50">
+                            className={`px-4 py-2 rounded-lg hover:cursor-pointer hover:opacity-90 ${TIER_BUTTONS_GRADIENT[currentPlan] ?? TIER_BUTTONS_GRADIENT.FREE_TRIAL} text-sm font-medium disabled:opacity-50`}>
                             {isRenewing ? <Loader2 size={16} className="animate-spin" /> : t('subscription.undoCancel')}
                         </button>
                     )}
 
-                    {/* Active users */}
+                    {/* upgrade */}
                     {isActive && (
-                        <button onClick={() => setShowPlanSelection(true)} dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 text-secondary-foreground hover:cursor-pointer hover:bg-secondary/60 text-sm font-medium">
+                        <button onClick={() => setShowPlanSelection(true)} dir={i18n.language === 'ar' ? 'ltr' : 'rtl'}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg hover:cursor-pointer ${TIER_BUTTONS_GRADIENT[currentPlan] ?? TIER_BUTTONS_GRADIENT.FREE_TRIAL} text-sm font-medium`}>
                             <ArrowUpRight size={16} />
                             <h3>{t('subscription.upgradePlan')}</h3>
                         </button>
@@ -300,7 +310,7 @@ export function SubscriptionClient({
                     {/* Cancel button */}
                     {isMonthly && isActive && !localCancelScheduled && (
                         <button onClick={handleCancel} disabled={isCanceling}
-                            className="px-4 py-2 rounded-lg border border-border hover:border-red-500/50 hover:text-destructive hover:cursor-pointer text-sm font-medium disabled:opacity-50">
+                            className={`px-4 py-2 rounded-lg border border-border hover:border-red-500/50 hover:text-destructive hover:cursor-pointer text-sm font-medium disabled:opacity-50 transition-colors duration-300`}>
                             {isCanceling ? <Loader2 size={16} className="animate-spin" /> : t('subscription.cancelPlan')}
                         </button>
                     )}
@@ -308,7 +318,11 @@ export function SubscriptionClient({
                     {/* end now button */}
                     {isActive && (
                         <button onClick={handleCancelNow} disabled={isCanceling}
-                            className="px-4 py-2 rounded-lg border border-border hover:border-red-500/50 hover:text-destructive hover:cursor-pointer text-sm font-medium disabled:opacity-50">
+                            className="px-4 py-2 rounded-lg border border-border
+
+                             bg-gradient-to-r from-destructive/50 to-destructive/80  hover:from-destructive/40 hover:to-destructive/20 hover:cursor-pointer 
+
+                             text-sm font-medium disabled:opacity-50 transition-colors duration-300">
                             {isCanceling ? <Loader2 size={16} className="animate-spin" /> : t('subscription.endNow')}
                         </button>
                     )}
@@ -316,11 +330,15 @@ export function SubscriptionClient({
                     {!isActive && (
                         <>
                             <button onClick={() => { setBillingModeState('ONE_TIME'); setShowPlanSelection(true) }} disabled={isUpgrading}
-                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 text-secondary-foreground hover:cursor-pointer hover:bg-secondary/60 text-sm font-medium">
+                                className="px-4 py-2 rounded-lg border border-border
+                                
+                                bg-gradient-to-r from-destructive/50 to-destructive/80  hover:from-destructive/40 hover:to-destructive/20 hover:cursor-pointer 
+                                
+                                bg-destructive hover:bg-destructive/80 text-sm font-medium disabled:opacity-50 transition-colors duration-300">
                                 {t('subscription.newOneTimePlan')}
                             </button>
                             <button onClick={() => { setBillingModeState('MONTHLY'); setShowPlanSelection(true) }} disabled={isUpgrading}
-                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 text-secondary-foreground hover:cursor-pointer hover:bg-secondary/60 text-sm font-medium">
+                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 text-secondary-foreground hover:cursor-pointer hover:bg-secondary/60 text-sm font-medium transition-colors duration-300">
                                 {t('subscription.createNewSubscription')}
                             </button>
                         </>

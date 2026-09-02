@@ -5,7 +5,7 @@ export async function planChecking(userId: string | undefined):Promise<Boolean>{
     const subscription = await prisma.subscription.findUnique({
         where: { userId }
     })
-    if (!subscription || !subscription.isActive) return false
+    if (!subscription || !subscription.providerCustomerId) return false
     return true
 
 }

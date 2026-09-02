@@ -41,9 +41,11 @@ export async function activateSubscription(
             isActive: true,
             startDate,
             currentPeriodEnd: endDate,
+            endDate: null,
             provider: 'STRIPE',
             providerSubscriptionId,
-            providerCustomerId
+            providerCustomerId,
+            billingMode: 'MONTHLY'
         }
     })
 }
