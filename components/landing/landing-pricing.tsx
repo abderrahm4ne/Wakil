@@ -64,11 +64,11 @@ export default function LandingPricing() {
   return (
     <section ref={sectionRef} id="pricing" className="bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col justify-center max-w-6xl mx-auto reveal">
-        <div className="text-center mb-16 font-display">
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+        <div className="text-center mb-16 f">
+          <h2 className="text-4xl sm:text-5xl font-semibold text-white mb-4">
             {t('pricing.title')}
           </h2>
-          <p className="text-neutral-400 text-lg">{t('pricing.subtitle')}</p>
+          <p className="text-neutral-400 text-lg font-medium">{t('pricing.subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
@@ -94,21 +94,21 @@ export default function LandingPricing() {
               )}
 
               <div className="p-6">
-                <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
+                <h3 className="text-xl font-semibold text-white mb-2">{plan.name}</h3>
                 <p className="text-neutral-400 text-sm mb-4">{plan.description}</p>
 
                 {/* Price */}
                 <div className="mb-6">
                   <div className="flex items-baseline justify-between">
                     <span className="text-4xl font-bold text-white">{plan.price}</span>
-                    <span className="text-neutral-400 ml-1">DZD{plan.period}</span>
+                    <span className="text-neutral-400 ml-1 font-normal">DZD{plan.period}</span>
                   </div>
                 </div>
 
                 {/* CTA */}
                 <Link
                   href="/register"
-                  className={`w-full py-2.5 rounded-lg font-semibold transition-all mb-6 block text-center ${
+                  className={`w-full py-2.5 rounded-lg font-medium transition-all mb-6 block text-center ${
                     plan.highlighted
                       ? 'bg-linear-to-r from-secondary/70 to-green-600/45 text-white hover:shadow-sm hover:shadow-green-200/50'
                       : 'border border-neutral-600 text-white hover:border-neutral-500'
@@ -120,7 +120,7 @@ export default function LandingPricing() {
                 {/* Features */}
                 <div className="space-y-3">
                   {plan.features.map((feature, fIndex) => (
-                    <div key={fIndex} className="flex items-start gap-3">
+                    <div key={fIndex} className="flex items-start gap-3 font-medium">
                       <Check className="w-5 h-5 text-green-400 mt-0.5 shrink-0" />
                       <span className="text-neutral-300 text-sm">{feature}</span>
                     </div>

@@ -34,11 +34,11 @@ export default function LandingHowItWorks() {
   return (
     <section ref={sectionRef}  id="how-it-works" className="bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto reveal">
-        <div className="text-center mb-16 font-display">
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+        <div className="text-center mb-16 ">
+          <h2 className="text-4xl sm:text-5xl font-semibold text-white mb-4">
             {t('howItWorks.title')}
           </h2>
-          <p className="text-neutral-400 text-lg">{t('howItWorks.subtitle')}</p>
+          <p className="text-neutral-400 text-lg font-medium">{t('howItWorks.subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative reveal">
@@ -61,7 +61,7 @@ export default function LandingHowItWorks() {
 
                 {/* Content */}
                 <h3 className="text-xl font-semibold text-white mb-2 text-center reveal">{step.title}</h3>
-                <p className="text-neutral-400 text-center reveal">{step.description}</p>
+                <p className="text-neutral-400 text-center reveal font-medium">{step.description}</p>
               </div>
             );
           })}

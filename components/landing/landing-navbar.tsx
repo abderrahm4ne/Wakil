@@ -30,7 +30,7 @@ export default function LandingNavbar() {
           </Link>
 
           {/* Center Links */}
-          <div className="hidden md:flex flex-1 justify-center gap-6 ">
+          <div className="hidden md:flex flex-1 justify-center gap-6 font-normal">
             <Link href="#features" className="text-neutral-400 hover:text-white transition-colors">
               {t('navbar.features')}
             </Link>
@@ -49,7 +49,7 @@ export default function LandingNavbar() {
               className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors px-3 py-1 rounded-md border border-neutral-800 hover:cursor-pointer"
             >
               <Globe className="w-4 h-4" />
-              <span className="text-sm font-medium uppercase">{i18n.language}</span>
+              <span className="text-sm font-normal uppercase">{i18n.language}</span>
             </button>
 
             {/* CTA Button */}

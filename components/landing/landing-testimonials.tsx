@@ -25,11 +25,11 @@ export default function LandingTestimonials() {
   return (
     <section ref={sectionRef} className="bg-black py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto reveal">
-        <div className="text-center mb-16 font-display">
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+        <div className="text-center mb-16 ">
+          <h2 className="text-4xl sm:text-5xl font-semibold text-white mb-4">
             {t('testimonials.title')}
           </h2>
-          <p className="text-neutral-400 text-lg">{t('testimonials.subtitle')}</p>
+          <p className="text-neutral-400 text-lg font-medium">{t('testimonials.subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal">
@@ -51,7 +51,7 @@ export default function LandingTestimonials() {
               {/* Author */}
                 <div>
                   <p className="text-white font-semibold text-sm">{testimonial.name}</p>
-                  <p className="text-neutral-400 text-xs">{testimonial.role}</p>
+                  <p className="text-neutral-400 text-xs font-light">{testimonial.role}</p>
                 </div>
             </div>
           ))}
