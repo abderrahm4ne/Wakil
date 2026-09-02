@@ -28,10 +28,12 @@ export async function POST(req: NextRequest) {
             )
         }
 
-        // payment method saved ?
-        const stripeSubscription = await stripe.subscriptions.retrieve(subscription.providerSubscriptionId)
+        const paymentMethods = await stripe.paymentMethods.list({
+            customer: subscription.providerCustomerId!,
+            type: 'card'
+        })
         
-        const hasPaymentMethod = !!(customer as Stripe.Customer).invoice_settings.default_payment_method || !!(stripeSubscription.default_payment_method as Stripe.PaymentMethod | null)?.id
+        const hasPaymentMethod = paymentMethods.data.length > 0
 
         if (!hasPaymentMethod) {
             return NextResponse.json(

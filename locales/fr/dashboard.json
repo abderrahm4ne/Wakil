@@ -128,6 +128,8 @@
     "oneTimeExpires": "Ce forfait unique expire le {{date}}",
     "newOneTimePlan": "Obtenez un nouveau forfait unique",
     "createNewSubscription": "Créer un nouvel abonnement",
+    "oneTimeRevoked": "Votre forfait unique a été révoqué. Vous ne pouvez plus utiliser votre bot.",
+    "subscriptionEnded": "Abonnement terminé avec succès",
     "errors": {
       "unauthorized": "Veuillez vous connecter pour continuer.",
       "invalidPlan": "Ce forfait n'existe pas.",
@@ -141,7 +143,8 @@
       "noPaymentMethod": "Ajoutez un moyen de paiement pour continuer.",
       "noCustomer": "Aucun compte de facturation trouvé.",
       "notScheduled": "Votre abonnement n'est pas programmé pour être annulé.",
-      "generic": "Une erreur s'est produite. Veuillez réessayer."
+      "generic": "Une erreur s'est produite. Veuillez réessayer.",
+      "downgradeNotAllowed": "Vous ne pouvez pas rétrograder votre forfait actuel. Veuillez contacter le support."
     },
     "success": {
       "subscriptionUpgraded": "Abonnement mis à niveau avec succès",

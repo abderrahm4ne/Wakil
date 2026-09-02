@@ -89,7 +89,7 @@ export function SubscriptionClient({
     const { t } = useTranslation('dashboard')
     const isMonthly = billingMode === 'MONTHLY'
 
-    console.log('subscription client', { currentPlan, isActive, renewalDate, cancelScheduled, messagesUsed, messageLimit, productLimit, billingMode })
+    // console.log('subscription client', { currentPlan, isActive, renewalDate, cancelScheduled, messagesUsed, messageLimit, productLimit, billingMode })
 
     const formatDateOnly = (value: string | null) => {
         if (!value) return null
@@ -190,7 +190,8 @@ export function SubscriptionClient({
             if (!result.success) {
                 if (result.error === 'NO_PAYMENT_METHOD') {
                     toast.error(resolveErrorMessage(result.error, t))
-                    setTimeout(() => (window.location.href = '/api/subscription/portal'), 1000)
+                    const res = await fetch('/api/subscription/portal', { method: 'POST' })
+                    console.log(res)
                 } else {
                     toast.error(resolveErrorMessage(result.error, t))
                 }
@@ -218,7 +219,7 @@ export function SubscriptionClient({
             })
             const result = await res.json()
             if (result.mode === 'ONE_TIME_REVOKED') {
-                toast.success(t('subscription.success.ONE_TIME_REVOKED'))
+                toast.success(t('subscription.success.oneTimeRevoked'))
                 router.refresh()
                 return
             }
@@ -310,7 +311,11 @@ export function SubscriptionClient({
                     {/* Cancel button */}
                     {isMonthly && isActive && !localCancelScheduled && (
                         <button onClick={handleCancel} disabled={isCanceling}
-                            className={`px-4 py-2 rounded-lg border border-border hover:border-red-500/50 hover:text-destructive hover:cursor-pointer text-sm font-medium disabled:opacity-50 transition-colors duration-300`}>
+                            className={`px-4 py-2 rounded-lg border border-border
+                            
+                            bg-gradient-to-r from-destructive/50 to-destructive/80  hover:from-destructive/40 hover:to-destructive/20 hover:cursor-pointer 
+                            
+                            text-sm font-medium disabled:opacity-50 transition-colors duration-300`}>
                             {isCanceling ? <Loader2 size={16} className="animate-spin" /> : t('subscription.cancelPlan')}
                         </button>
                     )}
@@ -327,18 +332,26 @@ export function SubscriptionClient({
                         </button>
                     )}
 
+
+                    {/* new plans buttons */}
                     {!isActive && (
                         <>
                             <button onClick={() => { setBillingModeState('ONE_TIME'); setShowPlanSelection(true) }} disabled={isUpgrading}
                                 className="px-4 py-2 rounded-lg border border-border
-                                
-                                bg-gradient-to-r from-destructive/50 to-destructive/80  hover:from-destructive/40 hover:to-destructive/20 hover:cursor-pointer 
-                                
-                                bg-destructive hover:bg-destructive/80 text-sm font-medium disabled:opacity-50 transition-colors duration-300">
+
+                                                                
+                                bg-gradient-to-r from-black/50 to-black/80  hover:from-black/40 hover:to-black/20 hover:cursor-pointer 
+
+                                text-sm font-medium disabled:opacity-50 transition-colors duration-300">
                                 {t('subscription.newOneTimePlan')}
                             </button>
                             <button onClick={() => { setBillingModeState('MONTHLY'); setShowPlanSelection(true) }} disabled={isUpgrading}
-                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 text-secondary-foreground hover:cursor-pointer hover:bg-secondary/60 text-sm font-medium transition-colors duration-300">
+                                className="px-4 py-2 rounded-lg border border-border
+
+                                                                
+                                bg-gradient-to-r from-black/50 to-black/80  hover:from-black/40 hover:to-black/20 hover:cursor-pointer 
+
+                                text-sm font-medium disabled:opacity-50 transition-colors duration-300">
                                 {t('subscription.createNewSubscription')}
                             </button>
                         </>

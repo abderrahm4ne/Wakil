@@ -12,6 +12,7 @@ export const ERROR_MESSAGES: Record<string, string> = {
     NO_CUSTOMER: 'subscription.errors.noCustomer',
     NOT_SCHEDULED_FOR_CANCELLATION: 'subscription.errors.notScheduled',
     SERVER_ERROR: 'subscription.errors.generic',
+    DOWNGRADE_NOT_ALLOWED: 'subscription.errors.downgradeNotAllowed'
 }
 
 export function resolveErrorMessage(code: string, t: (key: string) => string): string {

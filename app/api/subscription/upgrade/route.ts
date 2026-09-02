@@ -59,6 +59,14 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ success: false, error: 'CANNOT_UPGRADE_ONE_TIME' }, { status: 400 })
         }
 
+        const currentOrder = PLAN_ORDER[subscription.plan]
+        const targetOrder = PLAN_ORDER[plan as Plan]
+        const isDowngrade = subscription.isActive && targetOrder < currentOrder
+
+        if (isDowngrade) {
+            return NextResponse.json({ success: false, error: 'DOWNGRADE_NOT_ALLOWED' }, { status: 400 })
+        }
+
         if (subscription.isActive && subscription.plan === plan && subscription.billingMode === billingMode) {
             return NextResponse.json({ success: false, error: 'ALREADY_ON_THIS_PLAN' }, { status: 400 })
         }

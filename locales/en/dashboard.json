@@ -114,6 +114,8 @@
     "oneTimeExpires": "This one-time plan expires on {{date}}",
     "newOneTimePlan": "Get a new one-time plan",
     "createNewSubscription": "Create a new subscription",
+    "oneTimeRevoked": "Your one-time plan has been revoked. You can no longer use your bot.",
+    "subscriptionEnded": "Subscription ended successfully",
     "errors": {
       "unauthorized": "Please log in to continue.",
       "invalidPlan": "This plan doesn't exist.",
@@ -128,7 +130,8 @@
       "noCustomer": "No billing account found.",
       "notScheduled": "Your subscription isn't scheduled for cancellation.",
       "portalFailed": "Couldnt react billing page",
-      "generic": "Something went wrong. Please try again."
+      "generic": "Something went wrong. Please try again.",
+      "downgradeNotAllowed": "You can't downgrade your current plan. Please contact support."
     },
     "success": {
       "subscriptionUpgraded": "Subscription upgraded successfully",
