@@ -52,6 +52,7 @@
     "subtitle": "راقب أداء البوت واستخدام الرسائل",
     "unauthenticated": "غير مصادق عليه. يرجى تسجيل الدخول مرة أخرى.",
     "noBot": "لم يتم العثور على بوت.",
+    "setUpYourBot": "قم بإعداد البوت الخاص بك للبدء في جمع البيانات.",
     "loadError": "تعذر تحميل التحليلات. يرجى المحاولة مرة أخرى لاحقًا.",
     "totalConversations": "إجمالي المحادثات",
     "totalMessages": "إجمالي الرسائل",
@@ -63,7 +64,20 @@
     "perDay": "الرسائل يوميًا (آخر 30 يومًا)",
     "unlimited": "غير محدود",
     "used": "تم استخدام {{percent}}%",
-    "approaching": "الاقتراب من الحد المسموح"
+    "approaching": "الاقتراب من الحد المسموح",
+    "conversionRate": "معدل التحويل",
+    "orderValueThisMonth": "قيمة الطلبات هذا الشهر",
+    "conversationsToOrders": "المحادثات إلى الطلبات",
+    "avgResponseTime": "متوسط وقت الاستجابة",
+    "orderFunnel": "قمع الطلبات",
+    "noOrdersYet": "لا توجد طلبات بعد",
+    "peakHours": "ساعات الذروة",
+    "tokenUsage": "استخدام الرموز",
+    "tokenUsageDes": "الرموز المستخدمة في آخر 30 يومًا",
+    "token": "رمز",
+    "unAnsweredConversation": "المحادثات غير المجابة",
+    "averageMessagesPerConversation": "متوسط الرسائل لكل محادثة",
+    "conversationTrend": "المحادثات اليومية (آخر 30 يومًا)"
   },
 
   "bot": {

@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { getAnalyticsData } from '@/lib/data/analytics'
 import getLang from '@/lib/locale'
 import i18n from '@/lib/i18n-server'
-import { TrendingUp, Clock, ShoppingBag, PieChart } from 'lucide-react'
+import { TrendingUp, Clock, Bot, PieChart, MessageSquareMore } from 'lucide-react'
 
 const FUNNEL_COLORS: Record<string, string> = {
   PENDING: 'bg-muted-foreground',
@@ -50,7 +50,7 @@ export default async function AnalyticsPage() {
   if (!bot) {
   return (
     <div className={`${lang === 'ar' ? 'font-arabic' : 'font-display'} flex flex-col items-center justify-center py-20 text-center`}>
-      <p className="text-muted-foreground font-semibold">{t('analytics.noBotYet')}</p>
+      <p className="text-muted-foreground font-semibold">{t('analytics.noBot')}</p>
       <a href="/dashboard/bot" className="text-sm text-secondary hover:underline mt-2">
         {t('analytics.setUpYourBot')}
       </a>
@@ -70,35 +70,51 @@ export default async function AnalyticsPage() {
       </div>
 
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
         <div className="group relative overflow-hidden bg-linear-to-tr from-black to-black/5 border border-border rounded-2xl p-6 flex items-center gap-6">
           <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
           <ConversionRing value={data.conversionRate} />
           <div className="relative">
-            <p className="text-sm text-muted-foreground">{t('analytics.conversionRate')}</p>
+            <p className="text-md text-muted-foreground">{t('analytics.conversionRate')}</p>
             <p className="text-2xl font-semibold text-foreground">{data.convertedConversations}/{data.totalConversations}</p>
-            <p className="text-xs text-muted-foreground">{t('analytics.conversationsToOrders')}</p>
+            <p className="text-sm text-muted-foreground">{t('analytics.conversationsToOrders')}</p>
           </div>
-        </div>
-
-        <div className="group relative overflow-hidden bg-linear-to-br from-secondary/10 to-green-600/5 border border-border rounded-2xl p-6 flex flex-col justify-center space-y-2">
-          <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
-          <ShoppingBag className="relative text-secondary" size={24} />
-          <p className="relative text-sm text-muted-foreground">{t('analytics.orderValueThisMonth')}</p>
-          <p className="relative text-3xl font-semibold text-foreground">{data.orderValueThisMonth.toLocaleString()} DZD</p>
         </div>
 
         <div className="group relative overflow-hidden bg-linear-to-tr from-black to-black/5 border border-border rounded-2xl p-6 flex flex-col justify-center space-y-2">
           <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
+          <Bot className="relative text-secondary" size={24} />
+          <p className="relative text-md text-muted-foreground">{t('analytics.tokenUsage')}</p>
+          <p className="relative text-3xl font-semibold text-foreground">{data.tokenUsed.toLocaleString()} <span className='text-[1.1rem] font-normal'>{t('analytics.token')}</span></p>
+        </div>
+
+
+        <div className="group relative overflow-hidden bg-linear-to-tr from-black to-black/5 border border-border rounded-2xl p-6 flex flex-col justify-center space-y-2">
+          <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
           <Clock className="relative text-secondary" size={24} />
-          <p className="relative text-sm text-muted-foreground">{t('analytics.avgResponseTime')}</p>
+          <p className="relative text-md text-muted-foreground">{t('analytics.avgResponseTime')}</p>
           <p className="relative text-3xl font-semibold text-foreground">{formatMs(data.avgResponseMs)}</p>
         </div>
+
+        <div className="group relative overflow-hidden bg-linear-to-tr from-black to-black/5 border border-border rounded-2xl p-6 flex flex-col justify-center space-y-2">
+          <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
+          <MessageSquareMore className="relative text-secondary" size={24} />
+          <p className="relative text-md text-muted-foreground">{t('analytics.unAnsweredConversation')}</p>
+          <p className="relative text-3xl font-semibold text-foreground">{data.unAnsweredConversations}</p>
+        </div>
+
+        <div className="group relative overflow-hidden bg-linear-to-tr from-black to-black/5 border border-border rounded-2xl p-6 flex flex-col justify-center space-y-2">
+          <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
+          <MessageSquareMore className="relative text-secondary" size={24} />
+          <p className="relative text-md text-muted-foreground">{t('analytics.averageMessagesPerConversation')}</p>
+          <p className="relative text-3xl font-semibold text-foreground">{data.averageMessagesPerConversation}</p>
+        </div>
+
       </section>
 
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-card border border-border rounded-2xl p-6">
+      <div className="bg-card border border-border rounded-2xl p-6">
           <h2 className="text-lg font-normal mb-4 flex items-center gap-2">
-            <PieChart size={18} className="text-secondary" />
+            <PieChart size={22} className="text-secondary" />
             {t('analytics.orderFunnel')}
           </h2>
           {funnelTotal === 0 ? (
@@ -119,7 +135,9 @@ export default async function AnalyticsPage() {
               ))}
             </div>
           )}
-        </div>
+      </div>
+
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
         <div className="bg-card border border-border rounded-2xl p-6">
           <h2 className="text-lg font-normal mb-4 flex items-center gap-2">
@@ -130,12 +148,34 @@ export default async function AnalyticsPage() {
             {data.peakHours.map((count, hour) => (
               <div key={hour} className="flex-1 flex flex-col items-center gap-1 group/bar">
                 <div className="w-full rounded-t-sm bg-secondary/40 group-hover/bar:bg-secondary transition-colors"
-                  style={{ height: `${(count / maxHourCount) * 100}%`, minHeight: count > 0 ? '4px' : '0px' }} />
+                  style={{ height: `${(Number(count) / maxHourCount) * 100}%`, minHeight: Number(count) > 0 ? '4px' : '0px' }} />
                 {hour % 4 === 0 && <span className="text-[10px] text-muted-foreground">{hour}h</span>}
               </div>
             ))}
           </div>
         </div>
+
+        <div className="bg-card border border-border rounded-2xl p-6">
+          <h2 className="text-lg font-normal mb-4 flex items-center gap-2">
+            <TrendingUp size={18} className="text-secondary" />
+            {t('analytics.conversationTrend')}
+          </h2>
+          <div className="flex items-end gap-1 h-32">
+            {data.conversationTrend.map(item => (
+              <div key={item.date} className="flex-1 flex flex-col items-center gap-1 group/bar">
+                <div className="w-full rounded-t-sm bg-secondary/40 group-hover/bar:bg-secondary transition-colors"
+                  style={{
+                  height: `${(item.count / Math.max(...data.conversationTrend.map(d => d.count), 1)) * 100}%`,
+                  minHeight: item.count > 0 ? '4px' : '0px',
+                }} />
+                <span className="text-[10px] text-muted-foreground">
+                  {item.date.slice(8)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </section>
     </div>
   )
