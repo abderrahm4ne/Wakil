@@ -61,6 +61,7 @@ export default async function AnalyticsPage() {
   const data = await getAnalyticsData(bot.id)
   const funnelTotal = Object.values(data.funnel).reduce((a, b) => a + b, 0)
   const maxHourCount = Math.max(...data.peakHours, 1)
+  const maxConvCount = Math.max(...data.conversationTrend.map(d => d.count), 1)
 
   return (
     <div className={`${lang === 'ar' ? 'font-arabic' : 'font-display'} flex flex-col relative space-y-8`}>
@@ -139,14 +140,16 @@ export default async function AnalyticsPage() {
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
+          {/* Peak Hours */}
         <div className="bg-card border border-border rounded-2xl p-6">
           <h2 className="text-lg font-normal mb-4 flex items-center gap-2">
             <TrendingUp size={18} className="text-secondary" />
             {t('analytics.peakHours')}
           </h2>
+
           <div className="flex items-end gap-1 h-32">
             {data.peakHours.map((count, hour) => (
-              <div key={hour} className="flex-1 flex flex-col items-center gap-1 group/bar">
+              <div key={hour} className="flex-1 h-full flex flex-col justify-end items-center gap-1 group/bar">
                 <div className="w-full rounded-t-sm bg-secondary/40 group-hover/bar:bg-secondary transition-colors"
                   style={{ height: `${(Number(count) / maxHourCount) * 100}%`, minHeight: Number(count) > 0 ? '4px' : '0px' }} />
                 {hour % 4 === 0 && <span className="text-[10px] text-muted-foreground">{hour}h</span>}
@@ -162,15 +165,10 @@ export default async function AnalyticsPage() {
           </h2>
           <div className="flex items-end gap-1 h-32">
             {data.conversationTrend.map(item => (
-              <div key={item.date} className="flex-1 flex flex-col items-center gap-1 group/bar">
+              <div key={item.date} className="flex-1 h-full flex flex-col justify-end items-center gap-1 group/bar">
                 <div className="w-full rounded-t-sm bg-secondary/40 group-hover/bar:bg-secondary transition-colors"
-                  style={{
-                  height: `${(item.count / Math.max(...data.conversationTrend.map(d => d.count), 1)) * 100}%`,
-                  minHeight: item.count > 0 ? '4px' : '0px',
-                }} />
-                <span className="text-[10px] text-muted-foreground">
-                  {item.date.slice(8)}
-                </span>
+                  style={{ height: `${(item.count / maxConvCount) * 100}%`, minHeight: item.count > 0 ? '4px' : '0px' }} />
+                <span className="text-[10px] text-muted-foreground">{item.date.slice(8)}</span>
               </div>
             ))}
           </div>

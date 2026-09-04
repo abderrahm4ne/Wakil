@@ -6,7 +6,7 @@ export default async function ResponseTimeCalculator(messages: { createdAt: Date
 
     for (const m of messages) {
         const hour = Number(
-        new Intl.DateTimeFormat('en-US', {
+        new Intl.DateTimeFormat('en-CA', {
             timeZone: 'Africa/Algiers',
             hour: '2-digit',
             hour12: false,

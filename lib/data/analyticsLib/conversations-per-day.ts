@@ -5,7 +5,7 @@ export default async function conversationsPerDayCalculator(
     const dailyConversations = new Map<string, number>()
 
   for( let date = new Date(monthStart); date <= now; date.setDate(date.getDate() + 1)) {
-    const key = date.toISOString().split('T')[0]
+    const key = new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Algiers' }).format(date)
     dailyConversations.set(key, 0)
   }
 

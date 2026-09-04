@@ -8,9 +8,8 @@ export async function getAnalyticsData(botId: string) {
   const now = new Date()
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
 
-  const [totalConversations, convertedConversations, funnelRaw, messages, tokenUsage, conversations] =
+  const [convertedConversations, funnelRaw, messages, tokenUsage, conversations] =
     await Promise.all([
-      prisma.conversation.count({ where: { botId, createdAt: { gte: monthStart } } }),
       prisma.conversation.count({
         where: { botId, createdAt: { gte: monthStart }, order: { some: {} } }
       }),
@@ -28,20 +27,17 @@ export async function getAnalyticsData(botId: string) {
         where: { conversation: { botId }, createdAt: { gte: monthStart } },
         _sum: { tokensUsed: true }
       }),
-      await prisma.conversation.findMany({
-        where: {
-          botId,
-          createdAt: {
-            gte: monthStart,
-          },
-        },
-        select: {
-          createdAt: true,
-        },
+      prisma.conversation.findMany({
+        where: { botId, createdAt: { gte: monthStart } },
+        select: { createdAt: true }
       })
     ])
 
-    const [avgResponseMs, hourCounts] = await ResposneTimeCalculator(messages)
+  // totalConversations: conversations OPENED this month.
+
+  const totalConversations = conversations.length
+
+  const [avgResponseMs, hourCounts] = await ResposneTimeCalculator(messages)
 
   // funnel data
   const funnel = { PENDING: 0, PENDING_REVIEW: 0, CONFIRMED: 0, CANCELLED: 0 }
@@ -50,17 +46,19 @@ export async function getAnalyticsData(botId: string) {
   // token used
   const tokenUsed = tokenUsage._sum.tokensUsed || 0
 
-
   // last message by user
   const unAnsweredConversations = await unAnsweredConversationsCalculator(messages)
 
-  // message count by conversation 
-    const averageMessagesPerConversation = await averageMessagesPerConversationsCalculator(messages, totalConversations)
+  // Average messages per conversation: scoped to conversations that had
+  const activeConversationCount = new Set(messages.map(m => m.conversationId)).size
+  const averageMessagesPerConversation = Number(
+    (await averageMessagesPerConversationsCalculator(messages, activeConversationCount)).toFixed(1)
+  )
 
   // conversation opened per day
-    const conversationTrend = await conversationsPerDayCalculator(conversations, monthStart, now)
+  const conversationTrend = await conversationsPerDayCalculator(conversations, monthStart, now)
 
-  // Return the analytics data/
+  // Return the analytics data
   return {
     conversionRate: totalConversations ? (convertedConversations / totalConversations) * 100 : 0,
     totalConversations,
