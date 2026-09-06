@@ -188,6 +188,41 @@
     "renewsOn": "Renouvelle le {{date}}",
     "DZD/mo": "DZD/mois",
     "reActivateSubscription": "Réactiver votre abonnement",
-    "completePayement": "Finaliser le paiement"
+    "completePayement": "Finaliser le paiement",
+    "messages/month": "Messages/mois",
+    "changePlan": "Change votre plan dans subscription page"
+  },
+  "pricing": {
+    "plans": {
+      "free": {
+        "name": "Essai gratuit",
+        "feat.0": "500 messages",
+        "feat.1": "Basé uniquement sur des règles",
+        "feat.2": "Une seule page",
+        "feat.3": "1 canal"
+      },
+      "starter": {
+        "name": "Starter",
+        "feat.0": "2 000 messages/mois",
+        "feat.1": "Basé uniquement sur des règles",
+        "feat.2": "Pages illimitées",
+        "feat.3": "1 canal",
+        "feat.4": ""
+      },
+      "pro": {
+        "name": "Pro",
+        "feat.0": "10 000 messages/mois",
+        "feat.1": "IA incluse",
+        "feat.2": "Escalade intelligente",
+        "feat.3": "Analyses avancées"
+      },
+      "business": {
+        "name": "Business",
+        "feat.0": "Messages illimités",
+        "feat.1": "IA incluse",
+        "feat.2": "2 canaux",
+        "feat.3": "Support prioritaire"
+      }
+    }
   }
 }
