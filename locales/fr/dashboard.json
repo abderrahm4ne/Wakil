@@ -167,5 +167,27 @@
       "subscriptionEnded": "Abonnement terminé avec succès",
       "ONE_TIME_REVOKED": "Votre forfait à paiement unique a été révoqué. Vous ne pouvez plus utiliser votre bot."
     }
+  },
+  "billing": {
+    "title": "Facturation et bureau",
+    "billingNSubscription": "Facturation et abonnement",
+    "subTitle": "Gardez les paiements, le statut de renouvellement et les limites du forfait visibles avant que votre bot ne soit mis en pause pour des raisons de facturation.",
+    "plan": "Forfait",
+    "status": "Statut",
+    "active": "Actif",
+    "inActive": "Inactif",
+    "saved": "Enregistré",
+    "billing": "Facturation",
+    "old": "Ancien",
+    "expired": "Expiré",
+    "paymentRequired": "Paiement requis",
+    "currentPlan": "Forfait actuel",
+    "availablePlan": "Forfait disponible",
+    "unlimitedMessages": "Messages illimités",
+    "messagesPerMonth": "Messages par mois",
+    "renewsOn": "Renouvelle le {{date}}",
+    "DZD/mo": "DZD/mois",
+    "reActivateSubscription": "Réactiver votre abonnement",
+    "completePayement": "Finaliser le paiement"
   }
 }

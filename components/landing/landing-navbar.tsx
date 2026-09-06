@@ -55,7 +55,7 @@ export default function LandingNavbar() {
             {/* CTA Button */}
             <Link
               href="/login"
-              className="px-3 py-2 bg-linear-to-r from-secondary/70 to-green-600/45 text-white text-[0.9rem] rounded-full font-semibold hover:shadow-sm hover:shadow-green-300/50 transition-all"
+              className="px-3 py-2 bg-linear-to-r from-secondary/70 to-green-600/45 text-white text-[0.9rem] rounded-full font-medium hover:shadow-sm hover:shadow-green-300/50 transition-all"
             >
               {t('navbar.completeYourWork')}
             </Link>

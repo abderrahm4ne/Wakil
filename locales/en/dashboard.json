@@ -154,5 +154,27 @@
       "subscriptionEnded": "Subscription ended successfully",
       "ONE_TIME_REVOKED": "Your one-time plan has been revoked. You can no longer use your bot."
     }
+  },
+  "billing": {
+    "title": "Billing & Desk",
+    "billingNSubscription": "Billing and Subscription",
+    "subTitle": "Keep payments, renewal status, and plan limits visible before your bot hits a billing pause.",
+    "plan": "plan",
+    "status": "Status",
+    "active": "Active",
+    "inActive": "Inactive",
+    "saved": "Saved",
+    "billing": "Billing",
+    "old": "Old",
+    "expired": "Expired",
+    "paymentRequired": "Payment Required",
+    "currentPlan": "Current Plan",
+    "availablePlan": "Available Plan",
+    "unlimitedMessages": "Unlimited Messages",
+    "messagesPerMonth": "Messages Per Month",
+    "renewsOn": "Renews on {{date}}",
+    "DZD/mo": "DZD/mo",
+    "reActivateSubscription": "Reactivate your subscription",
+    "completePayement": "Complete Payement"
   }
 }

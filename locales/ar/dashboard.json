@@ -95,7 +95,6 @@
     "aiDescription": "يعمل البوت الخاص بك بواسطة ذكاء اصطناعي متقدم لإجراء محادثات طبيعية.",
     "rulesDescription": "يتبع البوت حاليًا قواعد ثابتة للرد على الرسائل."
   },
-
   "conversations": {
     "title": "المحادثات",
     "subtitle": "محادثات العملاء عبر جميع القنوات.",
@@ -172,5 +171,27 @@
       "subscriptionEnded": "تم إنهاء الاشتراك بنجاح",
       "ONE_TIME_REVOKED": "تم إلغاء خطتك ذات الدفعة الواحدة. لم يعد بإمكانك استخدام البوت."
     }
+  },
+  "billing": {
+    "title": "الفوترة والمكتب",
+    "billingNSubscription": "الفوترة والاشتراك",
+    "subTitle": "تابع المدفوعات وحالة التجديد وحدود الخطة قبل أن يتم إيقاف بوتك مؤقتًا بسبب الفوترة.",
+    "plan": "الخطة",
+    "status": "الحالة",
+    "active": "نشط",
+    "inActive": "غير نشط",
+    "saved": "محفوظ",
+    "billing": "الفوترة",
+    "old": "قديم",
+    "expired": "منتهي الصلاحية",
+    "paymentRequired": "الدفع مطلوب",
+    "currentPlan": "الخطة الحالية",
+    "availablePlan": "الخطة المتاحة",
+    "unlimitedMessages": "رسائل غير محدودة",
+    "messagesPerMonth": "رسائل شهريًا",
+    "renewsOn": "يتجدد في {{date}}",
+    "DZD/mo": "دج/شهريًا",
+    "reActivateSubscription": "إعادة تفعيل اشتراكك",
+    "completePayement": "إتمام الدفع"
   }
 }
