@@ -11,8 +11,8 @@ export const subscriptions = [
             productLimit: 50,
             features: [
                 "pricing.plans.free.feat.0", 
-                "pricing.free.free.feat.1", 
-                "pricing.free.free.feat.2"
+                "pricing.plans.free.feat.1", 
+                "pricing.plans.free.feat.2"
             ]
         },{
             id: "1",
@@ -41,8 +41,7 @@ export const subscriptions = [
                 'pricing.plans.pro.feat.0', 
                 'pricing.plans.pro.feat.1', 
                 'pricing.plans.pro.feat.2', 
-                'pricing.plans.pro.feat.3', 
-                'pricing.plans.pro.feat.4'
+                'pricing.plans.pro.feat.3'
                 ]
             },
         {

@@ -42,7 +42,7 @@ export function BillingPlanComparison({
       >
     <div className={`${i18n.language === 'ar' ? 'font-arabic' : 'font-display'}`}>
       <h3 className="text-2xl font-semibold text-foreground mb-6">
-        {('billing.compareAllPlans')}
+        {t('billing.compareAllPlans')}
       </h3>
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-center w-[85%] h-[65vh] px-20 mx-auto">
         {plans.map((plan) => {
@@ -53,8 +53,8 @@ export function BillingPlanComparison({
               key={plan.id}
               className={`p-6 flex flex-col transition-all  ${
                 isCurrent
-                  ? 'border-emerald-500/50 bg-linear-to-b from-emerald-950/29 to-emerald-900/60 ring-1 ring-emerald-500/20'
-                  : 'border-border hover:border-muted-foreground/30 bg-linear-to-b from-black to-secondary/10'
+                  ? 'border-emerald-500/50 bg-linear-to-b from-emerald-950/29 via-emerald-950 to-emerald-900/60 ring-1 ring-emerald-500/20'
+                  : 'border-border hover:border-muted-foreground/30 bg-linear-to-b from-black  via-black to-secondary/10'
               }`}
             >
               <div className="space-y-4 flex-1">

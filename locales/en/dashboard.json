@@ -177,7 +177,8 @@
     "reActivateSubscription": "Reactivate your subscription",
     "completePayement": "Complete Payement",
     "messages/month": "Messages/Month",
-    "changePlan": "Change your plan in subscription plan"
+    "changePlan": "Change your plan in subscription plan",
+    "compareAllPlans": "Compare All Plans"
   },
   "pricing": {
     "plans": {
@@ -193,8 +194,7 @@
         "feat.0": "2,000 messages/month",
         "feat.1": "Rule-based only",
         "feat.2": "Unlimited pages",
-        "feat.3": "1 Channel",
-        "feat.4": ""
+        "feat.3": "1 Channel"
       },
       "pro": {
         "name": "Pro",

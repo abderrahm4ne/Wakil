@@ -96,9 +96,9 @@ export default async function DashboardPage() {
             </section>
 
             {/* Recent orders && Channels */}
-            <section  className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-15 justify-center space-x-10 '>
+            <section  className='grid grid-cols-1 md:grid-cols-2  gap-4 mt-15 justify-center space-x-10 '>
 
-                <div className='flex flex-col bg-linear-to-br from-secondary/10 to-green-600/5 border border-border rounded-xl px-5 py-4  w-full'>
+                <div className='flex flex-col bg-linear-to-br from-secondary/10 to-green-600/5 border border-border rounded-xl px-5 py-4  w-[full]'>
                     <div className='flex items-center justify-between mb-4'>
                         <h2 className='text-lg font-normal'>{t('overview.recentOrders')}</h2>
                         <a href='/dashboard/orders' className='flex items-center gap-1 text-md text-secondary font-normal tracking-wider hover:underline'>
@@ -171,9 +171,9 @@ export default async function DashboardPage() {
                         <p className='text-muted-foreground text-sm py-6 text-center font-normal'>{t('overview.botIs')}<span className='text-red-600 px-2'>OFF</span></p>
                     ) : (
                         <div className='flex flex-col divide-y divide-border text-md'>
-                            <h2 className='py-2 px-2 font-medium flex flex-col'>{t('overview.storeName')} : <span className='font-normal'>{bot.storeName}</span></h2>
-                            <h2 className='py-2 px-2 font-medium flex flex-col'>{t('overview.storeLocation')} : <span className='font-normal'>{bot.storeCity}</span></h2>
-                            <h2 className='py-2 px-2 font-medium flex flex-col'>{t('overview.storeContact')} : <span className='font-normal'>{bot.storeContact}</span></h2>
+                            <h2 className='py-2 px-2 font-medium flex sm:flex-row sm:gap-x-4 flex-col'>{t('overview.storeName')} : <span className='font-normal'>{bot.storeName}</span></h2>
+                            <h2 className='py-2 px-2 font-medium flex sm:flex-row sm:gap-x-4 flex-col'>{t('overview.storeLocation')} : <span className='font-normal'>{bot.storeCity}</span></h2>
+                            <h2 className='py-2 px-2 font-medium flex sm:flex-row sm:gap-x-4 flex-col'>{t('overview.storeContact')} : <span className='font-normal'>{bot.storeContact}</span></h2>
                         </div>
                     )}
             </div>
