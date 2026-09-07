@@ -5,6 +5,7 @@ import { SubscriptionClient } from "@/components/dashboard/subscription-client"
 import { subscriptions } from "@/types/subscription"
 import getLang from '@/lib/locale'
 import i18n from "@/lib/i18n-server"
+import Welcoming from "@/components/dashboard/page-title"
 
 export default async function SubscriptionPage() {
     const lang = await getLang()
@@ -34,12 +35,8 @@ export default async function SubscriptionPage() {
     )
     return (
         <div className={`${lang === 'ar' ? 'font-arabic' : 'font-display'} flex flex-col relative space-y-8`}>
-            <div>
-                <h1 className="sm:text-4xl text-[1.6rem] text-foreground tracking-tight font-semibold">
-                    {t('subscription.title')}
-                </h1>
-                <p className="text-muted-foreground font-medium">{t('subscription.subtitle')}</p>
-            </div>
+
+            <Welcoming title={'subscription.title'} subTitle={'subscription.subtitle'} />
 
             <SubscriptionClient
                 currentPlan={currentPlan}

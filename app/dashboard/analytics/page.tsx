@@ -4,7 +4,11 @@ import { prisma } from '@/lib/prisma'
 import { getAnalyticsData } from '@/lib/data/analytics'
 import getLang from '@/lib/locale'
 import i18n from '@/lib/i18n-server'
-import { TrendingUp, Clock, Bot, PieChart, MessageSquareMore } from 'lucide-react'
+import { AnalyticsStats } from '@/components/dashboard/analytics-stats'
+import { OrderFunnel } from '@/components/dashboard/analytics-order-funnel'
+import { PeakHours } from '@/components/dashboard/analytics-peak-hours'
+import { ConversationTrend } from '@/components/dashboard/analytics-conversations-trend'
+import Welcoming from '@/components/dashboard/page-title'
 
 const FUNNEL_COLORS: Record<string, string> = {
   PENDING: 'bg-muted-foreground',
@@ -43,9 +47,11 @@ function ConversionRing({ value }: { value: number }) {
 export default async function AnalyticsPage() {
   const lang = await getLang()
   const t = i18n.getFixedT(lang, 'dashboard')
+
   const session = await auth()
   if (!session) redirect('/login')
 
+    // no bot
   const bot = await prisma.bot.findUnique({ where: { userId: session.user.id } })
   if (!bot) {
   return (
@@ -65,116 +71,82 @@ export default async function AnalyticsPage() {
 
   return (
     <div className={`${lang === 'ar' ? 'font-arabic' : 'font-display'} flex flex-col relative space-y-8`}>
-      <div>
-        <h1 className="sm:text-4xl text-[1.6rem] text-foreground tracking-tight font-semibold">{t('analytics.title')}</h1>
-        <p className="text-muted-foreground font-medium">{t('analytics.subtitle')}</p>
-      </div>
+      {/* Header */}
+      <Welcoming title={'analytics.title'} subTitle={'analytics.subtitle'} />
 
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Stats */}
+      <AnalyticsStats
+        conversionRate={data.conversionRate}
+        convertedConversations={
+          data.convertedConversations
+        }
+        totalConversations={
+          data.totalConversations
+        }
+        tokenUsed={data.tokenUsed}
+        avgResponseMs={
+          data.avgResponseMs
+        }
+        unAnsweredConversations={
+          data.unAnsweredConversations
+        }
+        averageMessagesPerConversation={
+          data.averageMessagesPerConversation
+        }
+        labels={{
+          conversionRate:
+            t('analytics.conversionRate'),
+          conversationsToOrders:
+            t('analytics.conversationsToOrders'),
+          tokenUsage:
+            t('analytics.tokenUsage'),
+          token:
+            t('analytics.token'),
+          avgResponseTime:
+            t('analytics.avgResponseTime'),
+          unAnsweredConversation:
+            t('analytics.unAnsweredConversation'),
+          averageMessagesPerConversation:
+            t(
+              'analytics.averageMessagesPerConversation'
+            )
+        }}
+      />
 
-        <div className="group relative overflow-hidden bg-linear-to-tr from-black to-black/5 border border-border rounded-2xl p-6 flex items-center gap-6">
-          <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
-          <ConversionRing value={data.conversionRate} />
-          <div className="relative">
-            <p className="text-md text-muted-foreground">{t('analytics.conversionRate')}</p>
-            <p className="text-2xl font-semibold text-foreground">{data.convertedConversations}/{data.totalConversations}</p>
-            <p className="text-sm text-muted-foreground">{t('analytics.conversationsToOrders')}</p>
-          </div>
-        </div>
 
-        <div className="group relative overflow-hidden bg-linear-to-tr from-black to-black/5 border border-border rounded-2xl p-6 flex flex-col justify-center space-y-2">
-          <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
-          <Bot className="relative text-secondary" size={24} />
-          <p className="relative text-md text-muted-foreground">{t('analytics.tokenUsage')}</p>
-          <p className="relative text-3xl font-semibold text-foreground">{data.tokenUsed.toLocaleString()} <span className='text-[1.1rem] font-normal'>{t('analytics.token')}</span></p>
-        </div>
+      {/* Order Funnel */}
+      <OrderFunnel
+        funnel={data.funnel}
+        labels={{
+          orderFunnel:
+            t('analytics.orderFunnel'),
+          noOrdersYet:
+            t('analytics.noOrdersYet')
+        }}
+      />
 
 
-        <div className="group relative overflow-hidden bg-linear-to-tr from-black to-black/5 border border-border rounded-2xl p-6 flex flex-col justify-center space-y-2">
-          <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
-          <Clock className="relative text-secondary" size={24} />
-          <p className="relative text-md text-muted-foreground">{t('analytics.avgResponseTime')}</p>
-          <p className="relative text-3xl font-semibold text-foreground">{formatMs(data.avgResponseMs)}</p>
-        </div>
-
-        <div className="group relative overflow-hidden bg-linear-to-tr from-black to-black/5 border border-border rounded-2xl p-6 flex flex-col justify-center space-y-2">
-          <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
-          <MessageSquareMore className="relative text-secondary" size={24} />
-          <p className="relative text-md text-muted-foreground">{t('analytics.unAnsweredConversation')}</p>
-          <p className="relative text-3xl font-semibold text-foreground">{data.unAnsweredConversations}</p>
-        </div>
-
-        <div className="group relative overflow-hidden bg-linear-to-tr from-black to-black/5 border border-border rounded-2xl p-6 flex flex-col justify-center space-y-2">
-          <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/20" />
-          <MessageSquareMore className="relative text-secondary" size={24} />
-          <p className="relative text-md text-muted-foreground">{t('analytics.averageMessagesPerConversation')}</p>
-          <p className="relative text-3xl font-semibold text-foreground">{data.averageMessagesPerConversation}</p>
-        </div>
-
-      </section>
-
-      <div className="bg-card border border-border rounded-2xl p-6">
-          <h2 className="text-lg font-normal mb-4 flex items-center gap-2">
-            <PieChart size={22} className="text-secondary" />
-            {t('analytics.orderFunnel')}
-          </h2>
-          {funnelTotal === 0 ? (
-            <p className="text-muted-foreground text-sm py-6 text-center font-semibold">{t('analytics.noOrdersYet')}</p>
-          ) : (
-            <div className="space-y-3">
-              {Object.entries(data.funnel).map(([status, count]) => (
-                <div key={status} className="space-y-1">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-foreground font-medium">{status.replace('_', ' ')}</span>
-                    <span className="text-muted-foreground">{count}</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-muted/30 overflow-hidden">
-                    <div className={`h-full rounded-full ${FUNNEL_COLORS[status]}`}
-                      style={{ width: `${funnelTotal ? (count / funnelTotal) * 100 : 0}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-      </div>
+      {/* Charts */}
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <PeakHours
+          peakHours={data.peakHours}
+          title={
+            t('analytics.peakHours')
+          }
+        />
 
-          {/* Peak Hours */}
-        <div className="bg-card border border-border rounded-2xl p-6">
-          <h2 className="text-lg font-normal mb-4 flex items-center gap-2">
-            <TrendingUp size={18} className="text-secondary" />
-            {t('analytics.peakHours')}
-          </h2>
-
-          <div className="flex items-end gap-1 h-32">
-            {data.peakHours.map((count, hour) => (
-              <div key={hour} className="flex-1 h-full flex flex-col justify-end items-center gap-1 group/bar">
-                <div className="w-full rounded-t-sm bg-secondary/40 group-hover/bar:bg-secondary transition-colors"
-                  style={{ height: `${(Number(count) / maxHourCount) * 100}%`, minHeight: Number(count) > 0 ? '4px' : '0px' }} />
-                {hour % 4 === 0 && <span className="text-[10px] text-muted-foreground">{hour}h</span>}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-card border border-border rounded-2xl p-6">
-          <h2 className="text-lg font-normal mb-4 flex items-center gap-2">
-            <TrendingUp size={18} className="text-secondary" />
-            {t('analytics.conversationTrend')}
-          </h2>
-          <div className="flex items-end gap-1 h-32">
-            {data.conversationTrend.map(item => (
-              <div key={item.date} className="flex-1 h-full flex flex-col justify-end items-center gap-1 group/bar">
-                <div className="w-full rounded-t-sm bg-secondary/40 group-hover/bar:bg-secondary transition-colors"
-                  style={{ height: `${(item.count / maxConvCount) * 100}%`, minHeight: item.count > 0 ? '4px' : '0px' }} />
-                <span className="text-[10px] text-muted-foreground">{item.date.slice(8)}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <ConversationTrend
+          conversationTrend={
+            data.conversationTrend
+          }
+          title={
+            t('analytics.conversationTrend')
+          }
+        />
 
       </section>
+
     </div>
   )
 }
