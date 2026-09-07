@@ -211,5 +211,102 @@
         "feat.3": "Priority support"
       }
     }
-  }
+  },
+  "channels": {
+    "title": "Channels",
+    "description": "Connect Instagram and Facebook to automate clients messages",
+    "permissions": {
+      "title": "Connect {{platform}} with Wakil",
+      "subtitle": "We require this autorisations to help you generate messages to clients",
+      "readMessages": "Read messages",
+      "readMessagesDesc": "View your customers' direct messages",
+      "sendMessages": "Send messages",
+      "sendMessagesDesc": "Automatically respond to customer messages",
+      "manageMetadata": "Manage metadata",
+      "manageMetadataDesc": "Track message status and conversation metadata",
+      "whyNeeded": "Why do we need this?",
+      "readMessagesWhy": "Wakil reads incoming messages to understand customer requests and provide contextual responses.",
+      "sendMessagesWhy": "Wakil sends automated responses to customers based on your rules or AI model. Your account remains in full control.",
+      "manageMetadataWhy": "We track delivery status, read receipts, and conversation metadata for analytics and debugging.",
+      "security": {
+        "readMessages": "Messages are processed on the server only. They are never permanently stored.",
+        "sendMessages": "Responses are sent through your professional account. You can revoke access at any time.",
+        "manageMetadata": "Metadata is used exclusively for your analytics dashboard."
+      },
+      "continueBtn": "Continue to {{platform}}",
+      "cancelBtn": "Cancel",
+      "redirectInfo": "You will be redirected to {{platform}} to approve these permissions. You can revoke access at any time."
+    },
+    "success": {
+      "title": "Connected successfully",
+      "subtitle": "We found {{count}} page(s) on your account",
+      "pageId": "Page ID",
+      "noInstagramLinked": "No Instagram account linked",
+      "instagramLinked": "✓ Instagram professional account linked",
+      "instagramWarning": "None of your pages are linked to Instagram. Please first link an Instagram professional account in Facebook Business Manager.",
+      "info": "Next, select the page you want to connect to Wakil to enable automated messaging.",
+      "continueBtn": "Continue to page selection",
+      "cancelBtn": "Cancel"
+    },
+    "errors": {
+      "noBot": {
+        "title": "Set up your bot before connecting a channel"
+      },
+      "noPages": {
+        "title": "No pages found",
+        "message": "We couldn't find any business pages linked to your account. Make sure you are logged in as a business manager and have permission to manage pages."
+      },
+      "noInstagram": {
+        "title": "Instagram not linked",
+        "message": "This page does not have a linked Instagram professional account. Go to your Facebook Page settings and link an Instagram account first."
+      },
+      "permissionDenied": {
+        "title": "Permissions denied",
+        "message": "You denied the required permissions. Wakil needs permission to read and send messages to automate your customer responses. Please try again and approve all permissions."
+      },
+      "sessionExpired": {
+        "title": "Session expired",
+        "message": "Your session has expired. Please go back and try again."
+      },
+      "connectionFailed": {
+        "title": "Connection failed",
+        "message": "We couldn't complete the connection. This may be a temporary issue. Please try again."
+      },
+      "accessDenied": {
+        "title": "Access denied",
+        "message": "You don't have permission to manage this page. Make sure you are logged in with the correct account."
+      },
+      "serverError": {
+        "title": "Something went wrong",
+        "message": "An unexpected error occurred. Please try again or contact support."
+      },
+      "whatToDo": "What you should do:",
+      "tryAgain": "Try again",
+      "goBack": "Go back",
+      "support": "Still having problems? Contact support"
+    },
+    "disconnect": {
+      "title": "Disconnect {{platform}}?",
+      "message": "You will no longer receive customer messages from {{platform}} until you reconnect.",
+      "info": "You can reconnect your {{platform}} page at any time. No data will be deleted.",
+      "btn": "Disconnect",
+      "keepBtn": "Keep connected",
+      "disconnecting": "Disconnecting...",
+      "success": "{{platform}} disconnected. You can reconnect at any time.",
+      "error": "Failed to disconnect. Please try again."
+    },
+    "card": {
+      "connected": "Connected",
+      "notConnected": "Not connected",
+      "pageId": "Page ID",
+      "messagestoday": "Messages today",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "description": "Connect your {{platform}} to enable automated responses"
+      }
+    },
+    "connect": "Connect",
+    "disconnectBtn": "Disconnect",
+    "disconnecting": "Disconnecting.."
 }

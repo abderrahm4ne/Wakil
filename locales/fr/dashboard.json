@@ -224,5 +224,102 @@
         "feat.3": "Support prioritaire"
       }
     }
+  },
+  "channels": {
+    "title": "Canaux",
+    "description": "Connectez Instagram et Facebook pour automatiser les messages des clients",
+    "permissions": {
+      "title": "Connecter {{platform}} à Wakil",
+      "subtitle": "Nous avons besoin de ces autorisations pour vous aider à gérer les messages des clients",
+      "readMessages": "Lire les messages",
+      "readMessagesDesc": "Voir les messages directs de vos clients",
+      "sendMessages": "Envoyer des messages",
+      "sendMessagesDesc": "Répondre automatiquement aux messages des clients",
+      "manageMetadata": "Gérer les métadonnées",
+      "manageMetadataDesc": "Suivre l'état des messages et les métadonnées de conversation",
+      "whyNeeded": "Pourquoi en avons-nous besoin ?",
+      "readMessagesWhy": "Wakil lit les messages entrants pour comprendre les demandes des clients et fournir des réponses contextuelles.",
+      "sendMessagesWhy": "Wakil envoie des réponses automatisées aux clients selon vos règles ou modèle IA. Votre compte conserve le contrôle total.",
+      "manageMetadataWhy": "Nous suivons le statut de livraison, les accusés de réception et les métadonnées de conversation pour l'analyse et le débogage.",
+      "security": {
+        "readMessages": "Les messages sont traités côté serveur uniquement. Jamais stockés de manière permanente.",
+        "sendMessages": "Les réponses sont envoyées sous votre compte professionnel. Vous pouvez révoquer l'accès à tout moment.",
+        "manageMetadata": "Les métadonnées sont utilisées uniquement pour votre tableau de bord analytique."
+      },
+      "continueBtn": "Continuer vers {{platform}}",
+      "cancelBtn": "Annuler",
+      "redirectInfo": "Vous serez redirigé vers {{platform}} pour approuver ces autorisations. Vous pouvez révoquer l'accès à tout moment."
+    },
+    "success": {
+      "title": "Connecté avec succès",
+      "subtitle": "Nous avons trouvé {{count}} page sur votre compte",
+      "pageId": "ID de la page",
+      "noInstagramLinked": "Aucun compte Instagram lié",
+      "instagramLinked": "✓ Compte professionnel Instagram lié",
+      "instagramWarning": "Aucune de vos pages n'est liée à Instagram. Veuillez d'abord lier un compte Instagram professionnel dans Facebook Business Manager.",
+      "info": "Ensuite, sélectionnez la page que vous souhaitez connecter à Wakil pour activer les messages automatisés.",
+      "continueBtn": "Continuer vers la sélection de page",
+      "cancelBtn": "Annuler"
+    },
+    "errors": {
+      "noBot": {
+        "title": "Set up your bot before connecting a channel"
+      },
+      "noPages": {
+        "title": "Aucune page trouvée",
+        "message": "Nous n'avons pas pu trouver de pages professionnelles liées à votre compte. Assurez-vous que vous êtes connecté en tant que gestionnaire professionnel et que vous avez la permission de gérer les pages."
+      },
+      "noInstagram": {
+        "title": "Instagram non lié",
+        "message": "Cette page n'a pas de compte professionnel Instagram lié. Accédez aux paramètres de votre page Facebook et liez d'abord un compte Instagram."
+      },
+      "permissionDenied": {
+        "title": "Autorisations refusées",
+        "message": "Vous avez refusé les autorisations requises. Wakil a besoin de la permission de lire et envoyer des messages pour automatiser vos réponses aux clients. Veuillez réessayer et approuver toutes les autorisations."
+      },
+      "sessionExpired": {
+        "title": "Session expirée",
+        "message": "Votre session a expiré. Veuillez revenir en arrière et réessayer."
+      },
+      "connectionFailed": {
+        "title": "Échec de la connexion",
+        "message": "Nous n'avons pas pu terminer la connexion. Cela pourrait être un problème temporaire. Veuillez réessayer."
+      },
+      "accessDenied": {
+        "title": "Accès refusé",
+        "message": "Vous n'avez pas la permission de gérer cette page. Assurez-vous que vous êtes connecté avec le bon compte."
+      },
+      "serverError": {
+        "title": "Quelque chose s'est mal passé",
+        "message": "Une erreur inattendue s'est produite. Veuillez réessayer ou contacter le support."
+      },
+      "whatToDo": "Ce que tu dois faire:",
+      "tryAgain": "Réessayer",
+      "goBack": "Retourner",
+      "support": "Vous avez toujours des problèmes ? Contactez le support"
+    },
+    "disconnect": {
+      "title": "Déconnecter {{platform}} ?",
+      "message": "Vous ne recevrez pas les messages des clients de {{platform}} jusqu'à ce que vous vous reconnectiez.",
+      "info": "Vous pouvez reconnecter votre page {{platform}} à tout moment. Aucune donnée ne sera supprimée.",
+      "btn": "Déconnecter",
+      "keepBtn": "Garder connecté",
+      "disconnecting": "Déconnexion en cours...",
+      "success": "{{platform}} déconnecté. Vous pouvez vous reconnecter à tout moment.",
+      "error": "Échec de la déconnexion. Veuillez réessayer."
+    },
+    "card": {
+      "connected": "Connecté",
+      "notConnected": "Non connecté",
+      "pageId": "ID de la page",
+      "messagestoday": "Messages aujourd'hui",
+      "status": "Statut",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "description": "Connectez votre compte {{platform}} pour activer les réponses automatisées"
+    },
+    "connect": "Connecter",
+    "disconnectBtn": "Deconnecter",
+    "disconnecting": "Deconnection"
   }
 }

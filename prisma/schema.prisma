@@ -28,6 +28,7 @@ model User {
   bot                Bot?
   subscription       Subscription?
   pendingEmail       String?
+  pendingConnections PendingChannelConnection[]
 
   createdAt          DateTime      @default(now())
   updatedAt          DateTime      @updatedAt
@@ -61,17 +62,25 @@ model Bot {
   storeCity     String?
   storeContact  String?
   storeInfo     String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+
   userId        String         @unique
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   channels      Channel[]
   conversations Conversation[]
+
   rules         Rule[]
+
   usageLogs     UsageLog[]
+
   product       Product[]
+
   order         Order[]
   orderCount    Int             @default(0)
+  pendingConnections PendingChannelConnection[]
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model Channel {
@@ -142,15 +151,18 @@ model UsageLog {
 }
 
 model PendingChannelConnection {
-  id        String      @id @default(uuid())
+  id        String   @id @default(cuid())
   platform  ChannelType
-  pages     Json
-  expiresAt DateTime
-  createdAt DateTime    @default(now())
+  pages     Json     @default("[]")
   userId    String
   botId     String
-
-  @@index([userId, expiresAt])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bot       Bot      @relation(fields: [botId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+ 
+  @@index([userId])
+  @@index([expiresAt])
 }
 
 model Product {
