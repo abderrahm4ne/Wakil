@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { disconnectChannel } from '@/lib/actions/disconnectChannel'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 interface DisconnectChannelDialogProps {
   channelId: string
@@ -17,18 +18,19 @@ export function DisconnectChannelDialog({
 }: DisconnectChannelDialogProps) {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useTranslation('dashboard')
 
   const handleDisconnect = async () => {
     setIsLoading(true)
     try {
       const result = await disconnectChannel(channelId)
       if (result.error) {
-        toast.error('Failed to disconnect. Please try again.')
+        toast.error(t('channels.disconnect.error'))
         return
       }
       
       setOpen(false)
-      toast.success(`${platformLabel} disconnected. You can reconnect anytime.`)
+      toast.success(t('channels.disconnect.success', { platform: platformLabel }))
     } catch (err) {
       toast.error('Something went wrong. Please try again.')
     } finally {

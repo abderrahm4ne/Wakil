@@ -79,7 +79,8 @@ export async function GET(req: NextRequest) {
         // Step 3: get the Pages this user manages, each Page has its own
         // never-expiring Page access token (as long as the user token is valid)
         const pagesRes = await fetch(
-            `https://graph.facebook.com/v21.0/me/accounts?access_token=${longLivedUserToken}`
+            `https://graph.facebook.com/v21.0/me/accounts?access_token=${longLivedUserToken}`, 
+            { signal: AbortSignal.timeout(20000) }
         )
         const pagesData = await pagesRes.json()
 
@@ -96,7 +97,8 @@ export async function GET(req: NextRequest) {
             let channelPageId = page.id
             if (platform === 'INSTAGRAM') {
                 const igRes = await fetch(
-                    `https://graph.facebook.com/v21.0/${page.id}?fields=instagram_business_account&access_token=${page.access_token}`
+                    `https://graph.facebook.com/v21.0/${page.id}?fields=instagram_business_account&access_token=${page.access_token}`, 
+                    { signal: AbortSignal.timeout(20000) }
                 )
                 const igData = await igRes.json()
                 if (!igRes.ok || !igData.instagram_business_account?.id) return null

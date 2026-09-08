@@ -8,42 +8,54 @@ import { useTranslation } from 'react-i18next'
 
 type ChannelType = 'INSTAGRAM' | 'FACEBOOK'
 
-const PERMISSIONS = {
+const getPermissions = (t: any) => ({
   INSTAGRAM: [
     {
       id: 'read_messages',
-      title: 'Read Messages',
-      description: 'See direct messages from your customers'
+      titleKey: 'channels.permissions.readMessages',
+      descKey: 'channels.permissions.readMessagesDesc',
+      whyKey: 'channels.permissions.readMessagesWhy',
+      securityKey: 'channels.permissions.readMessagesSecurity'
     },
     {
       id: 'send_messages',
-      title: 'Send Messages',
-      description: 'Reply to customer messages automatically'
+      titleKey: 'channels.permissions.sendMessages',
+      descKey: 'channels.permissions.sendMessagesDesc',
+      whyKey: 'channels.permissions.sendMessagesWhy',
+      securityKey: 'channels.permissions.sendMessagesSecurity'
     },
     {
       id: 'manage_metadata',
-      title: 'Manage Metadata',
-      description: 'Track message status and conversation metadata'
+      titleKey: 'channels.permissions.manageMetadata',
+      descKey: 'channels.permissions.manageMetadataDesc',
+      whyKey: 'channels.permissions.manageMetadataWhy',
+      securityKey: 'channels.permissions.manageMetadataSecurity'
     }
   ],
   FACEBOOK: [
     {
       id: 'read_messages',
-      title: 'Read Messages',
-      description: 'See direct messages from your customers'
+      titleKey: 'channels.permissions.readMessages',
+      descKey: 'channels.permissions.readMessagesDesc',
+      whyKey: 'channels.permissions.readMessagesWhy',
+      securityKey: 'channels.permissions.readMessagesSecurity'
     },
     {
       id: 'send_messages',
-      title: 'Send Messages',
-      description: 'Reply to customer messages automatically'
+      titleKey: 'channels.permissions.sendMessages',
+      descKey: 'channels.permissions.sendMessagesDesc',
+      whyKey: 'channels.permissions.sendMessagesWhy',
+      securityKey: 'channels.permissions.sendMessagesSecurity'
     },
     {
       id: 'manage_metadata',
-      title: 'Manage Metadata',
-      description: 'Track message status and conversation metadata'
+      titleKey: 'channels.permissions.manageMetadata',
+      descKey: 'channels.permissions.manageMetadataDesc',
+      whyKey: 'channels.permissions.manageMetadataWhy',
+      securityKey: 'channels.permissions.manageMetadataSecurity'
     }
   ]
-}
+})
 
 interface ConnectPermissionsProps {
   platform: ChannelType
@@ -56,10 +68,11 @@ export function ConnectPermissions({ platform, botId }: ConnectPermissionsProps)
   const router = useRouter()
   const { t } = useTranslation('dashboard')
 
-  const permissions = PERMISSIONS[platform]
+  const permissions = getPermissions(t)[platform]
 
   const handleConnect = async () => {
     setIsLoading(true)
+    // Redirect to OAuth flow
     window.location.href = `/api/channels/connect?platform=${platform}&botId=${botId}`
   }
 
@@ -78,10 +91,10 @@ export function ConnectPermissions({ platform, botId }: ConnectPermissionsProps)
             </div>
           </div>
           <h1 className="text-2xl font-semibold text-foreground">
-            Connect {platform === 'INSTAGRAM' ? 'Instagram' : 'Facebook'} to Wakil
+            {t('channels.permissions.title', { platform: platform === 'INSTAGRAM' ? 'Instagram' : 'Facebook' })}
           </h1>
           <p className="text-sm text-muted-foreground">
-            We need these permissions to help you manage customer messages
+            {t('channels.permissions.subtitle')}
           </p>
         </div>
 
@@ -106,10 +119,10 @@ export function ConnectPermissions({ platform, botId }: ConnectPermissionsProps)
                   </div>
                   <div>
                     <p className="font-medium text-foreground text-sm">
-                      {permission.title}
+                      {t(permission.titleKey)}
                     </p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      {permission.description}
+                      {t(permission.descKey)}
                     </p>
                   </div>
                 </div>
@@ -122,22 +135,8 @@ export function ConnectPermissions({ platform, botId }: ConnectPermissionsProps)
 
               {expandedId === permission.id && (
                 <div className="px-4 py-3 bg-muted/20 border-t border-border/50 text-xs text-muted-foreground space-y-2">
-                  <p>
-                    {permission.id === 'read_messages' &&
-                      'Wakil reads incoming messages to understand customer queries and provide contextual responses.'}
-                    {permission.id === 'send_messages' &&
-                      'Wakil sends automated replies to customers based on rules or AI. Your account always retains full control.'}
-                    {permission.id === 'manage_metadata' &&
-                      'We track delivery status, read receipts, and conversation metadata for analytics and debugging.'}
-                  </p>
-                  <p className="text-secondary font-medium">
-                    {permission.id === 'read_messages' &&
-                      '🔒 Messages are processed server-side only. Never stored permanently.'}
-                    {permission.id === 'send_messages' &&
-                      '🔒 Replies are sent under your business account. You can revoke access anytime.'}
-                    {permission.id === 'manage_metadata' &&
-                      '🔒 Metadata is used for your analytics dashboard only.'}
-                  </p>
+                  <p>{t(permission.whyKey)}</p>
+                  <p className="text-secondary font-medium">{t(permission.securityKey)}</p>
                 </div>
               )}
             </div>
@@ -147,11 +146,7 @@ export function ConnectPermissions({ platform, botId }: ConnectPermissionsProps)
         {/* Info Box */}
         <div className="flex gap-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-sm text-blue-200">
           <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-          <p>
-            You'll be redirected to{' '}
-            {platform === 'INSTAGRAM' ? 'Instagram' : 'Facebook'} to approve these permissions.
-            You can revoke access anytime.
-          </p>
+          <p>{t('channels.permissions.redirectInfo', { platform: platform === 'INSTAGRAM' ? 'Instagram' : 'Facebook' })}</p>
         </div>
 
         {/* Actions */}
@@ -162,14 +157,14 @@ export function ConnectPermissions({ platform, botId }: ConnectPermissionsProps)
             className="flex-1"
             disabled={isLoading}
           >
-            Cancel
+            {t('channels.permissions.cancelBtn')}
           </Button>
           <Button
             onClick={handleConnect}
             className="flex-1 bg-secondary hover:bg-secondary/90 text-secondary-foreground"
             disabled={isLoading}
           >
-            {isLoading ? 'Redirecting...' : 'Continue to ' + platform}
+            {isLoading ? t('channels.permissions.redirecting') : t('channels.permissions.continueBtn', { platform: platform === 'INSTAGRAM' ? 'Instagram' : 'Facebook' })}
           </Button>
         </div>
       </div>

@@ -14,7 +14,7 @@ export async function disconnectChannel(channelId: string) {
     })
 
     if (!channel || channel.bot.userId !== session.user.id) {
-        return { error: 'NOT_FOUND' }
+        return { error: 'NO_CHANNELS_FOUND' }
     }
 
     await prisma.channel.delete({ where: { id: channelId } })

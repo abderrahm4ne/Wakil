@@ -283,7 +283,11 @@
       "whatToDo": "What you should do:",
       "tryAgain": "Try again",
       "goBack": "Go back",
-      "support": "Still having problems? Contact support"
+      "support": "Still having problems? Contact support",
+      "missingParams": "Parameters missing, Try again.",
+      "invalidPlatform": "Platform invalid.",
+      "forbidden": "You don't have permission to perform this action.",
+      "connectionExpired": "connection expired, Try again."
     },
     "disconnect": {
       "title": "Disconnect {{platform}}?",

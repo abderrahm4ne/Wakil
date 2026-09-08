@@ -154,6 +154,7 @@ model PendingChannelConnection {
   id        String   @id @default(cuid())
   platform  ChannelType
   pages     Json     @default("[]")
+  userToken String?
   userId    String
   botId     String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -4,6 +4,7 @@ import { CheckCircle2, AlertCircle, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type ChannelType = 'INSTAGRAM' | 'FACEBOOK'
 
@@ -26,6 +27,7 @@ export function ConnectSuccessSheet({
 }: ConnectSuccessSheetProps) {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { t } = useTranslation('dashboard')
 
   const handleContinue = () => {
     // Redirect to page picker with connection ID
@@ -53,10 +55,10 @@ export function ConnectSuccessSheet({
             </div>
           </div>
           <h1 className="text-2xl font-semibold text-foreground">
-            Connected Successfully
+            {t('channels.success.title')}
           </h1>
           <p className="text-sm text-muted-foreground">
-            Found {pages.length} {pages.length === 1 ? 'page' : 'pages'} on your account
+            {t('channels.success.subtitle', { count: pages.length })}
           </p>
         </div>
 
@@ -76,17 +78,17 @@ export function ConnectSuccessSheet({
                     {page.name}
                   </p>
                   <p className="text-xs text-muted-foreground font-mono mt-1">
-                    ID: {page.id}
+                    {t('channels.success.pageId')}: {page.id}
                   </p>
                   {platform === 'INSTAGRAM' && !page.hasInstagram && (
                     <p className="text-xs text-amber-600 mt-1 flex items-center gap-1">
                       <AlertCircle className="h-3 w-3" />
-                      No Instagram account linked
+                      {t('channels.success.noInstagramLinked')}
                     </p>
                   )}
                   {platform === 'INSTAGRAM' && page.hasInstagram && (
                     <p className="text-xs text-green-600 mt-1">
-                      ✓ Instagram business account linked
+                      {t('channels.success.instagramLinked')}
                     </p>
                   )}
                 </div>
@@ -99,19 +101,13 @@ export function ConnectSuccessSheet({
         {showInstagramWarning && (
           <div className="flex gap-3 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-xs text-amber-200">
             <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-            <p>
-              None of your pages have Instagram linked. Connect an Instagram business account
-              in your Facebook Business Manager first.
-            </p>
+            <p>{t('channels.success.instagramWarning')}</p>
           </div>
         )}
 
         {/* Info */}
         <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-xs text-blue-200">
-          <p>
-            Next, select which {platform === 'INSTAGRAM' ? 'page' : 'page'} you want to connect
-            to Wakil for automated messaging.
-          </p>
+          <p>{t('channels.success.info')}</p>
         </div>
 
         {/* Actions */}
@@ -122,7 +118,7 @@ export function ConnectSuccessSheet({
             className="flex-1"
             disabled={isLoading}
           >
-            Cancel
+            {t('channels.success.cancelBtn')}
           </Button>
           <Button
             onClick={handleContinue}
@@ -132,10 +128,10 @@ export function ConnectSuccessSheet({
             {isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                Loading...
+                {t('loading')}
               </>
             ) : (
-              'Continue to Page Selection'
+              t('channels.success.continueBtn')
             )}
           </Button>
         </div>

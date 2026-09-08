@@ -296,7 +296,11 @@
       "whatToDo": "Ce que tu dois faire:",
       "tryAgain": "Réessayer",
       "goBack": "Retourner",
-      "support": "Vous avez toujours des problèmes ? Contactez le support"
+      "support": "Vous avez toujours des problèmes ? Contactez le support",
+      "missingParams": "Paramètres manquants. Veuillez réessayer.",
+      "invalidPlatform": "Plateforme invalide.",
+      "forbidden": "Vous n'avez pas la permission d'effectuer cette action.",
+      "connectionExpired": "La connexion a expiré. Veuillez réessayer."
     },
     "disconnect": {
       "title": "Déconnecter {{platform}} ?",

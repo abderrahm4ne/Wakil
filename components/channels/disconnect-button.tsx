@@ -4,12 +4,15 @@ import { Unlink } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { disconnectChannel } from '@/lib/actions/disconnectChannel'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
+import { resolveErrorMessage } from '@/lib/errorMessages'
 
 type Props = {
+    platform: string
     channelId: string
 }
 
-export function DisconnectButton({ channelId }: Props) {
+export function DisconnectButton({ platform, channelId }: Props) {
     const { t } = useTranslation('dashboard')
     const [isPending, startTransition] = useTransition()
     const [error, setError] = useState<string | null>(null)
@@ -18,7 +21,12 @@ export function DisconnectButton({ channelId }: Props) {
         setError(null)
         startTransition(async () => {
             const res = await disconnectChannel(channelId)
-            if (res.error) setError(res.error)
+            if (res.error) {
+                toast.error(resolveErrorMessage(res.error, t))
+                res.error === 'NO_CHANNELS_FOUND' && toast.error(t('channels.errors.noPages.message'))
+                return
+            }
+            toast.success(t('channels.disconnect.success', platform))
         })
     }
 
