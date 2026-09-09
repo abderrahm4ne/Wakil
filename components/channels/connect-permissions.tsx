@@ -66,13 +66,12 @@ export function ConnectPermissions({ platform, botId }: ConnectPermissionsProps)
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const { t } = useTranslation('dashboard')
+  const { t, i18n } = useTranslation('dashboard')
 
   const permissions = getPermissions(t)[platform]
 
   const handleConnect = async () => {
     setIsLoading(true)
-    // Redirect to OAuth flow
     window.location.href = `/api/channels/connect?platform=${platform}&botId=${botId}`
   }
 
@@ -81,19 +80,25 @@ export function ConnectPermissions({ platform, botId }: ConnectPermissionsProps)
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className={`min-h-[80vh] bg-background flex items-center justify-center p-4 ${i18n.language === 'ar' ? 'font-arabic' : 'font-display'}`}>
       <div className="w-full max-w-md space-y-8">
+
         {/* Header */}
         <div className="text-center space-y-2">
+
+          {/* SHIELD ICON */}
           <div className="flex justify-center mb-4">
             <div className="p-3 rounded-lg bg-secondary/10 border border-secondary/30">
               <Shield className="h-6 w-6 text-secondary" />
             </div>
           </div>
+
+
           <h1 className="text-2xl font-semibold text-foreground">
             {t('channels.permissions.title', { platform: platform === 'INSTAGRAM' ? 'Instagram' : 'Facebook' })}
           </h1>
-          <p className="text-sm text-muted-foreground">
+
+          <p className="text-sm font-medium text-muted-foreground">
             {t('channels.permissions.subtitle')}
           </p>
         </div>
@@ -109,16 +114,19 @@ export function ConnectPermissions({ platform, botId }: ConnectPermissionsProps)
                 onClick={() =>
                   setExpandedId(expandedId === permission.id ? null : permission.id)
                 }
-                className="w-full px-4 py-3 flex items-start justify-between hover:bg-muted/30 transition-colors text-left"
+                className="w-full px-4 py-3 flex items-start justify-between hover:bg-muted/30 transition-colors text-left hover:cursor-pointer"
               >
                 <div className="flex items-start gap-3 flex-1">
-                  <div className="mt-0.5">
+
+                  {/* DOT */}
+                  <div className="mt-0.5">              
                     <div className="h-5 w-5 rounded-full bg-secondary/20 border border-secondary flex items-center justify-center">
                       <div className="h-2 w-2 rounded-full bg-secondary" />
                     </div>
                   </div>
+
                   <div>
-                    <p className="font-medium text-foreground text-sm">
+                    <p className="font-medium text-start text-foreground text-sm">
                       {t(permission.titleKey)}
                     </p>
                     <p className="text-xs text-muted-foreground mt-0.5">
@@ -126,6 +134,7 @@ export function ConnectPermissions({ platform, botId }: ConnectPermissionsProps)
                     </p>
                   </div>
                 </div>
+
                 <ChevronDown
                   className={`h-4 w-4 text-muted-foreground transition-transform shrink-0 ml-2 mt-0.5 ${
                     expandedId === permission.id ? 'rotate-180' : ''
@@ -154,14 +163,14 @@ export function ConnectPermissions({ platform, botId }: ConnectPermissionsProps)
           <Button
             onClick={handleCancel}
             variant="outline"
-            className="flex-1"
+            className="flex-1 hover:cursor-pointer"
             disabled={isLoading}
           >
             {t('channels.permissions.cancelBtn')}
           </Button>
           <Button
             onClick={handleConnect}
-            className="flex-1 bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+            className="flex-1 bg-secondary hover:bg-secondary/90 text-secondary-foreground hover:cursor-pointer"
             disabled={isLoading}
           >
             {isLoading ? t('channels.permissions.redirecting') : t('channels.permissions.continueBtn', { platform: platform === 'INSTAGRAM' ? 'Instagram' : 'Facebook' })}

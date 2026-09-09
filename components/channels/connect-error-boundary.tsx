@@ -3,49 +3,30 @@
 import { AlertCircle, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useTranslation } from 'react-i18next'
 
-const ERROR_MAP: Record<string, { title: string; message: string; action?: string }> = {
-  NO_PAGES_FOUND: {
-    title: 'No Pages Found',
-    message:
-      'We couldn\'t find any business pages linked to your account. Make sure you\'re logged in as a Business Manager and have permission to manage pages.'
-  },
-  NO_INSTAGRAM_ACCOUNT_LINKED: {
-    title: 'Instagram Not Linked',
-    message:
-      'This page doesn\'t have an Instagram business account connected. Go to your Facebook Page settings and link an Instagram account first.'
-  },
-  PERMISSION_DENIED: {
-    title: 'Permissions Denied',
-    message:
-      'You declined the required permissions. Wakil needs permission to read and send messages to automate your customer replies. Please try again and approve all permissions.'
-  },
-  INVALID_STATE: {
-    title: 'Session Expired',
-    message: 'Your session expired. Please go back and try connecting again.'
-  },
-  TOKEN_EXCHANGE_FAILED: {
-    title: 'Connection Failed',
-    message:
-      'We couldn\'t complete the connection. This might be a temporary issue. Please try again.'
-  },
-  ACCESS_DENIED: {
-    title: 'Access Denied',
-    message:
-      'You don\'t have permission to manage this page. Make sure you\'re logged in with the correct account.'
-  },
-  SERVER_ERROR: {
-    title: 'Something Went Wrong',
-    message: 'An unexpected error occurred. Please try again or contact support.'
-  }
+// In connect-error-boundary.tsx
+const ERROR_KEY_MAP: Record<string, string> = {
+  NO_PAGES_FOUND: 'noPages',
+  NO_INSTAGRAM_ACCOUNT_LINKED: 'noInstagram',
+  PERMISSION_DENIED: 'permissionDenied',
+  INVALID_STATE: 'sessionExpired',
+  TOKEN_EXCHANGE_FAILED: 'connectionFailed',
+  SERVER_ERROR: 'serverError',
 }
 
 export function ChannelConnectErrorBoundary() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { t } = useTranslation('dashboard')
   const error = searchParams.get('error') as string | null
 
-  const errorConfig = error ? ERROR_MAP[error] : null
+  const mappedKey = error ? (ERROR_KEY_MAP[error] || 'serverError') : null
+
+  const errorConfig = mappedKey ? {
+    title: t(`channels.errors.${mappedKey}.title`),
+    message: t(`channels.errors.${mappedKey}.message`)
+  } : null
 
   if (!errorConfig) {
     return null
@@ -80,48 +61,48 @@ export function ChannelConnectErrorBoundary() {
         {/* Error Details */}
         <div className="p-3 rounded-lg bg-muted/30 border border-border/50">
           <p className="text-xs font-mono text-muted-foreground">
-            Error code: {error}
+            {t('channels.errors.errorCode')}: {error}
           </p>
         </div>
 
         {/* Next Steps */}
         <div className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/30">
-          <p className="text-sm text-blue-200 font-medium mb-2">What to do:</p>
+          <p className="text-sm text-blue-200 font-medium mb-2">{t('channels.errors.whatToDo')}:</p>
           <ul className="text-xs text-blue-200/80 space-y-1 list-disc list-inside">
             {error === 'NO_INSTAGRAM_ACCOUNT_LINKED' && (
               <>
-                <li>Open your Facebook Page settings</li>
-                <li>Go to Instagram settings</li>
-                <li>Link your Instagram business account</li>
-                <li>Come back and try connecting again</li>
+                <li>{t('channels.errors.steps.noInstagram.step1')}</li>
+                <li>{t('channels.errors.steps.noInstagram.step2')}</li>
+                <li>{t('channels.errors.steps.noInstagram.step3')}</li>
+                <li>{t('channels.errors.steps.noInstagram.step4')}</li>
               </>
             )}
             {error === 'NO_PAGES_FOUND' && (
               <>
-                <li>Make sure you're logged into the right Meta account</li>
-                <li>Verify you have admin access to a business page</li>
-                <li>Try again or contact Meta support</li>
+                <li>{t('channels.errors.steps.noPages.step1')}</li>
+                <li>{t('channels.errors.steps.noPages.step2')}</li>
+                <li>{t('channels.errors.steps.noPages.step3')}</li>
               </>
             )}
             {error === 'PERMISSION_DENIED' && (
               <>
-                <li>Go back and click "Connect" again</li>
-                <li>Check all permissions boxes when prompted</li>
-                <li>Complete the authorization flow</li>
+                <li>{t('channels.errors.steps.permission.step1')}</li>
+                <li>{t('channels.errors.steps.permission.step2')}</li>
+                <li>{t('channels.errors.steps.permission.step3')}</li>
               </>
             )}
             {error === 'INVALID_STATE' && (
               <>
-                <li>Go back to the channels page</li>
-                <li>Click "Connect" to start fresh</li>
-                <li>Complete the authorization within 10 minutes</li>
+                <li>{t('channels.errors.steps.session.step1')}</li>
+                <li>{t('channels.errors.steps.session.step2')}</li>
+                <li>{t('channels.errors.steps.session.step3')}</li>
               </>
             )}
             {(error === 'TOKEN_EXCHANGE_FAILED' || error === 'SERVER_ERROR') && (
               <>
-                <li>Check your internet connection</li>
-                <li>Try connecting again</li>
-                <li>If the issue persists, contact support</li>
+                <li>{t('channels.errors.steps.server.step1')}</li>
+                <li>{t('channels.errors.steps.server.step2')}</li>
+                <li>{t('channels.errors.steps.server.step3')}</li>
               </>
             )}
           </ul>
@@ -135,21 +116,21 @@ export function ChannelConnectErrorBoundary() {
             className="flex-1"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Go Back
+            {t('channels.errors.goBack')}
           </Button>
           <Button
             onClick={handleRetry}
             className="flex-1 bg-secondary hover:bg-secondary/90 text-secondary-foreground"
           >
-            Try Again
+            {t('channels.errors.tryAgain')}
           </Button>
         </div>
 
         {/* Support */}
         <p className="text-center text-xs text-muted-foreground">
-          Still having trouble?{' '}
+          {t('channels.errors.support')}{' '}
           <a href="mailto:support@wakil.app" className="text-secondary hover:underline">
-            Contact support
+            {t('contact')}
           </a>
         </p>
       </div>

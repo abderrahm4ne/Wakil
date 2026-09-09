@@ -32,7 +32,7 @@ export function DisconnectChannelDialog({
       setOpen(false)
       toast.success(t('channels.disconnect.success', { platform: platformLabel }))
     } catch (err) {
-      toast.error('Something went wrong. Please try again.')
+      toast.error(t('channels.disconnect.error'))
     } finally {
       setIsLoading(false)
     }
@@ -45,7 +45,7 @@ export function DisconnectChannelDialog({
         className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-red-500 hover:border-red-500/50 transition-colors disabled:opacity-50 hover:cursor-pointer"
       >
         <Unlink className="h-3.5 w-3.5" />
-        Disconnect
+        {t('channels.disconnect.btn')}
       </button>
     )
   }
@@ -59,16 +59,16 @@ export function DisconnectChannelDialog({
             <AlertTriangle className="h-5 w-5 text-red-500" />
           </div>
           <div>
-            <h2 className="font-semibold text-foreground">Disconnect {platformLabel}?</h2>
+            <h2 className="font-semibold text-foreground">{t('channels.disconnect.title', { platform: platformLabel })}</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              You won't receive customer messages from {platformLabel} until you reconnect.
+              {t('channels.disconnect.message', { platform: platformLabel })}
             </p>
           </div>
         </div>
 
         {/* Info */}
         <div className="p-3 rounded-lg bg-muted/30 border border-border/50 text-xs text-muted-foreground">
-          You can reconnect your {platformLabel} page anytime. No data will be deleted.
+          {t('channels.disconnect.info', { platform: platformLabel })}
         </div>
 
         {/* Actions */}
@@ -79,7 +79,7 @@ export function DisconnectChannelDialog({
             className="flex-1"
             disabled={isLoading}
           >
-            Keep Connected
+            {t('channels.disconnect.keepBtn')}
           </Button>
           <Button
             onClick={handleDisconnect}
@@ -89,10 +89,10 @@ export function DisconnectChannelDialog({
             {isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                Disconnecting...
+                {t('channels.disconnect.disconnecting')}
               </>
             ) : (
-              'Disconnect'
+              t('channels.disconnect.btn')
             )}
           </Button>
         </div>

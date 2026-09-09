@@ -130,7 +130,7 @@ export async function GET(req: NextRequest) {
         })
 
         return NextResponse.redirect(
-            new URL(`/dashboard/channels/select?connection=${connection.id}`, req.url)
+            new URL(`/dashboard/channels/connect-success?connection=${connection.id}`, req.url)
         )
     } catch (err) {
         console.error('Meta OAuth callback error', err)

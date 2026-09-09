@@ -18,5 +18,6 @@ export default async function SelectChannelPage({ searchParams }: Props) {
     }
 
     const pages = (connection.pages as Array<{ id: string; name: string }>).map(({ id, name }) => ({ id, name }))
+    
     return <PagePicker connectionId={connection.id} platform={connection.platform} pages={pages} />
 }

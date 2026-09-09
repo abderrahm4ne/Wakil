@@ -23,10 +23,9 @@ export function DisconnectButton({ platform, channelId }: Props) {
             const res = await disconnectChannel(channelId)
             if (res.error) {
                 toast.error(resolveErrorMessage(res.error, t))
-                res.error === 'NO_CHANNELS_FOUND' && toast.error(t('channels.errors.noPages.message'))
                 return
             }
-            toast.success(t('channels.disconnect.success', platform))
+            toast.success(t('channels.disconnect.success', { platform }))
         })
     }
 
@@ -36,12 +35,12 @@ export function DisconnectButton({ platform, channelId }: Props) {
                 type="button"
                 onClick={handleDisconnect}
                 disabled={isPending}
-                className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-red-500 hover:border-red-500/50 transition-colors disabled:opacity-50 hover:cursor-pointer"
+                className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-md font-medium text-muted-foreground hover:text-red-500 hover:border-red-500/50 transition-colors disabled:opacity-50 hover:cursor-pointer min-w-25"
             >
                 <Unlink className="h-3.5 w-3.5" />
-                {isPending ? t('disconnecting') : t('channels.disconnectBtn')}
+                {isPending ? t('channels.disconnect.disconnecting') : t('channels.card.disconnect')}
             </button>
-            {error && <span className="text-xs text-red-500">Failed to disconnect</span>}
+            {error && <span className="text-xs text-red-500">{t('channels.disconnect.error')}</span>}
         </div>
     )
 }

@@ -63,17 +63,19 @@ const byType = (type: 'INSTAGRAM' | 'FACEBOOK') =>
                       className={`h-10 w-10 ${meta.color}`}
                     />
                     <div>
-                      <p className="font-semibold text-xl text-foreground">{meta.label}</p>
+                      <p className="font-sans font-semibold text-xl text-foreground">{meta.label}</p>
                       <div className="mt-1.5 flex items-center gap-1.5">
                         {connected ? (
                           <>
                             <Check size={20} className="text-green-500" />
-                            <span className="text-[0.83rem] text-green-500 font-medium">{t('channels.card.connected')}</span>
+                            <span className="text-[0.83rem] text-green-500 font-semibold">
+                                {t('channels.card.connected')}
+                            </span>
                           </>
                         ) : (
                           <>
                             <X size={20} className="text-muted-foreground" />
-                            <span className="text-[0.83rem] text-muted-foreground">{t('channels.card.notConnected')}</span>
+                            <span className="text-[0.83rem] text-muted-foreground font-semibold">{t('channels.card.notConnected')}</span>
                           </>
                         )}
                       </div>
@@ -85,20 +87,24 @@ const byType = (type: 'INSTAGRAM' | 'FACEBOOK') =>
                 {connected && (
                   <>
                     <div className="space-y-3 mb-6 pb-6 border-b border-border/50">
+
+                      {/* PAGE ID */}
                       <div>
-                        <p className="text-sm text-muted-foreground">{t('channels.card.pageId')}</p>
-                        <p className="text-sm text-foreground mt-1">{channel!.pageId}</p>
+                        <p className="text-md text-muted-foreground">{t('channels.card.pageId')}</p>
+                        <p className="text-md font-sans text-foreground mt-1">{channel!.pageId}</p>
                       </div>
 
+                      {/* MESSAGES TODAY */}
                       <div>
-                        <p className="text-sm text-muted-foreground">{t('channels.card.messagestoday')}</p>
-                        <p className="text-2xl font-semibold text-secondary mt-1">
+                        <p className="text-md text-muted-foreground">{t('channels.card.messagestoday')}</p>
+                        <p className="text-2xl font-sans font-semibold text-secondary mt-1">
                           {statsMap[channel!.id] ?? 0}
                         </p>
                       </div>
 
+                      {/* STATUS */}
                       <div className="pt-2">
-                        <p className="text-sm text-muted-foreground">{t('channels.card.status')}</p>
+                        <p className="text-md text-muted-foreground">{t('channels.card.status')}</p>
                         <div className="flex items-center gap-2 mt-2">
                           <div className={`h-2 w-2 rounded-full ${channel!.isActive ? 'bg-green-500' : 'bg-amber-500'}`} />
                           <span className="text-md font-medium text-foreground">
@@ -118,7 +124,7 @@ const byType = (type: 'INSTAGRAM' | 'FACEBOOK') =>
                 {/* Disconnected State */}
                 {!connected && (
                   <div className="space-y-3">
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-md text-muted-foreground">
                       {t('channels.card.description',  { platform: meta.label })}
                     </p>
                     <ConnectButton platform={type} botId={bot.id} />

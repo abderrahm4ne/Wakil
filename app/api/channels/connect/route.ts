@@ -27,6 +27,7 @@ export async function GET(req: NextRequest) {
     try {
     const bot = await prisma.bot.findUnique({ where: { id: botId } })
         if (!bot || bot.userId !== session.user.id) {
+            console.log('ownership error')
             return NextResponse.redirect(
                 new URL('/dashboard/channels?error=FORBIDDEN', req.url)
             )

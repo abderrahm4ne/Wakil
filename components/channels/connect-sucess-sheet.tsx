@@ -37,7 +37,6 @@ export function ConnectSuccessSheet({
   }
 
   const handlePickDifferent = () => {
-    // Go back to channel selection
     router.push('/dashboard/channels')
   }
 

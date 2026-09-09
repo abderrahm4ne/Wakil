@@ -19,5 +19,6 @@
         "**/.vexp/parent_workspace.json": true,
         "**/.vexp/.gitignore": true,
         "**/.vexp/.gitattributes": true
-    }
+    },
+    "python-envs.defaultEnvManager": "ms-python.python:system"
 }
