@@ -61,7 +61,7 @@ const navItems = [
 
 export function DashboardSidebar() {
     const pathname = usePathname()
-    const { t } = useTranslation('dashboard')
+    const { t, i18n} = useTranslation('dashboard')
     const { isOpen, close } = useSidebarStore()
 
     return (
@@ -80,7 +80,7 @@ export function DashboardSidebar() {
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 space-y-2 ">
+            <nav className={`flex-1 space-y-2 ${i18n.language === 'ar' ? 'font-arabic' : 'font-display'}`}>
                 {navItems.map((item) => {
                     const Icon = item.icon
                     const isActive = pathname === item.href
@@ -92,7 +92,7 @@ export function DashboardSidebar() {
                             setTimeout(() => close(), 500)
                           }}
                           className={cn(
-                            'flex items-center rounded-lg py-3 text-sm font-sans transition-colors',
+                            'flex items-center rounded-lg py-3 text-sm transition-colors',
                             isActive
                               ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                               : 'text-sidebar-foreground hover:bg-sidebar-accent/50',
@@ -106,7 +106,7 @@ export function DashboardSidebar() {
                           (
                             <span
                               className={cn(
-                                "overflow-hidden whitespace-nowrap transition-all duration-200",
+                                "overflow-hidden whitespace-nowrap transition-all font-semibold duration-200",
                                 isOpen
                                   ? "w-auto opacity-100 translate-x-0"
                                   : "w-0 opacity-0 -translate-x-2"

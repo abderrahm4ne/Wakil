@@ -78,12 +78,9 @@ export function DashboardNavbar() {
       isOpen ? "ms-64" : "ms-20"
     )}>
       {/* Left side */}
-      <div className="flex items-center gap-4">
         <button onClick={toggle} className="p-2 hover:bg-accent rounded-lg">
           <PanelLeft size={20} />
         </button>
-        <h1 className="text-lg font-semibold text-foreground">{t('navbar.title')}</h1>
-      </div>
 
       {/* Right side  */}
       <div className="flex items-center gap-4 ">
