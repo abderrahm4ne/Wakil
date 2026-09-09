@@ -38,21 +38,23 @@ export function PagePicker({ connectionId, platform, pages }: Props) {
 
     return (
         <div className={`mx-auto max-w-2xl space-y-6 p-6 ${i18n.language === 'ar' ? 'font-arabic' : 'font-display'}`}>
-            <div>
-                <h1 className="text-3xl font-semibold text-foreground">{t('channels.select.title')}</h1>
-                <p className="mt-2 text-md text-muted-foreground">
+
+            <div className='flex flex-col items-center'>
+                <h1 className="text-3xl font-semibold text-foreground">
+                    {t('channels.select.title')}
+                </h1>
+                <h3 className="mt-2 text-md text-muted-foreground">
                     {t('channels.select.subtitle')}
-                </p>
+                </h3>
             </div>
-            <Card className="p-6">
-                <div className="space-y-3">
+
+            <Card className="space-y-2 border border-border rounded-lg p-4 bg-card/50 max-h-64 overflow-y-auto">
                     {pages.map((page) => (
-                        <label key={page.id} className="flex cursor-pointer items-center gap-3 rounded-lg border border-border p-4 hover:bg-muted/50">
+                        <label key={page.id} className="flex cursor-pointer items-center gap-3 rounded-lg bg-background border border-border/50 hover:border-border transition-colors p-4">
                             <input type="radio" name="page" value={page.id} checked={selectedPageId === page.id} onChange={() => setSelectedPageId(page.id)} />
                             <span className="font-medium text-xl text-foreground">{page.name}</span>
                         </label>
                     ))}
-                </div>
                 {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
                 <div className="mt-6 flex gap-3">
 

@@ -128,9 +128,9 @@ export async function GET(req: NextRequest) {
                 botId
             }
         })
-
+        console.log('redirecting ')
         return NextResponse.redirect(
-            new URL(`/dashboard/channels/connect-success?connection=${connection.id}`, req.url)
+            new URL(`/dashboard/channels/connect-success?connection=${connection.id}&platform=${platform as 'INSTAGRAM' | 'FACEBOOK'}`, req.url)
         )
     } catch (err) {
         console.error('Meta OAuth callback error', err)

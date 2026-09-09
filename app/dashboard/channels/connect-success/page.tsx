@@ -1,4 +1,4 @@
-import { ConnectSuccessSheet } from '@/components/channels/connect-sucess-sheet'
+import { ConnectSuccessSheet } from '@/components/channels/connect-success-sheet'
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
