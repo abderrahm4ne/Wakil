@@ -2,26 +2,33 @@
 
 import { TrendingUp } from 'lucide-react'
 
-import { MotionSection } from './analytics-motion-section'
+import { MotionSection } from './motion-section'
 
-interface PeakHoursProps {
-  peakHours: number[]
+interface ConversationTrendItem {
+  date: string
+  count: number
+}
+
+interface ConversationTrendProps {
+  conversationTrend: ConversationTrendItem[]
 
   title: string
 }
 
-export function PeakHours({
-  peakHours,
+export function ConversationTrend({
+  conversationTrend,
   title
-}: PeakHoursProps) {
+}: ConversationTrendProps) {
 
-  const maxHourCount = Math.max(
-    ...peakHours,
+  const maxConvCount = Math.max(
+    ...conversationTrend.map(
+      item => item.count
+    ),
     1
   )
 
   return (
-    <MotionSection delay={0.35}>
+    <MotionSection delay={0.4}>
       <div className="bg-card border border-border rounded-2xl p-6">
 
         <h2 className="text-lg font-normal mb-4 flex items-center gap-2">
@@ -37,10 +44,10 @@ export function PeakHours({
 
         <div className="flex items-end gap-1 h-32">
 
-          {peakHours.map((count, hour) => (
+          {conversationTrend.map(item => (
 
             <div
-              key={hour}
+              key={item.date}
               className="flex-1 h-full flex flex-col justify-end items-center gap-1 group/bar"
             >
 
@@ -54,23 +61,19 @@ export function PeakHours({
                 "
                 style={{
                   height: `${
-                    (Number(count) / maxHourCount) * 100
+                    (item.count / maxConvCount) * 100
                   }%`,
 
                   minHeight:
-                    Number(count) > 0
+                    item.count > 0
                       ? '4px'
                       : '0px'
                 }}
               />
 
-              {hour % 4 === 0 && (
-
-                <span className="text-[10px] text-muted-foreground">
-                  {hour}h
-                </span>
-
-              )}
+              <span className="text-[10px] text-muted-foreground">
+                {item.date.slice(8)}
+              </span>
 
             </div>
 

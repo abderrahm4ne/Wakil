@@ -2,33 +2,26 @@
 
 import { TrendingUp } from 'lucide-react'
 
-import { MotionSection } from './analytics-motion-section'
+import { MotionSection } from './motion-section'
 
-interface ConversationTrendItem {
-  date: string
-  count: number
-}
-
-interface ConversationTrendProps {
-  conversationTrend: ConversationTrendItem[]
+interface PeakHoursProps {
+  peakHours: number[]
 
   title: string
 }
 
-export function ConversationTrend({
-  conversationTrend,
+export function PeakHours({
+  peakHours,
   title
-}: ConversationTrendProps) {
+}: PeakHoursProps) {
 
-  const maxConvCount = Math.max(
-    ...conversationTrend.map(
-      item => item.count
-    ),
+  const maxHourCount = Math.max(
+    ...peakHours,
     1
   )
 
   return (
-    <MotionSection delay={0.4}>
+    <MotionSection delay={0.35}>
       <div className="bg-card border border-border rounded-2xl p-6">
 
         <h2 className="text-lg font-normal mb-4 flex items-center gap-2">
@@ -44,10 +37,10 @@ export function ConversationTrend({
 
         <div className="flex items-end gap-1 h-32">
 
-          {conversationTrend.map(item => (
+          {peakHours.map((count, hour) => (
 
             <div
-              key={item.date}
+              key={hour}
               className="flex-1 h-full flex flex-col justify-end items-center gap-1 group/bar"
             >
 
@@ -61,19 +54,23 @@ export function ConversationTrend({
                 "
                 style={{
                   height: `${
-                    (item.count / maxConvCount) * 100
+                    (Number(count) / maxHourCount) * 100
                   }%`,
 
                   minHeight:
-                    item.count > 0
+                    Number(count) > 0
                       ? '4px'
                       : '0px'
                 }}
               />
 
-              <span className="text-[10px] text-muted-foreground">
-                {item.date.slice(8)}
-              </span>
+              {hour % 4 === 0 && (
+
+                <span className="text-[10px] text-muted-foreground">
+                  {hour}h
+                </span>
+
+              )}
 
             </div>
 

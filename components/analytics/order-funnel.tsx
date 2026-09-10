@@ -2,7 +2,7 @@
 
 import { PieChart } from 'lucide-react'
 
-import { MotionSection } from './analytics-motion-section'
+import { MotionSection } from './motion-section'
 
 const FUNNEL_COLORS: Record<string, string> = {
   PENDING: 'bg-muted-foreground',

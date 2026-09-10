@@ -6,7 +6,7 @@ import {
   MessageSquareMore
 } from 'lucide-react'
 
-import { MotionSection } from './analytics-motion-section'
+import { MotionSection } from './motion-section'
 
 interface AnalyticsStatsProps {
   conversionRate: number
