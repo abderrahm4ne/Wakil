@@ -1,140 +1,240 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { Loader2, Settings, Store, Globe, Phone, ShieldCheck } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+import { Settings, Store, Globe, Phone, Bot, Zap, ArrowRight, ToggleLeft, ToggleRight, Loader2 } from "lucide-react"
+import Link from "next/link"
+import { useTranslation } from "react-i18next"
+import { toast } from "sonner"
+import Welcoming from "@/components/dashboard/page-title"
 
-export default function MyBotPage() {
-  const { t, i18n } = useTranslation('dashboard');
-  const [loading, setLoading] = useState(true);
-  const [bot, setBot] = useState<any>(null);
+type BotData = {
+  id: string
+  name: string
+  type: "RULE_BASED" | "AI_POWERED"
+  languages: string[]
+  isActive: boolean
+  storeName: string
+  storeCity: string
+  storeContact: string
+  storeInfo?: string
+  createdAt: string
+}
 
-  const fetchBot = async () => {
-    try {
-      const res = await fetch("/api/bot");
-      const data = await res.json();
-      if (data.success) {
-        setBot(data.data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch bot", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const LANGUAGE_LABELS: Record<string, string> = {
+  ARABIC: "العربية",
+  FRENCH: "Français",
+  DARIJA: "دارجة",
+}
+
+export default function BotPage() {
+  const { t, i18n } = useTranslation("dashboard")
+  const [bot, setBot] = useState<BotData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [toggling, setToggling] = useState(false)
 
   useEffect(() => {
-    fetchBot();
-  }, []);
+    fetch("/api/bot")
+      .then((r) => r.json())
+      .then((res) => {
+        if (res.success) setBot(res.data)
+      })
+      .finally(() => setLoading(false))
+  }, [])
+
+  const handleToggle = async () => {
+    if (!bot) return
+    setToggling(true)
+    try {
+      const res = await fetch("/api/bot/activate", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isActive: !bot.isActive }),
+      })
+      const result = await res.json()
+      if (result.success) {
+        setBot((prev) => prev ? { ...prev, isActive: !prev.isActive } : prev)
+        toast.success(bot.isActive ? t("bot.deactivated") : t("bot.activated"))
+      } else {
+        toast.error(result.error === "SUBSCRIPTION_INACTIVE" ? t("bot.subscriptionInactive") : t("bot.toggleError"))
+      }
+    } catch {
+      toast.error(t("bot.toggleError"))
+    } finally {
+      setToggling(false)
+    }
+  }
 
   if (loading) {
     return (
       <div className="flex h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-[#00D4AA]" />
+        <Loader2 className="h-7 w-7 animate-spin text-secondary" />
       </div>
-    );
+    )
   }
 
   if (!bot) {
     return (
-      <div className="flex flex-col items-center justify-center h-[60vh] space-y-6 text-center">
-        <div className="p-4 rounded-full bg-slate-800/50 text-slate-400">
-           <Settings className="h-12 w-12" />
-        </div>
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-white">{t('bot.notConfigured')}</h1>
-          <p className="text-slate-400 max-w-md">
-            {t('bot.notConfiguredDescription')}
-          </p>
-        </div>
-        <Link href="/dashboard/bot/settings">
-          <Button className="bg-[#00D4AA] text-slate-950 hover:bg-[#00D4AA]/90">
-            {t('bot.configure')}
-          </Button>
-        </Link>
+      <div className={`flex flex-col ${i18n.language === 'ar' ? 'font-arabic' : 'font-display'} h-[70vh] items-center justify-center gap-6 text-center font-display`}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          className="flex flex-col items-center gap-6"
+        >
+          <div className="w-20 h-20 rounded-2xl bg-muted/40 border border-border flex items-center justify-center">
+            <Bot className="h-9 w-9 text-muted-foreground" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold text-foreground">{t("bot.notConfigured")}</h2>
+            <p className="text-muted-foreground text-sm max-w-sm">{t("bot.notConfiguredDescription")}</p>
+          </div>
+          <Link
+            href="/dashboard/bot/settings"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary text-black text-sm font-semibold hover:bg-secondary/90 transition-colors"
+          >
+            {t("bot.configure")} <ArrowRight size={15} />
+          </Link>
+        </motion.div>
       </div>
-    );
+    )
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-start">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">{bot.name}</h1>
-          <div className="flex items-center gap-2">
-            <Badge className={bot.isActive ? "bg-[#00D4AA] text-slate-950" : "bg-slate-700 text-slate-400"}>
-              {bot.isActive ? t('bot.active') : t('bot.inactive')}
-            </Badge>
-            <span className="text-slate-500 text-sm" suppressHydrationWarning>{t('bot.created', { date: new Date(bot.createdAt).toLocaleDateString(i18n.language) })}</span>
-          </div>
-        </div>
-        <Link href="/dashboard/bot/settings">
-          <Button variant="outline" className="border-slate-800 text-white hover:bg-slate-800 hover:text-white hover:cursor-pointer">
-            <Settings className="me-2 h-4 w-4 " />
-            {t('bot.settings')}
-          </Button>
+    <div className={`${i18n.language === 'ar' ? 'font-arabic' : 'font-display'} flex flex-col space-y-8`}>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <Welcoming title="bot.title" subTitle="bot.subtitle" />
+        <Link
+          href="/dashboard/bot/settings"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl border border-border text-sm font-medium text-muted-foreground hover:text-foreground hover:border-muted-foreground/50 transition-colors"
+        >
+          <Settings size={15} />
+          {t("bot.settings")}
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="bg-card border-slate-800">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">{t('bot.store')}</CardTitle>
-            <Store className="h-4 w-4 text-[#00D4AA]" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-white">{bot.storeName}</div>
-            <p className="text-xs text-slate-500 mt-1">{bot.storeCity}, Algeria</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card border-slate-800">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">{t('bot.languages')}</CardTitle>
-            <Globe className="h-4 w-4 text-[#00D4AA]" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {bot.languages.map((lang: string) => (
-                <Badge key={lang} variant="secondary" className="bg-slate-800 text-slate-300 border-none">
-                  {lang.charAt(0) + lang.slice(1).toLowerCase()}
-                </Badge>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card border-slate-800">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">{t('bot.contact')}</CardTitle>
-            <Phone className="h-4 w-4 text-[#00D4AA]" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-lg font-semibold text-white">{bot.storeContact}</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="bg-card border-slate-800">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5 text-[#00D4AA]" />
-            <CardTitle className="text-white">{t('bot.mode')}</CardTitle>
+      {/* Status banner */}
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
+        className={`relative overflow-hidden rounded-2xl border px-6 py-5 flex items-center justify-between gap-4
+          ${bot.isActive
+            ? "border-secondary/30 bg-secondary/5"
+            : "border-border bg-muted/10"
+          }`}
+      >
+        <div className="flex items-center gap-4">
+          <div className="relative flex h-3 w-3">
+            {bot.isActive && (
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-60" />
+            )}
+            <span className={`relative inline-flex rounded-full h-3 w-3  ${bot.isActive ? "bg-secondary" : "bg-muted-foreground"}`} />
           </div>
-          <CardDescription className="text-slate-400">
-            {bot.type === 'AI_POWERED' ? t('bot.aiDescription') : t('bot.rulesDescription')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-           <Badge className="bg-[#00D4AA]/10 text-[#00D4AA] border-[#00D4AA]/20 px-4 py-1">
-             {bot.type.replace('_', ' ')}
-           </Badge>
-        </CardContent>
-      </Card>
+          <div>
+            <p className={`text-md font-semibold text-foreground font-display`}>
+              {bot.name}
+            </p>
+            <p className="text-sm font-medium+ text-muted-foreground mt-0.5">
+              {bot.isActive ? t("bot.activeDescription") : t("bot.inactiveDescription")}
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={handleToggle}
+          disabled={toggling}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted/40 transition-colors disabled:opacity-50 hover:cursor-pointer"
+        >
+          {toggling ? (
+            <Loader2 size={15} className="animate-spin" />
+          ) : bot.isActive ? (
+            <ToggleRight size={18} className="text-secondary" />
+          ) : (
+            <ToggleLeft size={18} className="text-muted-foreground" />
+          )}
+          {bot.isActive ? t("bot.deactivate") : t("bot.activate")}
+        </button>
+      </motion.div>
+
+      {/* Info cards */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[
+          {
+            icon: Store,
+            label: t("bot.store"),
+            value: bot.storeName,
+            sub: `${bot.storeCity}, Algeria`,
+            delay: 0.05,
+          },
+          {
+            icon: Phone,
+            label: t("bot.contact"),
+            value: bot.storeContact,
+            sub: null,
+            delay: 0.1,
+          },
+          {
+            icon: Zap,
+            label: t("bot.mode"),
+            value: bot.type === "AI_POWERED" ? t("bot.aiPowered") : t("bot.ruleBased"),
+            sub: bot.type === "AI_POWERED" ? t("bot.aiDescription") : t("bot.rulesDescription"),
+            delay: 0.15,
+          },
+        ].map(({ icon: Icon, label, value, sub, delay }) => (
+          <motion.div
+            key={label}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay }}
+            className="group relative overflow-hidden rounded-2xl border border-border bg-linear-to-tr from-black to-black/5 px-5 py-5 flex flex-col gap-3"
+          >
+            <div className="absolute -top-8 -right-8 w-20 h-20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity bg-secondary/15" />
+            <Icon size={24} className="text-secondary relative" />
+            <div className="relative">
+              <p className="text-sm font-normal text-muted-foreground mb-1">{label}</p>
+              <p className="text-base font-semibold text-foreground">{value}</p>
+              {sub && <p className="text-sm text-muted-foreground mt-0.5">{sub}</p>}
+            </div>
+          </motion.div>
+        ))}
+      </section>
+
+      {/* Languages */}
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, delay: 0.2 }}
+        className="rounded-2xl border border-border bg-linear-to-tr from-black to-black/5 px-6 py-5"
+      >
+        <div className="flex items-center gap-2 mb-4">
+          <Globe size={18} className="text-secondary" />
+          <p className="text-sm font-medium text-foreground">{t("bot.languages")}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {bot.languages.map((lang) => (
+            <span
+              key={lang}
+              className="px-3 py-1.5 rounded-lg bg-secondary/10 border border-secondary/20 text-secondary text-sm font-medium"
+            >
+              {LANGUAGE_LABELS[lang] ?? lang}
+            </span>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Store info */}
+      {bot.storeInfo && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.25 }}
+          className="rounded-2xl border border-border bg-linear-to-tr from-black to-black/5 px-6 py-5"
+        >
+          <p className="text-xs text-muted-foreground mb-2">{t("bot.additionalInfo")}</p>
+          <p className="text-sm text-foreground leading-relaxed">{bot.storeInfo}</p>
+        </motion.div>
+      )}
     </div>
-  );
+  )
 }

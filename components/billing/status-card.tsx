@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { CreditCard, TrendingUp } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import { BillingCheckoutButton } from './billing-checkout-button';
+import { BillingCheckoutButton } from './checkout-button';
 import { subscriptions } from '@/types/subscription';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/lib/i18n';

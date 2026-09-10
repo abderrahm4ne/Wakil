@@ -1,37 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { getSystemPrompt } from '@/lib/bot'
 
 const AI_PLANS = ['PRO', 'BUSINESS']
-
-function buildSystemPrompt(storeName: string, storeCity: string, storeContact: string, plan: string) {
-  const languageLine = AI_PLANS.includes(plan)
-        ? 'You communicate in Arabic, French, and Darija. Always reply in the same language the customer uses.'
-        : 'You communicate in Arabic and French. Always reply in the same language the customer uses.'
-
-  return `
-  You are an automated customer support assistant for ${storeName}, powered by Wakil.
-
-  ${languageLine}
-
-  Your responsibilities:
-      - Answer frequently asked questions about products, pricing, availability, shipping, and returns
-      - Take orders by collecting: product name, size/variant, full address, and phone number
-      - Handle order status inquiries when the customer provides their order ID
-      - Recommend products based on the customer's query
-
-  Business information:
-      - Business name: ${storeName}
-      - Location: ${storeCity}, Algeria
-      - Contact: ${storeContact}
-
-  Rules:
-      - Be concise, polite, and professional
-      - Never invent information you were not given
-      - If a question is outside your knowledge, say: "For more details please contact us directly at ${storeContact}"
-      - Do not discuss anything unrelated to ${storeName}
-      `.trim()
-}
 
 export async function GET() {
   try {
@@ -49,9 +21,7 @@ export async function GET() {
 
   } catch (err) {
     console.error('error in bot GET route:', err)
-    return NextResponse.json(
-      { success: false, error: 'SERVER_ERROR' }, { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'SERVER_ERROR' }, { status: 500 })
   }
 }
 
@@ -62,12 +32,10 @@ export async function POST(req: NextRequest) {
       { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
     )
 
-    const { name, languages, type, storeName, storeCity, storeContact } = await req.json()
+    const { name, languages, type, storeName, storeCity, storeContact, storeInfo } = await req.json()
 
     if (!name || !languages?.length || !type || !storeName || !storeCity || !storeContact) {
-      return NextResponse.json(
-        { success: false, error: 'MISSING_FIELDS' }, { status: 400 }
-      )
+      return NextResponse.json({ success: false, error: 'MISSING_FIELDS' }, { status: 400 })
     }
 
     const subscription = await prisma.subscription.findUnique({
@@ -90,32 +58,22 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const existing = await prisma.bot.findUnique({
-      where: { userId: session.user.id }
-    })
+    const existing = await prisma.bot.findUnique({ where: { userId: session.user.id } })
     if (existing) return NextResponse.json(
       { success: false, error: 'BOT_ALREADY_EXISTS' }, { status: 409 }
     )
 
-    const systemPrompt = buildSystemPrompt(storeName, storeCity, storeContact, subscription.plan)
+    const systemPrompt = getSystemPrompt(storeName, storeCity, storeContact, subscription.plan, type, storeInfo)
 
-    const [bot] = await prisma.$transaction([
-      prisma.bot.create({
-        data: { name, languages, type, systemPrompt, storeName, storeCity, storeContact, userId: session.user.id }
-      }),
-      prisma.subscription.update({
-        where: { userId: session.user.id },
-        data: { isActive: true }
-      })
-    ])
+    const bot = await prisma.bot.create({
+      data: { name, languages, type, systemPrompt, storeName, storeCity, storeContact, storeInfo, userId: session.user.id }
+    })
 
     return NextResponse.json({ success: true, data: bot }, { status: 201 })
 
   } catch (err) {
     console.error('error in bot POST route:', err)
-    return NextResponse.json(
-      { success: false, error: 'SERVER_ERROR' }, { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'SERVER_ERROR' }, { status: 500 })
   }
 }
 
@@ -126,48 +84,61 @@ export async function PATCH(req: NextRequest) {
       { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
     )
 
-    const { name, languages, type, storeName, storeCity, storeContact } = await req.json()
+    const { name, languages, type, storeName, storeCity, storeContact, storeInfo } = await req.json()
 
-    const allowedUpdate: Record<string, any> = {}
-    if (name) allowedUpdate.name = name
-    if (languages?.length) allowedUpdate.languages = languages
-    if (storeName) allowedUpdate.storeName = storeName
-    if (storeCity) allowedUpdate.storeCity = storeCity
-    if (storeContact) allowedUpdate.storeContact = storeContact
+    const [current, subscription] = await Promise.all([
+      prisma.bot.findUnique({ where: { userId: session.user.id } }),
+      prisma.subscription.findUnique({ where: { userId: session.user.id } })
+    ])
 
-    if (type) {
-      const subscription = await prisma.subscription.findUnique({
-        where: { userId: session.user.id }
-      })
+    if (!current) return NextResponse.json(
+      { success: false, error: 'BOT_NOT_FOUND' }, { status: 404 }
+    )
 
-      if (!subscription) return NextResponse.json(
-        { success: false, error: 'NO_SUBSCRIPTION_FOUND' }, { status: 403 }
-      )
+    if (!subscription) return NextResponse.json(
+      { success: false, error: 'NO_SUBSCRIPTION_FOUND' }, { status: 403 }
+    )
 
+    const resolvedType = type ?? current.type
+
+    if (type && type !== current.type) {
       if (type === 'AI_POWERED' && !AI_PLANS.includes(subscription.plan)) {
         return NextResponse.json(
           { success: false, error: 'AI_POWERED_REQUIRES_PRO_OR_BUSINESS' }, { status: 403 }
         )
       }
-
-      allowedUpdate.type = type
-
-      const current = await prisma.bot.findUnique({ where: { userId: session.user.id } })
-      if (current) {
-        allowedUpdate.systemPrompt = buildSystemPrompt(
-          storeName ?? current.storeName ?? '',
-          storeCity ?? current.storeCity ?? '',
-          storeContact ?? current.storeContact ?? '',
-          subscription.plan
-        )
-      }
     }
 
-    const resolvedType = type ?? (await prisma.bot.findUnique({ where: { userId: session.user.id } }))?.type
-    if (languages?.includes('DARIJA') && resolvedType === 'RULE_BASED') {
+    const resolvedLanguages = languages ?? current.languages
+    if (resolvedLanguages.includes('DARIJA') && resolvedType === 'RULE_BASED') {
       return NextResponse.json(
         { success: false, error: 'DARIJA_REQUIRES_AI_POWERED' }, { status: 403 }
       )
+    }
+
+    const resolvedStoreName    = storeName    ?? current.storeName    ?? ''
+    const resolvedStoreCity    = storeCity    ?? current.storeCity    ?? ''
+    const resolvedStoreContact = storeContact ?? current.storeContact ?? ''
+    const resolvedStoreInfo    = storeInfo    !== undefined ? storeInfo : current.storeInfo
+
+    const promptAffected = storeName || storeCity || storeContact || storeInfo !== undefined || type
+    const systemPrompt = promptAffected
+      ? getSystemPrompt(resolvedStoreName, resolvedStoreCity, resolvedStoreContact, subscription.plan, resolvedType, resolvedStoreInfo)
+      : undefined
+
+    const allowedUpdate: Record<string, any> = {
+      ...(name          && { name }),
+      ...(languages     && { languages: resolvedLanguages }),
+      ...(type          && { type }),
+      ...(storeName     && { storeName }),
+      ...(storeCity     && { storeCity }),
+      ...(storeContact  && { storeContact }),
+      ...(storeInfo !== undefined && { storeInfo }),
+      ...(systemPrompt  && { systemPrompt }),
+    }
+
+    if (Object.keys(allowedUpdate).length === 0) {
+      return NextResponse.json({ success: false, error: 'NO_FIELDS_TO_UPDATE' }, { status: 400 })
     }
 
     const bot = await prisma.bot.update({
@@ -179,9 +150,7 @@ export async function PATCH(req: NextRequest) {
 
   } catch (err) {
     console.error('error in bot PATCH route:', err)
-    return NextResponse.json(
-      { success: false, error: 'SERVER_ERROR' }, { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'SERVER_ERROR' }, { status: 500 })
   }
 }
 
@@ -192,16 +161,12 @@ export async function DELETE() {
       { success: false, error: 'UNAUTHORIZED' }, { status: 401 }
     )
 
-    await prisma.bot.delete({
-      where: { userId: session.user.id }
-    })
+    await prisma.bot.delete({ where: { userId: session.user.id } })
 
     return NextResponse.json({ success: true })
 
   } catch (err) {
     console.error('error in bot DELETE route:', err)
-    return NextResponse.json(
-      { success: false, error: 'SERVER_ERROR' }, { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'SERVER_ERROR' }, { status: 500 })
   }
 }
