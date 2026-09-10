@@ -8,7 +8,6 @@ const PLAN_LIMITS: Record<string, number> = {
     BUSINESS: 2000
 }
 const REQUIRED = ['name', 'price']
-const EXAMPLE_SKU_MARKER = 'TS-RED-L'
 
 export async function POST(req: NextRequest) {
     try {
@@ -29,7 +28,7 @@ export async function POST(req: NextRequest) {
 
         const formData = await req.formData()
         const file = formData.get('file') as File | null
-        if (!file) return NextResponse.json({ success: false, error: 'NO_FILE' }, { status: 400 })
+        if (!file) return NextResponse.json({ success: false, error: 'SERVER_ERROR' }, { status: 400 })
 
         const buffer = Buffer.from(await file.arrayBuffer())
         const workbook = XLSX.read(buffer, { type: 'buffer' })
@@ -41,9 +40,8 @@ export async function POST(req: NextRequest) {
         }
 
         const headers = Object.keys(rows[0]).map(h => h.trim().toLowerCase())
-        // console.log(headers)
         const missing = REQUIRED.filter(r => !headers.includes(r))
-        // console.log("missing, ", missing)
+        
         if (missing.length > 0) {
             return NextResponse.json(
                 { success: false, error: 'MISSING_HEADERS', missing },
@@ -54,14 +52,10 @@ export async function POST(req: NextRequest) {
         const errors: { row: number; reason: string }[] = []
         const valid: { name: string; variant: string | null; price: number; stock: number; sku: string | null }[] = []
 
-
         rows.forEach((raw, i) => {
-            // console.log(i, raw)
             const rowNum = i + 2
             const norm: Record<string, any> = {}
             for (const key in raw) norm[key.trim().toLowerCase()] = raw[key]
-
-            // if (norm.sku === EXAMPLE_SKU_MARKER) return
 
             const name = String(norm.name ?? '').trim()
             if (!name) {
@@ -93,11 +87,10 @@ export async function POST(req: NextRequest) {
                 sku: norm.sku ? String(norm.sku).trim() : null
             })
         })
-        console.log(valid)
 
         if (valid.length > limit) {
             return NextResponse.json(
-                { success: false, error: 'PRODUCT_LIMIT_EXCEEDED', limit, received: valid.length },
+                { success: false, error: 'PRODUCT_LIMIT_EXCEEDED' },
                 { status: 400 }
             )
         }

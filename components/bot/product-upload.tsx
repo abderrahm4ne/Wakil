@@ -4,6 +4,9 @@ import { useState, useRef } from "react";
 import { Upload, Loader2, CheckCircle2, XCircle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { resolveErrorMessage } from "@/lib/errorMessages";
 
 type UploadResult = {
   success: boolean;
@@ -18,6 +21,7 @@ export function ProductUpload() {
   const [uploading, setUploading] = useState(false);
   const [result, setResult] = useState<UploadResult | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation('dashboard')
 
   const handleFile = async (file: File) => {
     setUploading(true);
@@ -32,9 +36,19 @@ export function ProductUpload() {
         body: formData,
       });
       const data = await res.json();
-      setResult(data);
+      if (data.success) {
+        setResult(data);
+        toast.success(t('bot.product.success'))
+      }
+      else {
+        const errorMsg = resolveErrorMessage(data.error, t)
+        toast.error(errorMsg)
+        setResult({ success: false, error: errorMsg })
+      }
     } catch (err) {
-      setResult({ success: false, error: "NETWORK_ERROR" });
+      const errorMsg = resolveErrorMessage('SERVER_ERROR', t)
+      toast.error(errorMsg)
+      setResult({ success: false, error: errorMsg });
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -49,9 +63,9 @@ export function ProductUpload() {
   return (
     <Card className="bg-card border-slate-800">
       <CardHeader>
-        <CardTitle className="text-white">Product Catalog</CardTitle>
+        <CardTitle className="text-white">{t('bot.product.title')}</CardTitle>
         <CardDescription className="text-slate-400">
-          Upload your stock as xlsx or csv. This replaces your current catalog entirely.
+          {t('bot.product.subtitle')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -61,7 +75,7 @@ export function ProductUpload() {
           className="inline-flex items-center gap-2 text-sm text-[#00D4AA] hover:underline"
         >
           <Download className="h-4 w-4" />
-          Download template
+          {t('bot.product.download')}
         </a>
 
         <div className="flex items-center gap-4">
@@ -84,7 +98,7 @@ export function ProductUpload() {
             ) : (
               <Upload className="h-4 w-4 me-2" />
             )}
-            {uploading ? "Uploading..." : "Upload stock file"}
+            {uploading ? t('bot.product.uploading', { defaultValue: 'Uploading...' }) : t('bot.product.upload', { defaultValue: 'Upload stock file' })}
           </Button>
         </div>
 
@@ -92,8 +106,10 @@ export function ProductUpload() {
           <div className="flex items-start gap-2 text-red-400 text-sm bg-red-950/30 border border-red-900/50 rounded-lg p-3">
             <XCircle className="h-4 w-4 mt-0.5 shrink-0" />
             <div>
-              <p>Upload failed: {result.error}</p>
-              {result.missing && <p>Missing columns: {result.missing.join(", ")}</p>}
+              <p>{result.error}</p>
+              {result.missing && (
+                <p className="text-xs mt-1">{result.missing.join(", ")}</p>
+              )}
             </div>
           </div>
         )}
@@ -103,15 +119,17 @@ export function ProductUpload() {
             <div className="flex items-center gap-2 text-[#00D4AA] text-sm bg-[#00D4AA]/10 border border-[#00D4AA]/20 rounded-lg p-3">
               <CheckCircle2 className="h-4 w-4 shrink-0" />
               <span>
-                Imported {result.imported} products
-                {result.rejected ? `, ${result.rejected} rows skipped` : ""}
+                {t('bot.product.importedProducts', { defaultValue: result.imported })}
+                {result.rejected ? ` • ${result.rejected} ${t('bot.product.rowsRejected', { defaultValue: 'rows rejected' })}` : ""}
               </span>
             </div>
 
             {result.errors && result.errors.length > 0 && (
-              <div className="text-xs text-slate-400 bg-slate-800/50 rounded-lg p-3 max-h-40 overflow-y-auto space-y-1">
+              <div className="text-sm text-slate-400 bg-slate-800/50 rounded-lg p-3 max-h-40 overflow-y-auto space-y-1">
                 {result.errors.map((e, i) => (
-                  <div key={i}>Row {e.row}: {e.reason}</div>
+                  <div key={i}>
+                    {t('bot.product.row')} {e.row}: {resolveErrorMessage(e.reason, t)}
+                  </div>
                 ))}
               </div>
             )}

@@ -132,6 +132,23 @@
         "aiRequiresPro": "AI-powered bots require Pro or Business plan",
         "alreadyExists": "A bot already exists for this account",
         "generic": "Something went wrong, try again"
+      },
+      "product": {
+        "title": "Product Catalog",
+        "subtitle": "Upload your stock as xlsx or csv, This replaces your current catalog entirely",
+        "download": "Download catalog",
+        "success": "Catalog saved successfully",
+        "importedProducts": "imported Products : {{defaultValue}}",
+        "rowsRejected": "There is problem with your row, make sure you are following",
+        "errors": {
+          "emptyFile": "Provided file is empty",
+          "missingHeaders": "Missing headers",
+          "limitExceeded": "Products limits Exceeded",
+          "missingName": "Name field missing",
+          "invalidPrice": "Price wrong",
+          "invalidStock": "Invalid stock",
+          "notFound": "Bot not found"
+        }
       }
   },
   "conversations": { 
