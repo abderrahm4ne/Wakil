@@ -1,7 +1,7 @@
 import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
-import { SubscriptionClient } from "@/components/dashboard/subscription-client"
+import { SubscriptionClient } from "@/components/subscription/subscription-client"
 import { subscriptions } from "@/types/subscription"
 import getLang from '@/lib/locale'
 import i18n from "@/lib/i18n-server"

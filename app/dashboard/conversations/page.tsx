@@ -1,283 +1,215 @@
-"use client"
+'use client'
 
-import { Card } from '@/components/ui/card'
-import { Search, MessageSquare, Pencil, Check, X as XIcon } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import {
+    useEffect,
+    useMemo,
+    useState,
+} from 'react'
+
 import { useTranslation } from 'react-i18next'
+import {
+    AnimatePresence,
+    motion,
+} from 'framer-motion'
 
-type ConversationListItem = {
-    id: string
-    customerId: string
-    label: string | null
-    createdAt: string
-    updatedAt: string
-    messages: { content: string; fromCustomer: boolean; createdAt: string }[]
-}
+import Welcoming from '@/components/dashboard/page-title'
 
-type MessageItem = {
-    id: string
-    content: string
-    fromCustomer: boolean
-    createdAt: string
-}
+import type {
+    ConversationDetail,
+    ConversationListItem,
+} from '@/types/conversation'
 
-type ConversationDetail = {
-    id: string
-    customerId: string
-    label: string | null
-    messages: MessageItem[]
-}
-
-function timeAgo(dateStr: string, t: (key: string, options?: { count?: number }) => string): string {
-    const diffMs = Date.now() - new Date(dateStr).getTime()
-    const mins = Math.floor(diffMs / 60000)
-    if (mins < 1) return t('conversations.now')
-    if (mins < 60) return t('conversations.minutesAgo', { count: mins })
-    const hours = Math.floor(mins / 60)
-    if (hours < 24) return t('conversations.hoursAgo', { count: hours })
-    const days = Math.floor(hours / 24)
-    return t('conversations.daysAgo', { count: days })
-}
-
-function displayName(c: { customerId: string; label: string | null }, t: (key: string, options?: { id?: string }) => string): string {
-    if (c.label) return c.label
-    return t('conversations.name', { id: c.customerId.slice(0, 8) })
-}
+import { ConversationSidebar } from '@/components/conversations/sidebar'
+import { ConversationThread } from '@/components/conversations/thread'
+import { ConversationEmptyState } from '@/components/conversations/empty-state'
 
 export default function ConversationsPage() {
-    const { t } = useTranslation('dashboard')
-    const [conversations, setConversations] = useState<ConversationListItem[]>([])
-    const [loading, setLoading] = useState(true)
-    const [searchQuery, setSearchQuery] = useState('')
-    const [selectedId, setSelectedId] = useState<string | null>(null)
-    const [detail, setDetail] = useState<ConversationDetail | null>(null)
-    const [detailLoading, setDetailLoading] = useState(false)
-    const [editingLabel, setEditingLabel] = useState(false)
-    const [labelDraft, setLabelDraft] = useState('')
+    const { t, i18n } = useTranslation('dashboard')
 
+    const [conversations, setConversations] =
+        useState<ConversationListItem[]>([])
+
+    const [loading, setLoading] = useState(true)
+
+    const [searchQuery, setSearchQuery] =
+        useState('')
+
+    const [selectedId, setSelectedId] =
+        useState<string | null>(null)
+
+    const [detail, setDetail] =
+        useState<ConversationDetail | null>(null)
+
+    const [detailLoading, setDetailLoading] =
+        useState(false)
+
+    const [editingLabel, setEditingLabel] =
+        useState(false)
+
+    const [labelDraft, setLabelDraft] =
+        useState('')
+
+    // fetch conversations
     useEffect(() => {
-        fetch('/api/conversation')
-            .then((res) => res.json())
-            .then((res) => {
-                if (res.success) setConversations(res.data)
-            })
-            .finally(() => setLoading(false))
+        async function fetchConversations() {
+            try {
+                const response = await fetch('/api/conversation')
+                const result = await response.json()
+                if (result.success) {
+                    setConversations(result.data)
+                }
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchConversations()
     }, [])
 
+    // fetch selected conversation
     useEffect(() => {
         if (!selectedId) return
-        setDetailLoading(true)
-        fetch(`/api/conversation/${selectedId}`)
-            .then((res) => res.json())
-            .then((res) => {
-                if (res.success) setDetail(res.data)
-            })
-            .finally(() => setDetailLoading(false))
+
+        async function fetchConversationDetail() {
+            setDetailLoading(true)
+
+            try {
+                const response = await fetch(`/api/conversation/${selectedId}`)
+                const result = await response.json()
+                if (result.success) {
+                    setDetail(result.data)
+                }
+            } finally {
+                setDetailLoading(false)
+            }
+        }
+
+        fetchConversationDetail()
     }, [selectedId])
 
-    const filtered = useMemo(() => {
-        const q = searchQuery.trim().toLowerCase()
-        if (!q) return conversations
-        return conversations.filter((c) => {
-            const label = c.label?.toLowerCase() ?? ''
-            const lastMsg = c.messages[0]?.content.toLowerCase() ?? ''
-            return (
-                c.customerId.toLowerCase().includes(q) ||
-                label.includes(q) ||
-                lastMsg.includes(q)
-            )
-        })
+    // filter conversations
+    const filteredConversations = useMemo(() => {
+        const query = searchQuery.trim().toLowerCase()
+
+        if (!query) {
+            return conversations
+        }
+
+        return conversations.filter(
+            (conversation) => {
+                const label = conversation.label?.toLowerCase() ?? ''
+                const lastMessage = conversation.messages[0]?.content.toLowerCase() ?? ''
+                return (
+                    conversation.customerId
+                        .toLowerCase()
+                        .includes(query) ||
+                    label.includes(query) ||
+                    lastMessage.includes(query)
+                )
+            }
+        )
     }, [conversations, searchQuery])
 
-    const saveLabel = async () => {
+    // Select conversation
+    function handleSelectConversation(id: string) {
+        setSelectedId(id)
+        setEditingLabel(false)
+        setDetail(null)
+    }
+
+    // Start editing label
+    function handleStartEditing() {
+        setLabelDraft(detail?.label ?? '')
+        setEditingLabel(true)
+    }
+
+    // Save label
+    async function handleSaveLabel() {
         if (!detail) return
-        const res = await fetch(`/api/conversations/${detail.id}/label`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ label: labelDraft.trim() || null }),
-        })
-        const data = await res.json()
-        if (data.success) {
-            const newLabel = labelDraft.trim() || null
-            setDetail({ ...detail, label: newLabel })
-            setConversations((prev) =>
-                prev.map((c) => (c.id === detail.id ? { ...c, label: newLabel } : c))
-            )
+
+        const newLabel =
+            labelDraft.trim() || null
+        const response = await fetch(`/api/conversation/${detail.id}`,
+            {
+                method: 'PATCH',
+                headers: { 'Content-Type':'application/json' },
+                body: JSON.stringify({ label: newLabel }),
+            }
+        )
+
+        const result = await response.json()
+        if (!result.success) {
+            return
         }
+        // Update detail
+        setDetail((previous) =>
+            previous ? { ...previous, label: newLabel } : previous
+        )
+
+        // update conversations
+        setConversations((previous) =>
+            previous.map((conversation) =>
+                conversation.id === detail.id
+                    ? {
+                          ...conversation,
+                          label: newLabel,
+                      }
+                    : conversation
+            )
+        )
+
         setEditingLabel(false)
     }
 
     return (
-        <div className="flex flex-col h-[calc(100vh-3rem)] p-6 font-display gap-6">
+        <div className={`flex flex-col ${i18n.language === 'ar' ? 'font-arabic' : 'font-display'} h-[calc(100vh-4rem)] gap-6 overflow-hidden`}>
+            <Welcoming
+                title="conversations.title"
+                subTitle="conversations.subtitle"
+            />
 
-            <div>
-                <h1 className="text-3xl font-bold text-foreground">{t('conversations.title')}</h1>
-                <p className="mt-2 text-sm text-muted-foreground">
-                    {t('conversations.subtitle')}
-                </p>
-            </div>
-
-            <div className='flex flex-1 gap-6 h-[50vh]'>
-                {/* Side Bar */}
-                <div className='w-full md:w-[32%] flex flex-col p-1 overflow-hidden bg-card rounded-md'>
-
-                    {/* Search bar */}
-                    <div className='p-4 border-b border-border '>
-                        <div className='relative'>
-                            <Search className='absolute inset-a-3 -translate-y-1/2 top-1/2 text-muted-foreground pl-2' size={27}/>
-                            <input
-                                type='text'
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder={t('conversations.search')}
-                                className='w-full rounded-lg border border-border bg-background py-2 pl-8'
-                            />
-                        </div>
-                    </div>
-
-                    <div className='flex-1 overflow-y-auto'>
-                        {loading ? 
-                        (
-                            <p className='p-4 text-sm text-muted-foreground italic'>{t('conversations.loading')}</p>
-                        ) : 
-                        filtered.length === 0 ? (
-                            <p className='p-4 text-sm text-muted-foreground italic'>
-                                {conversations.length === 0 ? t('conversations.noConversations') : t('conversations.noMatches')}
-                            </p>
-                        ) : (
-                            filtered.map( c => {
-                                const last = c.messages[0]
-                                const isSelected = c.id === selectedId
-                                const unread = last && last.fromCustomer
-                                return (
-                                    <button
-                                        key={c.id}
-                                        onClick={() => {
-                                            setSelectedId(c.id)
-                                            setEditingLabel(false)
-                                        }}
-                                        className={`w-full text-left px-3 py-3 border-b border-border last:border-0 transition-colors hover:bg-primary/5 hover:cursor-pointer${
-                                            isSelected ? 'bg-primary/10' : ''}`}
-                                    >
-                                        <div className="flex items-center justify-between gap-2">
-                                            <span
-                                                className={`text-sm truncate ${
-                                                    unread ? 'font-semibold text-foreground' : 'font-medium text-foreground'
-                                                }`}
-                                            >
-                                                {displayName(c, t)}
-                                            </span>
-                                            {last && (
-                                                <span className="text-xs text-muted-foreground shrink-0">
-                                                    {timeAgo(last.createdAt, t)}
-                                                </span>
-                                            )}
-                                        </div>
-                                        <p
-                                            className={`mt-1 text-xs truncate ${
-                                                unread ? 'text-foreground/80' : 'text-muted-foreground'
-                                            }`}
-                                        >
-                                            {last ? last.content.slice(0, 40) : t('conversations.noMessages')}
-                                        </p>
-                                    </button>
-                                )
-                            })
-                        )
-
+            <motion.div
+                initial={{ opacity: 0,y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.1 }}
+                className="flex flex-1 gap-4 min-h-0"
+            >
+                <ConversationSidebar
+                    conversations={conversations}
+                    filteredConversations={
+                        filteredConversations
                     }
-                    </div>
+                    loading={loading}
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    selectedId={selectedId}
+                    onSelect={
+                        handleSelectConversation
+                    }
+                />
 
+                <div className="flex-1 flex flex-col overflow-hidden bg-card border border-border rounded-2xl min-w-0">
+                    <AnimatePresence mode="wait">
+                        {!selectedId ? (
+                            <ConversationEmptyState />
+                        ) : detail ? (
+                            <ConversationThread
+                                conversation={detail}
+                                loading={detailLoading}
+                                editingLabel={editingLabel}
+                                labelDraft={labelDraft}
+                                onLabelDraftChange={setLabelDraft}
+                                onStartEditing={handleStartEditing}
+                                onCancelEditing={() =>setEditingLabel(false)}
+                                onSaveLabel={handleSaveLabel}
+                            />
+                        ) : (
+                            <div className="flex-1 flex items-center justify-center">
+                                <div className="animate-pulse rounded-xl bg-muted/30 h-10 w-48" />
+                            </div>
+                        )}
+                    </AnimatePresence>
                 </div>
-
-                <div className='flex-1 flex flex-col p-0 overflow-hidden bg-card/60 rounded-md w-[50%]'>
-                    {!selectedId ? (
-                        <div className="flex-1 flex items-center justify-center">
-                            <div className="text-center">
-                                <MessageSquare className="mx-auto h-8 w-8 text-muted-foreground/50" />
-                                <p className="mt-3 text-sm text-muted-foreground">
-                                    {t('conversations.select')}
-                                </p>
-                            </div>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="p-4 border-b border-border flex items-center justify-between">
-                                {editingLabel ? (
-                                    <div className="flex items-center gap-2 flex-1">
-                                        <input
-                                            autoFocus
-                                            value={labelDraft}
-                                            onChange={(e) => setLabelDraft(e.target.value)}
-                                            placeholder={t('conversations.addName')}
-                                            className="flex-1 rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-                                        />
-                                        <button onClick={saveLabel} className="text-emerald-400 hover:cursor-pointer">
-                                            <Check className="h-4 w-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => setEditingLabel(false)}
-                                            className="text-red-500 hover:cursor-pointer"
-                                        >
-                                            <XIcon className="h-4 w-4" />
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-semibold text-foreground">
-                                            {detail ? displayName(detail, t) : ''}
-                                        </span>
-                                        <button
-                                            onClick={() => {
-                                                setLabelDraft(detail?.label ?? '')
-                                                setEditingLabel(true)
-                                            }}
-                                            className="text-muted-foreground hover:text-foreground hover:cursor-pointer"
-                                        >
-                                            <Pencil className="h-3.5 w-3.5" />
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                                {detailLoading ? (
-                                    <p className="text-sm text-muted-foreground italic">{t('conversations.loadingMessages')}</p>
-                                ) : (
-                                    detail?.messages.map((m) => (
-                                        <div
-                                            key={m.id}
-                                            className={`flex ${m.fromCustomer ? 'justify-start' : 'justify-end'}`}
-                                        >
-                                            <div
-                                                className={`max-w-[70%] rounded-2xl px-4 py-2 text-sm ${
-                                                    m.fromCustomer
-                                                        ? 'bg-muted text-foreground'
-                                                        : 'bg-black text-primary-foreground'
-                                                }`}
-                                            >
-                                                <p>{m.content}</p>
-                                                <p
-                                                    className={`mt-1 text-[10px] ${
-                                                        m.fromCustomer ? 'text-muted-foreground' : 'text-secondary-foreground/70'
-                                                    }`}
-                                                >
-                                                    {new Date(m.createdAt).toLocaleTimeString([], {
-                                                        hour: '2-digit',
-                                                        minute: '2-digit',
-                                                    })}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-                        </>
-                    )}
-                </div>
-
-            </div>
-
+            </motion.div>
         </div>
     )
 }
