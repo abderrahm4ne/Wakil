@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { resolveErrorMessage } from "@/lib/errorMessages";
+import i18n from "@/lib/i18n";
 
 type UploadResult = {
   success: boolean;
@@ -59,12 +60,14 @@ export function ProductUpload() {
     const file = e.target.files?.[0];
     if (file) handleFile(file);
   };
+  
+  const dir = i18n.language === 'ar' ? 'rtl' : 'ltr'
 
   return (
-    <Card className="bg-card border-slate-800">
+    <Card dir={dir} className={`bg-card border-slate-800 ${i18n.language === 'ar' ? 'font-arabic' : 'font-display'}`}>
       <CardHeader>
-        <CardTitle className="text-white">{t('bot.product.title')}</CardTitle>
-        <CardDescription className="text-slate-400">
+        <CardTitle className="text-white font-semibold text-lg">{t('bot.product.title')}</CardTitle>
+        <CardDescription className="text-slate-400 font-medium text-md">
           {t('bot.product.subtitle')}
         </CardDescription>
       </CardHeader>
@@ -72,7 +75,7 @@ export function ProductUpload() {
         <a
           href="/templates/wakil_product_template.xlsx"
           download
-          className="inline-flex items-center gap-2 text-sm text-[#00D4AA] hover:underline"
+          className="inline-flex items-center gap-2 text-sm font-medium text-[#00D4AA] hover:underline"
         >
           <Download className="h-4 w-4" />
           {t('bot.product.download')}

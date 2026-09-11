@@ -21,17 +21,19 @@ type BotData = {
   createdAt: string
 }
 
-const LANGUAGE_LABELS: Record<string, string> = {
-  ARABIC: "العربية",
-  FRENCH: "Français",
-  DARIJA: "دارجة",
-}
+
 
 export default function BotPage() {
   const { t, i18n } = useTranslation("dashboard")
   const [bot, setBot] = useState<BotData | null>(null)
   const [loading, setLoading] = useState(true)
   const [toggling, setToggling] = useState(false)
+
+  const LANGUAGE_LABELS: Record<string, string> = {
+    ARABIC: i18n.language === 'ar' ? "العربية" : "Arabic",
+    FRENCH: "Français",
+    DARIJA: i18n.language === 'ar' ? "دارجة" : "Darija",
+  }
 
   useEffect(() => {
     fetch("/api/bot")
@@ -208,14 +210,14 @@ export default function BotPage() {
         className="rounded-2xl border border-border bg-linear-to-tr from-black to-black/5 px-6 py-5"
       >
         <div className="flex items-center gap-2 mb-4">
-          <Globe size={18} className="text-secondary" />
-          <p className="text-sm font-medium text-foreground">{t("bot.languages")}</p>
+          <Globe size={24} className="text-secondary" />
+          <p className="text-md font-medium text-foreground">{t("bot.languages")}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {bot.languages.map((lang) => (
             <span
               key={lang}
-              className="px-3 py-1.5 rounded-lg bg-secondary/10 border border-secondary/20 text-secondary text-sm font-medium"
+              className="px-3 py-1.5 rounded-lg bg-secondary/10 border border-secondary/20 text-secondary text-[0.88rem] font-medium"
             >
               {LANGUAGE_LABELS[lang] ?? lang}
             </span>

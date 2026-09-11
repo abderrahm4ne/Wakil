@@ -110,8 +110,10 @@ export function BotConfigForm({ onSuccess, initialData }: BotConfigFormProps) {
     }
   }
 
+  const dir = i18n.language === 'ar' ? 'rtl' : 'ltr'
+
   return (
-    <div className={`${i18n.language === 'ar' ? 'font-arabic' : 'font-display'} max-w-2xl mx-auto`}>
+    <div dir={dir} className={`${i18n.language === 'ar' ? 'font-arabic' : 'font-display'} max-w-2xl mx-auto`}>
 
       {/* Header */}
       <motion.div

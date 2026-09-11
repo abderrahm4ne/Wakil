@@ -135,8 +135,10 @@
       },
       "product": {
         "title": "Product Catalog",
-        "subtitle": "Upload your stock as xlsx or csv, This replaces your current catalog entirely",
+        "subtitle": "Upload your stock as xlsx or csv, This replaces your current catalog entirely, make sure you follow our file format",
         "download": "Download catalog",
+        "uploading": "Uploading..",
+        "upload": "Upload",
         "success": "Catalog saved successfully",
         "importedProducts": "imported Products : {{defaultValue}}",
         "rowsRejected": "There is problem with your row, make sure you are following",

@@ -145,6 +145,26 @@
         "aiRequiresPro": "Les bots IA nécessitent un plan Pro ou Business",
         "alreadyExists": "Un bot existe déjà pour ce compte",
         "generic": "Une erreur s'est produite, réessayez"
+      },
+      "product": { 
+        "title": "Catalogue de produits", 
+        "subtitle": "Importez votre stock au format XLSX ou CSV. Cela remplacera entièrement votre catalogue actuel, Veillez à respecter le format de fichier requis.", 
+        "download": "Télécharger le catalogue",
+        "uploading": "Mise en ligne..",
+        "upload": "Mise en ligne",
+        "success": "Catalogue enregistré avec succès", 
+        "importedProducts": "Produits importés : {{defaultValue}}", 
+        "rowsRejected": "Certaines lignes contiennent des erreurs. Assurez-vous de respecter le format requis", 
+        "errors": 
+        { 
+          "emptyFile": "Le fichier fourni est vide", 
+          "missingHeaders": "En-têtes manquants", 
+          "limitExceeded": "La limite de produits a été dépassée", 
+          "missingName": "Le champ du nom est manquant", 
+          "invalidPrice": "Le prix est invalide", 
+          "invalidStock": "Le stock est invalide", 
+          "notFound": "Bot introuvable" 
+        } 
       }
   },
   "conversations": {
