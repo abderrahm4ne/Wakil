@@ -6,6 +6,8 @@ import Welcoming from '@/components/dashboard/page-title'
 import { OrdersTabs } from '@/components/orders/orders-tabs'
 import { OrdersTable } from '@/components/orders/orders-table'
 import { Order, StatusTab } from '@/types/orders'
+import { OrdersExportButton } from '@/components/orders/orders-export-button'
+import i18n from '@/lib/i18n'
 
 export default function OrdersPage() {
     const [orders, setOrders] = useState<Order[]>([])
@@ -42,7 +44,7 @@ export default function OrdersPage() {
     }
 
     return (
-        <div className="flex flex-col gap-6 font-display">
+        <div className={`flex flex-col gap-6 ${i18n.language === 'ar' ? 'font-arabic' : 'font-display'}`}>
 
             <motion.div
                 initial={{ opacity: 0, y: -12 }}
@@ -50,7 +52,10 @@ export default function OrdersPage() {
                 transition={{ duration: 0.35 }}
             >
                 <Welcoming title="orders.title" subTitle="orders.subtitle" />
+                
             </motion.div>
+
+            <OrdersExportButton orders={orders} />
 
             <motion.div
                 initial={{ opacity: 0, y: 8 }}

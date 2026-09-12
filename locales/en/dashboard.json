@@ -425,8 +425,12 @@
       "pending_review": "Pending Review",
       "confirmed": "Confiremd",
       "cancelled": "Cancelled",
-      "empty": "No orders found"
+      "empty": "No orders found",
+      "exportEmpty": "No orders to export",
+      "exportSuccess": "Orders exported",
+      "exportError": "Exporting failed"
     },
+    "export": "Export",
     "table": {
       "number": "Number",
       "customer": "Customer",

@@ -438,8 +438,12 @@
       "pending_review": "En attente de validation", 
       "confirmed": "Confirmée", 
       "cancelled": "Annulée", 
-      "empty": "Aucune commande trouvée" 
+      "empty": "Aucune commande trouvée",
+      "exportEmpty": "Aucune commande à exporter",
+      "exportSuccess": "Commandes exportées",
+      "exportError": "Échec de l'exportation"
     },
+    "export": "Exporter",
     "table": { 
       "number": "Numéro", 
       "customer": "Client", 

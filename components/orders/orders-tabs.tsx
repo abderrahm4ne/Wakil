@@ -18,7 +18,7 @@ export function OrdersTabs({ activeTab, counts, onChange }: Props) {
                 <button
                     key={tab}
                     onClick={() => onChange(tab)}
-                    className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors hover:cursor-pointer ${
+                    className={`px-4 py-2.5 text-md font-medium border-b-2 transition-colors hover:cursor-pointer ${
                         activeTab === tab
                             ? 'border-secondary text-foreground'
                             : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -26,7 +26,7 @@ export function OrdersTabs({ activeTab, counts, onChange }: Props) {
                 >
                     {t(`orders.status.${tab.toLowerCase()}`, { defaultValue: tab.replace(/_/g, ' ') })}
                     {counts[tab] ? (
-                        <span className={`ms-2 px-1.5 py-0.5 rounded-full text-xs ${
+                        <span className={`ms-2 px-1.5 py-0.5 rounded-full text-md ${
                             activeTab === tab ? 'bg-secondary/15 text-secondary' : 'bg-muted text-muted-foreground'
                         }`}>
                             {counts[tab]}

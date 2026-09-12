@@ -440,8 +440,12 @@
       "pending_review": "قيد المراجعة", 
       "confirmed": "تم التأكيد", 
       "cancelled": "ملغى", 
-      "empty": "لم يتم العثور على أي طلبات" 
+      "empty": "لم يتم العثور على أي طلبات",
+      "exportEmpty": "لا توجد طلبات للتصدير",
+      "exportSuccess": "تم استخراج الطلبات",
+      "exportError": "فشل الاستخراج"
     },
+    "export": "استخراج",
     "table": { 
       "number": "الرقم", 
       "customer": "العميل", 
