@@ -429,5 +429,26 @@
     },
     "cancel": "Annuler",
     "info": "Les canaux connectés reçoivent les messages des clients en temps réel. Wakil répondra automatiquement selon les règles de votre bot ou votre modèle d'IA."
+  },
+  "orders": { 
+    "title": "Page des commandes", 
+    "subtitle": "Examinez et confirmez les commandes enregistrées par votre bot", 
+    "status": { 
+      "all": "Toutes", 
+      "pending_review": "En attente de validation", 
+      "confirmed": "Confirmée", 
+      "cancelled": "Annulée", 
+      "empty": "Aucune commande trouvée" 
+    },
+    "table": { 
+      "number": "Numéro", 
+      "customer": "Client", 
+      "items": "Articles", 
+      "total": "Total", 
+      "status": "Statut", 
+      "date": "Date", 
+      "dzd": "DZD", 
+      "confirm": "Confirmer" 
     }
+  }
 }

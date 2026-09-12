@@ -19,7 +19,7 @@ export function StoreInfoCard({ bot }: Props) {
         >
             <div className='flex md:flex-row flex-col gap-y-2 items-center justify-between mb-4 py-2 font-semibold'>
                 <h2>{t('overview.storeInformations')}</h2>
-                <a href='/orders' className='flex items-center gap-1 text-xs text-secondary hover:underline'>
+                <a href='/dashboard/bot/settings' className='flex items-center gap-1 text-xs text-secondary hover:underline'>
                     {t('overview.botConfiguration')} <ArrowUpRight size={15} />
                 </a>
             </div>

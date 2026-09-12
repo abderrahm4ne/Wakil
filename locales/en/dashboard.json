@@ -416,5 +416,27 @@
     },
     "cancel": "Cancel",
     "info": "Connected channels receive customer messages in real-time. Wakil will automatically reply based on your bot's rules or AI model."
+  },
+  "orders": {
+    "title": "Orders Page",
+    "subtitle": "Review and confirm orders captured by your bot",
+    "status": {
+      "all": "All",
+      "pending_review": "Pending Review",
+      "confirmed": "Confiremd",
+      "cancelled": "Cancelled",
+      "empty": "No orders found"
+    },
+    "table": {
+      "number": "Number",
+      "customer": "Customer",
+      "items": "Items",
+      "total": "Total",
+      "status": "Status",
+      "date": "Date",
+      "dzd": "DZD",
+      "confirm": "Confirm"
+    }
+
   }
 }
