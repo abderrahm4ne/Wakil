@@ -157,8 +157,8 @@
     "title": "Conversations", 
     "subtitle": "Customer conversations across all channels.", 
     "search": "Search by name or message...", 
-    "loading": "Loading...", "noConversations": 
-    "No conversations yet.", 
+    "loading": "Loading...", 
+    "noConversations": "No conversations yet.", 
     "noMatches": "No matches found.", 
     "noMessages": "No messages yet", 
     "select": "Select a conversation to view messages", 
