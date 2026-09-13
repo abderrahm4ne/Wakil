@@ -12,6 +12,7 @@
     "Bot": "Bot",
     "active": "active",
     "paused": "paused",
+    "channels": "Channels",
     "messagesThisMonth": "Messages This Month",
     "openConversation": "Open Conversation",
     "orderPendingReview": "Order pending review",

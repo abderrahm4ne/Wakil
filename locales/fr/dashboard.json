@@ -23,6 +23,7 @@
     "Bot": "Bot",
     "active": "actif",
     "paused": "en pause",
+    "channels": "Canaux",
     "messagesThisMonth": "Messages ce mois-ci",
     "openConversation": "Ouvrir la conversation",
     "orderPendingReview": "Commande en attente de vérification",

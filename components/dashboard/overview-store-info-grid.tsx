@@ -8,13 +8,14 @@ interface Props {
 }
 
 export function StoreInfoCard({ bot }: Props) {
-    const { t } = useTranslation('dashboard')
-
+    const { t, i18n } = useTranslation('dashboard')
+    const dir = i18n.language === 'ar' ? 'rtl' : 'ltr'
     return (
         <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: 0.3 }}
+            dir={dir}
             className='flex flex-col bg-linear-to-b from-black via-90% to-black/70 border border-border rounded-xl px-5 py-4 w-[75%] self-center mt-15'
         >
             <div className='flex md:flex-row flex-col gap-y-2 items-center justify-between mb-4 py-2 font-semibold'>

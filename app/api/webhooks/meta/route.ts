@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyMetaSignature } from '@/lib/webhook/verify'
-import { handleMetaMessage } from '@/lib/webhook/handler'
+import { prisma } from '@/lib/prisma'
+import { Client } from '@upstash/qstash'
+
+const qstash = new Client({
+    baseUrl: process.env.QSTASH_URL,
+    token: process.env.QSTASH_TOKEN!,
+})
 
 export async function GET(req: NextRequest) {
     console.log('get webhook facebook')
@@ -38,7 +44,34 @@ export async function POST(req: NextRequest) {
         const mid = messaging.message?.mid
 
         if (text && mid) {
-            handleMetaMessage(pageId, senderId, text, mid ).catch(console.error)
+            const existing = await prisma.messageQueue.findUnique({
+                where: { metaMessageId: mid }
+            })
+            
+            if (!existing) {
+                const channel = await prisma.channel.findFirst({
+                    where: { pageId },
+                    include: { bot: true }
+                })
+
+                if (!channel?.bot) return response
+
+                await prisma.messageQueue.create({
+                    data: {
+                        metaMessageId: mid,
+                        botId: channel.bot.id,
+                        pageId,
+                        senderId,
+                        text,
+                        status: 'PENDING'
+                    }
+                })
+                
+                await qstash.publish({
+                    url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/jobs/process-queue`,
+                    delay: 0
+                })
+            }
         }
     }
 
