@@ -65,7 +65,7 @@ export function OrdersChannelsGrid({ orders, channelsCount, channels}: Props) {
                 transition={{ duration: 0.35, delay: 0.25 }}
                 className='flex flex-col bg-card border border-border rounded-xl px-5 py-4 w-full'
             >
-                <h2 className='font-normal text-lg mb-4'>{t('overview.Channels')}</h2>
+                <h2 className='font-normal text-lg mb-4'>{t('overview.channels')}</h2>
 
                 {channelsCount === 0 ? (
                     <div className='flex flex-col items-center justify-center py-6 gap-2 text-center'>

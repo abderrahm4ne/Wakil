@@ -264,7 +264,7 @@ export function SubscriptionClient({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className={`relative overflow-hidden rounded-2xl p-8 bg-linear-to-tr flex md:flex-row flex-col ${TIER_GRADIENT[currentPlan] ?? TIER_GRADIENT.FREE_TRIAL} border border-border`}
+            className={`relative overflow-hidden rounded-2xl p-8 bg-linear-to-tr flex flex-col ${TIER_GRADIENT[currentPlan] ?? TIER_GRADIENT.FREE_TRIAL} border border-border`}
         >
             <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="space-y-2">
@@ -366,7 +366,7 @@ export function SubscriptionClient({
                 </span>
             )}
 
-            <div className="relative flex md:flex-row flex-col flex-wrap gap-8 mt-8 pt-8 border-t border-border/60">
+            <div className="relative flex flex-wrap gap-8 mt-8 pt-8 border-t sm:justify-start justify-center border-border/60">
                 <UsageRing
                     value={isUnlimited ? 0 : usagePercent}
                     label={t('subscription.messages')}
