@@ -36,7 +36,7 @@ export default async function BillingPage() {
                         {t('billing.title')}
                         </p>
 
-                      <h1 className="text-4xl font-semibold text-foreground">
+                      <h1 className="md:text-4xl text-[1.9rem] font-semibold text-foreground">
                         {t('billing.billingNSubscription')}
                       </h1>
 

@@ -44,7 +44,7 @@ export function BillingPlanComparison({
       <h3 className="text-2xl font-semibold text-foreground mb-6">
         {t('billing.compareAllPlans')}
       </h3>
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-center w-[85%] h-[65vh] px-20 mx-auto">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-center md:w-[85%] h-[65vh] md:px-20 mx-auto">
         {plans.map((plan) => {
           const isCurrent = plan.id === currentPlan;
 
