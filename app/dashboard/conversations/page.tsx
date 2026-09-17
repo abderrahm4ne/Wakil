@@ -1,23 +1,13 @@
 'use client'
 
-import {
-    useEffect,
-    useMemo,
-    useState,
-} from 'react'
+import { useEffect, useMemo, useState, } from 'react'
 
 import { useTranslation } from 'react-i18next'
-import {
-    AnimatePresence,
-    motion,
-} from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 import Welcoming from '@/components/dashboard/page-title'
 
-import type {
-    ConversationDetail,
-    ConversationListItem,
-} from '@/types/conversation'
+import type { ConversationDetail, ConversationListItem } from '@/types/conversation'
 
 import { ConversationSidebar } from '@/components/conversations/sidebar'
 import { ConversationThread } from '@/components/conversations/thread'
@@ -26,28 +16,18 @@ import { ConversationEmptyState } from '@/components/conversations/empty-state'
 export default function ConversationsPage() {
     const { t, i18n } = useTranslation('dashboard')
 
-    const [conversations, setConversations] =
-        useState<ConversationListItem[]>([])
+    const [conversations, setConversations] = useState<ConversationListItem[]>([])
 
     const [loading, setLoading] = useState(true)
+    const [searchQuery, setSearchQuery] = useState('')
 
-    const [searchQuery, setSearchQuery] =
-        useState('')
+    const [selectedId, setSelectedId] = useState<string | null>(null)
 
-    const [selectedId, setSelectedId] =
-        useState<string | null>(null)
-
-    const [detail, setDetail] =
-        useState<ConversationDetail | null>(null)
-
-    const [detailLoading, setDetailLoading] =
-        useState(false)
-
-    const [editingLabel, setEditingLabel] =
-        useState(false)
-
-    const [labelDraft, setLabelDraft] =
-        useState('')
+    const [detail, setDetail] = useState<ConversationDetail | null>(null)
+    const [detailLoading, setDetailLoading] = useState(false)
+    
+    const [editingLabel, setEditingLabel] = useState(false)
+    const [labelDraft, setLabelDraft] = useState('')
 
     // fetch conversations
     useEffect(() => {
@@ -131,7 +111,7 @@ export default function ConversationsPage() {
         const response = await fetch(`/api/conversation/${detail.id}`,
             {
                 method: 'PATCH',
-                headers: { 'Content-Type':'application/json' },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ label: newLabel }),
             }
         )
@@ -150,9 +130,9 @@ export default function ConversationsPage() {
             previous.map((conversation) =>
                 conversation.id === detail.id
                     ? {
-                          ...conversation,
-                          label: newLabel,
-                      }
+                        ...conversation,
+                        label: newLabel,
+                    }
                     : conversation
             )
         )
@@ -168,7 +148,7 @@ export default function ConversationsPage() {
             />
 
             <motion.div
-                initial={{ opacity: 0,y: 8 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: 0.1 }}
                 className="flex flex-1 gap-4 min-h-0"
@@ -199,7 +179,7 @@ export default function ConversationsPage() {
                                 labelDraft={labelDraft}
                                 onLabelDraftChange={setLabelDraft}
                                 onStartEditing={handleStartEditing}
-                                onCancelEditing={() =>setEditingLabel(false)}
+                                onCancelEditing={() => setEditingLabel(false)}
                                 onSaveLabel={handleSaveLabel}
                             />
                         ) : (

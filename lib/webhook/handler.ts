@@ -8,7 +8,7 @@ export async function handleMetaMessage(
     pageId: string,
     senderId: string,
     text: string,
-    mid: string
+    mid: string 
 ) {
     try {
         const existing = await prisma.message.findUnique({ where: { metaMessageId: mid } })
@@ -32,20 +32,25 @@ export async function handleMetaMessage(
             return
         }
 
-        const conversation = await prisma.conversation.upsert({
-            where: { botId_customerId: { botId: bot.id, customerId: senderId } },
-            update: {},
-            create: { botId: bot.id, customerId: senderId }
-        })
+        const { conversation, message } = await prisma.$transaction(async (tx) => {
+            const conversation = await tx.conversation.upsert({
+                where: { botId_customerId: { botId: bot.id, customerId: senderId } },
+                update: {},
+                create: { botId: bot.id, customerId: senderId }
+            })
 
-        await prisma.message.create({
-            data: {
-                content: text,
-                fromCustomer: true,
-                conversationId: conversation.id,
-                metaMessageId: mid
-            }
+            const message = await tx.message.create({
+                data: {
+                    content: text,
+                    fromCustomer: true,
+                    conversationId: conversation.id,
+                    metaMessageId: mid
+                }
+            })
+
+            return { conversation, message }
         })
+        
         const pastMessages = await prisma.message.findMany({
             where: { conversationId: conversation.id },
             orderBy: { createdAt: 'desc' },

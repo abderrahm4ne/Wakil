@@ -47,7 +47,6 @@ export async function GET(
     }
 }
 
-
 export async function PATCH(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
@@ -92,6 +91,43 @@ export async function PATCH(
         console.error('error in conversation label PATCH route', err)
         return NextResponse.json(
             { success: false, error: 'SERVER_ERROR' }, { status: 500 }
+        )
+    }
+}
+
+
+export async function DELETE(
+    req: NextRequest,
+    { params }: { params: { id: string } }
+) {
+    const session = await auth()
+    if (!session?.user?.id) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    try {
+        const conversation = await prisma.conversation.findUnique({
+            where: { id: params.id },
+            include: { bot: { include: { user: true } } }
+        })
+
+        if (!conversation) {
+            return NextResponse.json({ error: 'Not found' }, { status: 404 })
+        }
+
+        if (conversation.bot.user.id !== session.user.id) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+        }
+
+        await prisma.conversation.delete({
+            where: { id: params.id }
+        })
+
+        return NextResponse.json({ success: true })
+    } catch (err) {
+        return NextResponse.json(
+            { error: err instanceof Error ? err.message : 'Delete failed' },
+            { status: 500 }
         )
     }
 }

@@ -11,6 +11,7 @@ type ConversationListProps = {
     selectedId: string | null
     totalConversations: number
     onSelect: (id: string) => void
+    onDelete: (id: string) => void
 }
 
 export function ConversationList({
@@ -19,6 +20,7 @@ export function ConversationList({
     selectedId,
     totalConversations,
     onSelect,
+    onDelete,
 }: ConversationListProps) {
     const { t } = useTranslation('dashboard')
 
@@ -39,7 +41,6 @@ export function ConversationList({
         return (
             <div className="flex flex-col items-center justify-center h-full py-12 gap-2 text-center px-4">
                 <MessageSquare className="h-8 w-8 text-muted-foreground/30" />
-
                 <p className="text-sm text-muted-foreground font-medium">
                     {totalConversations === 0
                         ? t('conversations.noConversations')
@@ -57,6 +58,7 @@ export function ConversationList({
                     conversation={conversation}
                     isSelected={conversation.id === selectedId}
                     onSelect={() => onSelect(conversation.id)}
+                    onDelete={onDelete}
                 />
             ))}
         </div>
