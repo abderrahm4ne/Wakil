@@ -131,26 +131,41 @@ model Message {
   content        String
   fromCustomer   Boolean
   tokensUsed     Int          @default(0)
+
+  mediaType      MediaType    @default(TEXT)
+  transcriptText String?
+  imageAnalysis  String?
+  modelUsed      String?
+
   ruleId         String?
+  rule           Rule?        @relation(fields: [ruleId], references: [id])
   metaMessageId  String?      @unique
-  createdAt      DateTime     @default(now())
+
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  rule           Rule?        @relation(fields: [ruleId], references: [id])
+
+  createdAt      DateTime     @default(now())
 }
 
 model MessageQueue {
   id              String          @id @default(cuid())
   metaMessageId   String          @unique
+
   botId           String
   bot             Bot             @relation(fields: [botId], references: [id], onDelete: Cascade)
+
   pageId          String
   senderId        String
-  text            String
+
+  text            String?
+  mediaType       MediaType          @default(TEXT)
+  mediaUrl        String?
+  
   status          String
   attempt         Int      @default(1)
   nextRetryAt     DateTime?
   error           String?
+  
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
@@ -258,4 +273,11 @@ enum OrderStatus {
 enum BillingMode {
   MONTHLY
   ONE_TIME
+}
+
+enum MediaType {
+  TEXT
+  VOICE
+  IMAGE
+  MIXED
 }

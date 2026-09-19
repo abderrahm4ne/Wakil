@@ -9,14 +9,12 @@ type ConversationListItemProps = {
     conversation: ConversationListItem
     isSelected: boolean
     onSelect: () => void
-    onDelete: (id: string) => void
 }
 
 export function ConversationListItem({
     conversation,
     isSelected,
     onSelect,
-    onDelete,
 }: ConversationListItemProps) {
     const { t } = useTranslation('dashboard')
     const [isDeleting, setIsDeleting] = useState(false)
@@ -40,7 +38,6 @@ export function ConversationListItem({
                 throw new Error(error.error || 'Failed to delete')
             }
 
-            onDelete(conversation.id)
         } catch (err) {
             console.error('Delete failed:', err)
         } finally {

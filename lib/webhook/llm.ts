@@ -6,9 +6,11 @@ import { z } from 'zod'
 import { Plan } from "@/generated/prisma/enums"
 import { prisma } from '@/lib/prisma'
 
+const main_model = "openai/gpt-oss-120b"
+
 const google = createGoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY })
 const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-const groq = createGroq({ apiKey: process.env.GROQ_API_KEY })
+const groq = createGroq({ apiKey: process.env.GROQ_AGENT_MODEL })
 
 export async function callLLM(
     botId: string,
@@ -27,8 +29,8 @@ export async function callLLM(
     const canTakeOrders = plan === 'PRO' || plan === 'BUSINESS'
 
     const model = plan === 'PRO'
-        ? groq('openai/gpt-oss-120b')
-        : groq('openai/gpt-oss-120b')
+        ? groq(main_model)
+        : groq(main_model)
 
     const searchProduct = tool({
         description: `

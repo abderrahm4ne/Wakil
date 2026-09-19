@@ -3,20 +3,42 @@ import { checkUsage, incrementUsage } from "./usage";
 import { callLLM } from "./llm";
 import { sendMetaReply } from "./messenger";
 import { ModelMessage } from 'ai'
+import { MediaType } from "@/generated/prisma/enums";
+
+type MetaMessageInput = {
+  pageId: string
+  senderId: string
+  text: string | null
+  metaMessageId: string
+  mediaType: MediaType
+  mediaUrl: string | null
+}
 
 export async function handleMetaMessage(
-    pageId: string,
-    senderId: string,
-    text: string,
-    mid: string 
-) {
+    { pageId,
+      senderId,
+      text,
+      metaMessageId,
+      mediaType,
+      mediaUrl 
+    }: MetaMessageInput
+) { 
     try {
-        const existing = await prisma.message.findUnique({ where: { metaMessageId: mid } })
+        const existing = await prisma.message.findUnique({ where: { metaMessageId} })
         if (existing) return
 
         const channel = await prisma.channel.findFirst({
             where: { pageId },
-            include: { bot: { include: { user: { include: { subscription: true } } } } }
+            include: { bot: { 
+                include: { 
+                    user: { 
+                        include: { 
+                            subscription: true 
+                        } 
+                    } 
+                } 
+            } 
+        }
         })
 
         if (!channel || !channel.bot) return
@@ -32,19 +54,50 @@ export async function handleMetaMessage(
             return
         }
 
+        let processedText = text
+        let transcriptText: string | null = null
+        let imageAnalysis: string | null = null
+        let modelUsed: string | null = null
+
+        if (mediaType === MediaType.VOICE && mediaUrl) {
+
+            // to be done
+        }
+
+        if (mediaType === MediaType.IMAGE && mediaUrl) {
+
+           // to be done
+        }
+
+        if (mediaType === MediaType.MIXED && mediaUrl) {
+
+            if (text) {
+                // to be done
+            }
+        }
+
+        if (!processedText) {
+            return
+        }
+
         const { conversation, message } = await prisma.$transaction(async (tx) => {
             const conversation = await tx.conversation.upsert({
-                where: { botId_customerId: { botId: bot.id, customerId: senderId } },
+                where: { botId_customerId: { botId: bot.id, 
+                    customerId: senderId } },
                 update: {},
                 create: { botId: bot.id, customerId: senderId }
             })
 
             const message = await tx.message.create({
                 data: {
-                    content: text,
+                    content: processedText,
                     fromCustomer: true,
                     conversationId: conversation.id,
-                    metaMessageId: mid
+                    metaMessageId,
+                    mediaType,
+                    transcriptText,
+                    imageAnalysis,
+                    modelUsed
                 }
             })
 
@@ -64,7 +117,7 @@ export async function handleMetaMessage(
                 content: m.content
             }))
 
-        const reply = await callLLM(bot.id, plan, bot.systemPrompt, text, history, conversation.id, senderId)
+        const reply = await callLLM(bot.id, plan, bot.systemPrompt, processedText, history, conversation.id, senderId)
 
         const sendResult = await sendMetaReply(senderId, reply, channel.accessToken)
 

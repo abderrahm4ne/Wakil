@@ -26,10 +26,12 @@ export async function POST(req: NextRequest) {
 
     try {
         await handleMetaMessage(
-            queueRow.pageId,
-            queueRow.senderId,
-            queueRow.text,
-            queueRow.metaMessageId
+            pageId: queueRow.pageId,
+            senderId: queueRow.senderId,
+            text: queueRow.text,
+            metaMessageId: queueRow.metaMessageId,
+            mediaType: queueRow.mediaType,
+            mediaUrl: queueRow.mediaUrl,
         )
 
         await prisma.messageQueue.delete({

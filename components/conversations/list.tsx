@@ -11,7 +11,6 @@ type ConversationListProps = {
     selectedId: string | null
     totalConversations: number
     onSelect: (id: string) => void
-    onDelete: (id: string) => void
 }
 
 export function ConversationList({
@@ -20,7 +19,6 @@ export function ConversationList({
     selectedId,
     totalConversations,
     onSelect,
-    onDelete,
 }: ConversationListProps) {
     const { t } = useTranslation('dashboard')
 
@@ -58,7 +56,6 @@ export function ConversationList({
                     conversation={conversation}
                     isSelected={conversation.id === selectedId}
                     onSelect={() => onSelect(conversation.id)}
-                    onDelete={onDelete}
                 />
             ))}
         </div>
